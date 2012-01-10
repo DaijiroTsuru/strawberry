@@ -1,0 +1,12 @@
+.DS_Store
+\#*\#
+.packlist
+.modulebuildrc
+Thumbs.db
+*.swp
+*~
+*.log
+.hg
+.svn
+.#*
+
