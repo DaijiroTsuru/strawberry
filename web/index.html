@@ -6,8 +6,9 @@
     <title>津留邦政いちご園</title>
     <meta property="og:image" content="http://www.tsuru-strawberry-farm.com/img/facebook-img01.jpg">
     <link rel="shortcut icon" href="/favicon.ico">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" ></script>
-    <script type="text/javascript">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script>
+    <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <script>
       function slideSwitch() {
       var $active = $('#photo img.active');
       if ( $active.length == 0 ) $active = $('#photo img:last');
@@ -32,7 +33,7 @@
     po.src = 'https://apis.google.com/js/plusone.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
   })();
-      
+
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-28187523-1']);
   _gaq.push(['_trackPageview']);
@@ -79,7 +80,7 @@
       <div id="price">
         <h2>料金表</h2>
         <p>
-          
+
           <table id="price_main">
             <tr>
               <th>300gx4パック</th>
@@ -112,6 +113,11 @@
           お支払いにつきましては、ご依頼主様に郵便振替用紙を発送致します。
         </p>
       </div>
+      <div id="map">
+        <h2>アクセス</h2>
+        <p>八女ICより約20分</p>
+        <div id="mapCanvas"></div>
+      </div>
       <div id="inquiry">
         <h2>ご注文・ご予約・お問合わせ</h2>
         <p>
@@ -131,5 +137,25 @@
         </p>
       </div>
     </div>
+    <script>
+      var place = new google.maps.LatLng(33.226285,130.469019);
+      var map = new google.maps.Map(
+        document.getElementById('mapCanvas'),
+        {
+          center: place,
+          zoom: 12,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+      );
+      new google.maps.DirectionsService().route({
+        origin: '33.209034,130.519423',
+        destination: place,
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
+      }, function(result, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          new google.maps.DirectionsRenderer({map: map}).setDirections(result);
+        }
+      });
+    </script>
   </body>
 </html>
