@@ -151,15 +151,14 @@
           mapTypeId: google.maps.MapTypeId.ROADMAP
         }
       );
-      new google.maps.DirectionsService().route({
-        origin: '33.209034,130.519423',
-        destination: place,
-        travelMode: google.maps.DirectionsTravelMode.DRIVING
-      }, function(result, status) {
-        if (status == google.maps.DirectionsStatus.OK) {
-          new google.maps.DirectionsRenderer({map: map}).setDirections(result);
-        }
+
+      var marker = new google.maps.Marker({
+        position: place,
+        map: map,
+        title: '津留邦政いちご園'
       });
+      var kmlLayer = new google.maps.KmlLayer('http://www.tsuru-strawberry-farm.com/route.kml').setMap(map);
+
     </script>
   </body>
 </html>
