@@ -114,8 +114,3 @@ a:hover {
     font-size: 1.2em;
     padding: 5px;
 }
-
-#mapCanvas {
-    height: 300px;
-    width: 100%;
-}
