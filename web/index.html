@@ -6,8 +6,9 @@
     <title>津留邦政いちご園</title>
     <meta property="og:image" content="http://www.tsuru-strawberry-farm.com/img/facebook-img01.jpg">
     <link rel="shortcut icon" href="/favicon.ico">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" ></script>
-    <script type="text/javascript">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script>
+    <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <script>
       function slideSwitch() {
       var $active = $('#photo img.active');
       if ( $active.length == 0 ) $active = $('#photo img:last');
@@ -24,25 +25,23 @@
       });
     </script>
     <script type="text/javascript">
+      window.___gcfg = {lang: 'ja'};
 
- window.___gcfg = {lang: 'ja'};
+       (function() {
+         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+         po.src = 'https://apis.google.com/js/plusone.js';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+       })();
 
-  (function() {
-    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-    po.src = 'https://apis.google.com/js/plusone.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-  })();
-      
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-28187523-1']);
-  _gaq.push(['_trackPageview']);
+       var _gaq = _gaq || [];
+       _gaq.push(['_setAccount', 'UA-28187523-1']);
+       _gaq.push(['_trackPageview']);
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+       (function() {
+         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+       })();
     </script>
   </head>
   <body>
@@ -56,6 +55,7 @@
         <div id="discription">
           <h1>津留邦政いちご園の<br />有機肥料栽培いちご</h1>
           <p>“豊かさを味わう”という時代のニーズにお答えする為、肥料は、油粕、米ヌカ、魚粉等12種類に及ぶ有機質を使用し、いちごが健康に育つ様に、黒砂糖、ニッケ、イオウ等 自然界に存在するものを散布しております。 早朝より一粒、一粒良いものだけを、厳選してお届け致します。</p>
+          <a href="2012tanabata.html"><img src="2012tanabata-bnr.jpg" /></a>
         </div>
       </div>
       <div>
@@ -70,13 +70,15 @@
             <td>
               <g:plusone size="medium"></g:plusone>
             </td>
+            <td>
+              <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="standard" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+            </td>
           </tr>
         </table>
       </div>
       <div id="price">
         <h2>料金表</h2>
         <p>
-          
           <table id="price_main">
             <tr>
               <th>300gx4パック</th>
@@ -109,6 +111,13 @@
           お支払いにつきましては、ご依頼主様に郵便振替用紙を発送致します。
         </p>
       </div>
+      <div id="map">
+        <h2>アクセス</h2>
+        <p>
+        住所：福岡県筑後市大字西牟田２８２１−２ （八女ICより約20分）
+        </p>
+        <div id="mapCanvas"></div>
+      </div>
       <div id="inquiry">
         <h2>ご注文・ご予約・お問合わせ</h2>
         <p>
@@ -128,5 +137,22 @@
         </p>
       </div>
     </div>
+    <script>
+      var place = new google.maps.LatLng(33.226285,130.469019);
+      var map = new google.maps.Map(
+        document.getElementById('mapCanvas'),
+        {
+          center: place,
+          zoom: 12,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+      );
+      var marker = new google.maps.Marker({
+        position: place,
+        map: map,
+        title: '津留邦政いちご園'
+      });
+      var kmlLayer = new google.maps.KmlLayer('http://www.tsuru-strawberry-farm.com/route.kml').setMap(map);
+    </script>
   </body>
 </html>
