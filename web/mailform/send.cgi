@@ -18,10 +18,10 @@ $conf{'spam_block'} = 1;
 $conf{'sendmail'} = '/usr/sbin/sendmail';
 
 #06.設置者のアドレス(カンマ区切り)
-$conf{'mailto'} = 'horai@hu-connect.co.jp';
+$conf{'mailto'} = 'tsuruichigoen@herb.ocn.ne.jp';
 
 #07.送信完了時にリダイレクトするサンクスページ
-$conf{'thanks'} = 'http://cgi.synck.com/mailform/thanks.html';
+$conf{'thanks'} = 'http://www.tsuru-strawberry-farm.com/?is_thanks=1';
 
 #08.設置者に届くメールの件名
 $conf{'subject'} = 'サイトメールフォームから';
