@@ -164,7 +164,6 @@ a:hover{color:#FF0;}
 
 /*sns*/
 .button_google{
-float: right;
 width: 33px;
 margin-right:10px;
 }
@@ -172,11 +171,9 @@ margin-right:10px;
 .twitter-share-button{
 width: 90px !important;
 vertical-align: top !important;
-float: right;
 }
 
 .fb-like{
-float: right !important;
 width:98px;
 }
 
