@@ -2,16 +2,16 @@ RewriteEngine On
 
 # iPod
 RewriteCond %{HTTP_USER_AGENT} iPod
-RewriteRule ^$ /sp/index.html [R]
+RewriteRule ^$ http://www.tsuru-strawberry-farm.com/sp/index.html [R]
 
 # iPhone
 RewriteCond %{HTTP_USER_AGENT} iPhone
-RewriteRule ^$ /sp/index.html [R]
+RewriteRule ^$ http://www.tsuru-strawberry-farm.com/sp/index.html [R]
 
 # WILLCOM
 RewriteCond %{HTTP_USER_AGENT} PDA
-RewriteRule ^$ /sp/index.html [R]
+RewriteRule ^$ http://www.tsuru-strawberry-farm.com/sp/index.html [R]
 
 # Android
 RewriteCond %{HTTP_USER_AGENT} Android
-RewriteRule ^$ /sp/index.html [R]
+RewriteRule ^$ http://www.tsuru-strawberry-farm.com/sp/index.html [R]
