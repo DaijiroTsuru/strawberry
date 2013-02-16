@@ -1,17 +1,11 @@
-RewriteEngine On
+RewriteEngine on
 
-# iPod
-RewriteCond %{HTTP_USER_AGENT} iPod
-RewriteRule ^$ http://www.tsuru-strawberry-farm.com/sp/index.html [R]
+RewriteCond %{REQUEST_URI} !/sp/
+RewriteCond %{HTTP_USER_AGENT} (iPod|iPhone|iPad|Android|Windows\ Phone)
+RewriteRule ^(.*)$ sp/$1 [R]
+RewriteBase /
 
-# iPhone
-RewriteCond %{HTTP_USER_AGENT} iPhone
-RewriteRule ^$ http://www.tsuru-strawberry-farm.com/sp/index.html [R]
-
-# WILLCOM
-RewriteCond %{HTTP_USER_AGENT} PDA
-RewriteRule ^$ http://www.tsuru-strawberry-farm.com/sp/index.html [R]
-
-# Android
-RewriteCond %{HTTP_USER_AGENT} Android
-RewriteRule ^$ http://www.tsuru-strawberry-farm.com/sp/index.html [R]
+RewriteCond %{REQUEST_URI} /sp/
+RewriteCond %{HTTP_USER_AGENT} !(iPod|iPhone|iPad|Android|Windows\ Phone)
+RewriteRule ^sp/(.*)$ $1 [R]
+RewriteBase /
