@@ -1,0 +1,17 @@
+RewriteEngine On
+
+# iPod
+RewriteCond %{HTTP_USER_AGENT} iPod
+RewriteRule ^$ /sp/ [R,L]
+
+# iPhone
+RewriteCond %{HTTP_USER_AGENT} iPhone
+RewriteRule ^$ /sp/ [R,L]
+
+# WILLCOM
+RewriteCond %{HTTP_USER_AGENT} PDA
+RewriteRule ^$ /sp/ [R,L]
+
+# Android
+RewriteCond %{HTTP_USER_AGENT} Android
+RewriteRule ^$ /sp/ [R,L]
