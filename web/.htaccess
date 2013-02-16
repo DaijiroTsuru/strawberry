@@ -1,11 +1,11 @@
-RewriteEngine on
+RewriteEngine On
 
-RewriteCond %{REQUEST_URI} !/sp/
-RewriteCond %{HTTP_USER_AGENT} (iPod|iPhone|iPad|Android|Windows\ Phone)
-RewriteRule ^(.*)$ sp/$1 [R]
-RewriteBase /
+# Set enviroment value by user-agent
+SetEnvIf User-Agent "iPhone" UA=sp
+SetEnvIf User-Agent "iPod" UA=sp
+SetEnvIf User-Agent "Android" UA=sp
 
-RewriteCond %{REQUEST_URI} /sp/
-RewriteCond %{HTTP_USER_AGENT} !(iPod|iPhone|iPad|Android|Windows\ Phone)
-RewriteRule ^sp/(.*)$ $1 [R]
-RewriteBase /
+# Redirect if smart phone
+RewriteCond %{REQUEST_URI} !^/sp.*
+RewriteCond %{ENV:UA} ^sp$
+RewriteRule ^(.*)$ /sp/ [R,L]
