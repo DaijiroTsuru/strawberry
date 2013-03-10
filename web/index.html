@@ -21,6 +21,8 @@ if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('i
 }
 </script>
 
+<link rel="stylesheet" href="js/lightbox/css/ceebox.css" type="text/css" media="screen">
+
 </head>
 <body>
 <!--header-->
@@ -52,7 +54,7 @@ if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('i
 <!--top-->
 <div class="contents-bgstart" id="top">
   <div class="contents-inbox clearfix">
-    <p class="line_center"><img src="img/top-mainimg.png" alt="津留邦政いちご園" width="570" height="540"></p>
+    <p class="line_center ceebox"><a href="http://www.youtube.com/watch?v=I8I8PZ2jPuY" title="津留邦政いちご園（多分）公式CM" ><img src="img/top-mainimg.png" alt="津留邦政いちご園" width="570" height="540"></a></p>
   </div>
 </div>
 <!--top-->
@@ -66,7 +68,7 @@ if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('i
         <div id="gari-left"><img src="img/concept-img02.jpg" width="185" height="124"></div>
         <div id="gari-right">
           <p class="margin_b15px">有機質の栄養をたっぷり含んだ土の力でいちごを健康的に育てるために、津留邦政いちご園では<span class="font_bold">土耕栽培</span>にこだわっていちごを育てています。</p>
-           <p>この土から育ついちごは有名ブランド<strong>「かおり野」「紅ほっぺ」「とちおとめ」</strong>。大地の力をたっぷり吸った大粒でとても甘い当園のいちごは、贈答用の品としても大変ご好評を頂いています。</p></div>
+           <p>この土から育ついちごは有名ブランド<strong>「かおり野」「紅ほっぺ」</strong>。大地の力をたっぷり吸った大粒でとても甘い当園のいちごは、贈答用の品としても大変ご好評を頂いています。</p></div>
       </div>
 
     <!--contact-->
@@ -456,6 +458,20 @@ _gaq.push(['_trackPageview']);
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 </script>
+
+
+
+<!--lightbox-->
+<script type="text/javascript" src="js/lightbox/js/jquery.swfobject.js"></script>
+<script type="text/javascript" src="js/lightbox/js/jquery.ceebox.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+$(".contents-inbox").ceebox();
+});
+</script>
+
+
+
 <!--mail-->
 <!--
 <link rel="stylesheet" href="mailform/mailform.css" type="text/css">
