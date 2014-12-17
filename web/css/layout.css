@@ -178,8 +178,7 @@ z-index: 999999;
 
 .sell-table{
 	width:610px;
-	border-top:1px solid #CCC;
-	border-bottom:1px solid #CCC;
+	border:1px solid #CCC;
 	border-collapse:collapse;
 }
 .sell-table th{
