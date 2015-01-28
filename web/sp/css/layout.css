@@ -284,3 +284,64 @@ body{
 
 
 
+/*kome*/
+
+#kome-table{
+	width:100%;
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	margin-bottom:20px;
+}
+#kome-table th{
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	padding:5px;
+}
+#kome-table th.title{
+	width:150px;
+}
+#kome-table th.sub{
+	background:#E6E6E6;
+}
+#kome-table th.tsuru{
+	background:#F90;
+	border:2px solid #F00;
+}
+#kome-table td{
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	padding:5px;
+	text-align:center;
+}
+#kome-table td.tsuru{
+	font-weight:bold;
+	border:2px solid #F00;
+}
+
+#kome-info{
+	margin:0 0 30px 0;
+	padding:0;
+}
+#kome-info li{
+	margin-bottom:5px;
+}
+
+#kome-price01{
+	width:100%;
+	border-collapse:collapse;
+	border:1px solid #ccc;
+}
+#kome-price01 th{
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	padding:5px;
+	background:#E6E6E6;
+}
+#kome-price01 td{
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	padding:5px;
+	text-align:center;
+}
+
+

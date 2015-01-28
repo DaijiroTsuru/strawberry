@@ -7,7 +7,6 @@ body{
 	background:url(../img/header-bg.png) repeat-x;
 position: fixed;
 width:100%;
-z-index: 999999;
 }
 
 
@@ -142,18 +141,20 @@ z-index: 999999;
 
 .gari-price-right table{
 	width:480px;
-	border-top:1px solid #CCC;
-	border-bottom:1px solid #CCC;
+	border:1px solid #CCC;
 	border-collapse:collapse;
 }
 .gari-price-right table th{
 	width:33%;
 	padding:7px 0 7px 0;
-	border-bottom:1px solid #CCC;
+	border:1px dotted #CCC;
+	border-bottom:1px solid #ccc;
+	background:#EFEFEF;
 }
 .gari-price-right table td{
 	padding:7px 0 7px 0;
-	border-bottom:1px dotted #ccc;
+	border:1px dotted #CCC;
+	border-bottom:1px solid #ccc;
 	text-align:center;
 }
 
@@ -164,11 +165,11 @@ z-index: 999999;
 
 
 .sell-photo01{
-	width:280px;
+	width:286px;
 	float:left;
 }
 .sell-photo02{
-	width:280px;
+	width:286px;
 	float:right;
 }
 .sell-photo01 img,.sell-photo02 img{
@@ -178,21 +179,19 @@ z-index: 999999;
 
 .sell-table{
 	width:610px;
-	border-top:1px solid #CCC;
-	border-bottom:1px solid #CCC;
+	border:1px solid #CCC;
 	border-collapse:collapse;
 }
 .sell-table th{
 	width:80px;
 	padding:7px 0 7px 0;
-	border-bottom:1px solid #CCC;
-	border-left:1px solid #CCC;
+	border:1px solid #CCC;
 }
 .sell-table td{
 	padding:7px 0 7px 0;
-	border-bottom:1px dotted #ccc;
 	text-align:center;
-	border-left:1px dotted #CCC;
+	background:#fefefe;
+	border:1px solid #CCC;
 }
 
 
@@ -258,3 +257,63 @@ z-index: 999999;
 
 
 
+/*kome*/
+
+
+#kome-table{
+	width:100%;
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	margin-bottom:20px;
+}
+#kome-table th{
+	width:150px;
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	padding:5px;
+}
+#kome-table th.title{
+	width:255px;
+}
+#kome-table th.sub{
+	background:#E6E6E6;
+}
+#kome-table th.tsuru{
+	background:#F90;
+	border:2px solid #F00;
+}
+#kome-table td{
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	padding:5px;
+	text-align:center;
+}
+#kome-table td.tsuru{
+	font-weight:bold;
+	border:2px solid #F00;
+}
+
+#kome-info{
+	margin:0 0 10px 20px;
+}
+#kome-info li{
+	margin-bottom:5px;
+}
+
+#kome-price01{
+	width:100%;
+	border-collapse:collapse;
+	border:1px solid #ccc;
+}
+#kome-price01 th{
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	padding:5px;
+	background:#E6E6E6;
+}
+#kome-price01 td{
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	padding:5px;
+	text-align:center;
+}

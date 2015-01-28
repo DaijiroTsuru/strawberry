@@ -128,7 +128,7 @@ a:hover{color:#FF0;}
 
 #mainmenu li,#mainmenu a{
   display: block;
-  width: 160px;
+  width: 136px;
   height:123px;
   float: left;
 }
@@ -145,19 +145,20 @@ a:hover{color:#FF0;}
 
 
 #mainmenu li.menu01 a { background-position: 0px 0px;}
-#mainmenu li.menu02 a { background-position: -160px 0px ;}
-#mainmenu li.menu03 a { background-position: -320px 0px ;}
-#mainmenu li.menu04 a { background-position: -480px 0px ;}
-#mainmenu li.menu05 a { background-position: -640px 0px ;}
-#mainmenu li.menu06 a { background-position: -800px 0px ;}
+#mainmenu li.menu02 a { background-position: -136px 0px ;}
+#mainmenu li.menu03 a { background-position: -272px 0px ;}
+#mainmenu li.menu04 a { background-position: -408px 0px ;}
+#mainmenu li.menu05 a { background-position: -544px 0px ;}
+#mainmenu li.menu06 a { background-position: -680px 0px ;}
+#mainmenu li.menu07 a { background-position: -816px 0px ;width:144px !important;}
 
 #mainmenu li.menu01 a:hover { background-position: 0px -123px ;}
-#mainmenu li.menu02 a:hover { background-position: -160px -123px ;}
-#mainmenu li.menu03 a:hover { background-position: -320px -123px ;}
-#mainmenu li.menu04 a:hover { background-position: -480px -123px ;}
-#mainmenu li.menu05 a:hover { background-position: -640px -123px ;}
-#mainmenu li.menu06 a:hover { background-position: -800px -123px ;}
-
+#mainmenu li.menu02 a:hover { background-position: -136px -123px ;}
+#mainmenu li.menu03 a:hover { background-position: -272px -123px ;}
+#mainmenu li.menu04 a:hover { background-position: -408px -123px ;}
+#mainmenu li.menu05 a:hover { background-position: -544px -123px ;}
+#mainmenu li.menu06 a:hover { background-position: -680px -123px ;}
+#mainmenu li.menu07 a:hover { background-position: -816px -123px ;}
 
 
 
