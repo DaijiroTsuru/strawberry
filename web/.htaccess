@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Set enviroment value by user-agent
+SetEnvIf User-Agent "iPhone" UA=sp
+SetEnvIf User-Agent "iPod" UA=sp
+SetEnvIf User-Agent "Android" UA=sp
+
+# Redirect if smart phone
+RewriteCond %{REQUEST_URI} !^/sp.*
+RewriteCond %{ENV:UA} ^sp$
+RewriteRule ^(.*)$ /sp/ [R,L]
