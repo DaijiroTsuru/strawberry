@@ -21,7 +21,7 @@ if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('i
 }
 </script>
 
-<link rel="stylesheet" href="js/lightbox/css/ceebox.css" type="text/css" media="screen">
+<link rel="stylesheet" href="js/colorbox/colorbox.css">
 
 </head>
 <body>
@@ -55,7 +55,7 @@ if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('i
 <!--top-->
 <div class="contents-bgstart" id="top">
   <div class="contents-inbox clearfix">
-    <p class="line_center ceebox"><a href="http://www.youtube.com/watch?v=I8I8PZ2jPuY" title="津留いちご園（多分）公式CM" ><img src="img/top-mainimg.png" alt="津留いちご園" width="570" height="540"></a></p>
+    <p class="line_center ceebox"><a href="http://www.youtube.com/watch?v=I8I8PZ2jPuY" class="youtube" title="津留いちご園（多分）公式CM" ><img src="img/top-mainimg.png" alt="津留いちご園" width="570" height="540"></a></p>
   </div>
 </div>
 <!--top-->
@@ -767,13 +767,69 @@ _gaq.push(['_trackPageview']);
 
 
 
-<!--lightbox-->
-<script type="text/javascript" src="js/lightbox/js/jquery.swfobject.js"></script>
-<script type="text/javascript" src="js/lightbox/js/jquery.ceebox.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-$(".contents-inbox").ceebox();
+<!--colorbox-->
+<script src="js/colorbox/jquery.colorbox-min.js"></script>
+<script>
+//画像単体
+$(function() {
+	$(".single").colorbox({
+		maxWidth:"90%",
+		maxHeight:"90%",
+		opacity: 0.7
+	});
 });
+
+//スライドショー
+$(function() {
+	$(".gallery").colorbox({
+		rel:'slideshow',
+		slideshow:true,
+		slideshowSpeed:3000,
+		maxWidth:"90%",
+		maxHeight:"90%",
+		opacity: 0.7
+	});
+});
+
+//インライン
+$(function() {
+	$(".inline").colorbox({
+		inline:true,
+		maxWidth:"90%",
+		maxHeight:"90%",
+		opacity: 0.7
+	});
+});
+
+//iframe
+$(function() {
+	$(".iframe").colorbox({
+		iframe:true,
+		width:"80%",
+		height:"80%",
+		opacity: 0.7
+	});
+});
+
+//ajax
+$(function() {
+	$(".ajax").colorbox({
+		maxWidth:"80%",
+		maxHeight:"80%",
+		opacity: 0.7
+	});
+});
+
+//youtube
+$(function() {
+    $(".youtube").colorbox({
+        iframe:true,
+		maxWidth:"80%",
+		maxHeight:"80%"
+    });
+});
+
+
 </script>
 
 
