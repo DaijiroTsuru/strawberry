@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<kml xmlns="https://www.opengis.net/kml/2.2" xmlns:atom="https://www.w3.org/2005/Atom">
 <Document>
 <name>津留邦正いちご園</name>
 <atom:author>
 <atom:name></atom:name>
 </atom:author> 
-<atom:link href="http://latlonglab.yahoo.co.jp/route/watch?id=8aa622396a72f638c21925e53e97f938" />
+<atom:link href="https://latlonglab.yahoo.co.jp/route/watch?id=8aa622396a72f638c21925e53e97f938" />
 <description><![CDATA[]]></description> 
 <Placemark>
 <Style>

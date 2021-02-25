@@ -1,4 +1,4 @@
-http://www.tsuru-strawberry-farm.com/
+https://www.tsuru-strawberry-farm.com/
 ---
 
 # リリース方法
