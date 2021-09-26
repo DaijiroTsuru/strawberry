@@ -70,7 +70,16 @@ body{
 	margin:15px auto 15px auto;
 }
 
-
+.content-header {
+	padding: 1em;
+    background-clip: border-box;
+    background-color: rgb(247, 244, 244);
+    border-left-style: solid;
+    border-left-color: #c10000;
+    border-left-width: thick;
+    box-shadow: 0 0 1px 1px #00000017;
+    color: #333;
+}
 
 
 
