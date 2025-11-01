@@ -59,6 +59,7 @@ body{
 	margin:0 auto;
 	box-sizing:border-box;
 	padding:0 16px;
+	overflow-x:hidden;
 }
 .contents-inbox-in{
 	width:100%;
@@ -66,6 +67,7 @@ body{
 	margin:0 auto;
 	box-sizing:border-box;
 	padding:0 8px;
+	overflow-x:hidden;
 }
 .contents-inbox-in2{
 	width:100%;
@@ -73,6 +75,7 @@ body{
 	margin:0 auto;
 	box-sizing:border-box;
 	padding:0 4px;
+	overflow-x:hidden;
 }
 
 .content-header {
@@ -263,10 +266,17 @@ body{
 }
 
 /* 画像はコンテナ幅に合わせて縮小 */
-img{max-width:100%;height:auto;}
+img{max-width:100%;height:auto;display:block;}
 
 /* テーブル横スクロールラッパ */
 .table-responsive{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:15px;}
+
+/* テーブルのスマホ対応 */
+@media (max-width:560px){
+	table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;}
+	.sell-table,.gari-price-right table{font-size:0.85em;}
+	#kome-table{font-size:0.8em;}
+}
 
 /* メニューを小画面で縦積みテキスト化 */
 @media (max-width:780px){
@@ -284,11 +294,16 @@ img{max-width:100%;height:auto;}
 	.photo-bg01,.photo-bg02,.photo-bg03,#gari-left,#gari-right,.sell-photo01,.sell-photo02,#footer-left,#footer-right{float:none;width:100% !important;text-align:center;}
 	.photo-bg01 img,.photo-bg02 img,.photo-bg03 img{width:100%;height:auto;}
 	.gari-price-right table{width:100%;}
-	.contact{width:100%;}
+	.gari-price-left,.gari-price-right{float:none !important;width:100% !important;max-width:100% !important;margin:0 auto 15px !important;}
+	.gari-price-left img{max-width:150px;margin:0 auto;}
+	.contact{width:100%;padding:15px;}
 	#header-right{width:100%;float:none;text-align:center;}
-	#header-left{float:none;text-align:center;}
+	#header-left{float:none;text-align:center;width:100%;}
 	.contact-left,.contact-right{float:none;width:100%;margin:0 0 15px 0;}
 	.contents-bgstart,.contents-bg{padding-top:40px;}
+	.contents-inbox,.contents-inbox-in,.contents-inbox-in2{padding:0 12px;}
+	table{font-size:0.9em;}
+	.flex-gallery > div > p{width:100%;flex:1 1 100%;}
 }
 #footer-left{
 	width:350px;
@@ -431,6 +446,11 @@ img{max-width:100%;height:auto;}
 @media (max-width:560px){
 	.flex-row{gap:16px;}
 	.flex-row > *{flex:1 1 100%;text-align:center;}
+	.flex-row > #gari-left{max-width:100%;}
+	.flex-row > #gari-left img{max-width:200px;margin:0 auto;}
+	.flex-row > .gari-price-left{max-width:100%;text-align:center;}
+	.flex-row > .gari-price-left img{max-width:150px;margin:0 auto;}
+	.flex-row > .contact-left,.flex-row > .contact-right{max-width:100%;margin:0 0 15px 0 !important;}
 }
 @media (min-width:781px){
 	.flex-gallery img{padding:4px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.1);border-radius:4px;}
