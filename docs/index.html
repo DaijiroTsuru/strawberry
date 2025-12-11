@@ -19,7 +19,15 @@
   <!-- モバイル専用ページ廃止のためUA判定による /sp/ リダイレクトを削除 -->
 
   <link rel="stylesheet" href="js/colorbox/colorbox.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V0M4G7XVPQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
+    gtag('config', 'G-V0M4G7XVPQ');
+  </script>
 </head>
 
 <body>
@@ -1188,15 +1196,6 @@
         title: '津留いちご園'
       });
       var kmlLayer = new google.maps.KmlLayer('https://www.tsuru-strawberry-farm.com/route.kml').setMap(map);
-    </script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V0M4G7XVPQ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-
-      gtag('config', 'G-V0M4G7XVPQ');
     </script>
 
 
