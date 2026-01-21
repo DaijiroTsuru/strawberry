@@ -9,4 +9,5 @@ Thumbs.db
 .hg
 .svn
 .#*
-
+node_modules
+dist
