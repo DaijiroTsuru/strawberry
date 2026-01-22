@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { ShoppingCart, Menu, X } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
@@ -23,10 +24,10 @@ export function Header() {
   }, []);
 
   const navItems = [
-    { label: 'ホーム', href: '#' },
-    { label: '商品', href: '#products' },
-    { label: '農園について', href: '#about' },
-    { label: 'アクセス', href: '#access' },
+    { label: 'ホーム', href: '/' },
+    { label: '商品', href: '/#products' },
+    { label: '農園について', href: '/#about' },
+    { label: 'アクセス', href: '/#access' },
   ];
 
   return (
@@ -41,7 +42,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-20 lg:h-24">
           {/* ロゴ */}
-          <a href="#" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group">
             <div 
               className="w-11 h-11 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
               style={{ 
@@ -74,7 +75,7 @@ export function Header() {
                 TSURU STRAWBERRY FARM
               </span>
             </div>
-          </a>
+          </Link>
 
           {/* デスクトップナビゲーション */}
           <nav className="hidden md:flex items-center gap-10">

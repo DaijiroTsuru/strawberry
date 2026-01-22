@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { Sparkles, Package, ShoppingCart, ArrowLeft, Check, AlertCircle } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
@@ -52,14 +53,14 @@ export function StrawberriesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <a
-              href="/"
+            <Link
+              to="/"
               className="inline-flex items-center gap-2 mb-8 transition-colors duration-300"
               style={{ color: 'var(--color-neutral-600)', fontFamily: 'var(--font-sans)' }}
             >
               <ArrowLeft className="w-5 h-5" />
               <span>ホームに戻る</span>
-            </a>
+            </Link>
 
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ background: 'linear-gradient(135deg, var(--color-strawberry-100) 0%, var(--color-strawberry-200) 100%)', border: '1px solid var(--color-strawberry-300)' }}>
               <Sparkles className="w-4 h-4" style={{ color: 'var(--color-strawberry-700)' }} />
@@ -243,8 +244,9 @@ export function StrawberriesPage() {
                         </button>
 
                         {/* 詳細を見るボタン */}
-                        <a
-                          href={`/product/${product.handle}`}
+                        <Link
+                          to="/product/$handle"
+                          params={{ handle: product.handle }}
                           className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-full transition-all duration-300 border-2"
                           style={{ 
                             borderColor: 'var(--color-strawberry-600)',
@@ -253,16 +255,10 @@ export function StrawberriesPage() {
                             fontWeight: 600,
                             background: 'white'
                           }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'var(--color-strawberry-50)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'white';
-                          }}
                         >
                           <span>詳細を見る</span>
                           <ArrowLeft className="w-4 h-4 rotate-180" />
-                        </a>
+                        </Link>
                       </div>
 
                       {/* エラー表示 */}

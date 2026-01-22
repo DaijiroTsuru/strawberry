@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link, useParams } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { ShoppingCart, Check, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
@@ -12,6 +13,7 @@ import { fetchProductByHandle, ShopifyProduct, formatPrice } from '@/utils/shopi
  * /product/strawberry-500g
  */
 export function ProductByHandlePage() {
+  const { handle } = useParams({ from: '/product/$handle' });
   const [product, setProduct] = useState<ShopifyProduct | null>(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,10 +23,6 @@ export function ProductByHandlePage() {
   useEffect(() => {
     const loadProduct = async () => {
       try {
-        // URLからhandleを取得
-        const pathParts = window.location.pathname.split('/');
-        const handle = pathParts[pathParts.length - 1];
-        
         if (handle) {
           const data = await fetchProductByHandle(handle);
           setProduct(data);
@@ -36,7 +34,7 @@ export function ProductByHandlePage() {
       }
     };
     loadProduct();
-  }, []);
+  }, [handle]);
 
   const handleAddToCart = async () => {
     if (!product) return;
@@ -75,8 +73,8 @@ export function ProductByHandlePage() {
           <p className="text-xl mb-4" style={{ color: 'var(--color-neutral-600)' }}>
             商品が見つかりませんでした
           </p>
-          <a
-            href="/strawberries"
+          <Link
+            to="/strawberries"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full"
             style={{ 
               background: 'var(--color-strawberry-600)', 
@@ -86,7 +84,7 @@ export function ProductByHandlePage() {
           >
             <ArrowLeft className="w-5 h-5" />
             商品一覧に戻る
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -108,14 +106,14 @@ export function ProductByHandlePage() {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <a
-            href="/strawberries"
+          <Link
+            to="/strawberries"
             className="inline-flex items-center gap-2 transition-colors duration-300"
             style={{ color: 'var(--color-neutral-600)', fontFamily: 'var(--font-sans)' }}
           >
             <ArrowLeft className="w-5 h-5" />
             <span>商品一覧に戻る</span>
-          </a>
+          </Link>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-12">

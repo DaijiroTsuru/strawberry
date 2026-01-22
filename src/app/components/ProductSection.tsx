@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { ArrowRight, Apple, Cookie, Soup, Sparkles } from 'lucide-react';
 
@@ -12,7 +13,7 @@ export function ProductSection() {
       gradient: 'linear-gradient(135deg, var(--color-strawberry-500) 0%, var(--color-strawberry-600) 100%)',
       bgGradient: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)',
       image: 'https://images.unsplash.com/photo-1464454709131-ffd692591ee5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      link: '#strawberries'
+      link: '/strawberries'
     },
     {
       id: 'strawberry-picking',
@@ -23,7 +24,7 @@ export function ProductSection() {
       gradient: 'linear-gradient(135deg, var(--color-strawberry-500) 0%, var(--color-strawberry-600) 100%)',
       bgGradient: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)',
       image: 'https://images.unsplash.com/photo-1518635017498-87f514b751ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      link: '#strawberry-picking'
+      link: '/strawberry-picking'
     },
     {
       id: 'rice',
@@ -34,7 +35,7 @@ export function ProductSection() {
       gradient: 'linear-gradient(135deg, var(--color-leaf-500) 0%, var(--color-leaf-600) 100%)',
       bgGradient: 'linear-gradient(135deg, var(--color-leaf-50) 0%, var(--color-leaf-100) 100%)',
       image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      link: '#rice'
+      link: '/rice'
     },
     {
       id: 'mochi',
@@ -45,7 +46,7 @@ export function ProductSection() {
       gradient: 'linear-gradient(135deg, hsl(30, 70%, 60%) 0%, hsl(30, 70%, 50%) 100%)',
       bgGradient: 'linear-gradient(135deg, hsl(30, 80%, 90%) 0%, hsl(30, 80%, 85%) 100%)',
       image: 'https://images.unsplash.com/photo-1609501676725-7186f017a4b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      link: '#mochi'
+      link: '/mochi'
     },
     {
       id: 'miso',
@@ -56,7 +57,7 @@ export function ProductSection() {
       gradient: 'linear-gradient(135deg, hsl(35, 60%, 55%) 0%, hsl(35, 60%, 45%) 100%)',
       bgGradient: 'linear-gradient(135deg, hsl(35, 65%, 90%) 0%, hsl(35, 65%, 85%) 100%)',
       image: 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      link: '#miso'
+      link: '/miso'
     },
   ];
 
@@ -119,16 +120,18 @@ export function ProductSection() {
 
         <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
           {productCategories.map((category, index) => (
-            <motion.a
+            <Link
               key={category.id}
-              href={category.link}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="group block relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
-              style={{ aspectRatio: '16/10' }}
+              to={category.link}
             >
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                className="group block relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
+                style={{ aspectRatio: '16/10' }}
+              >
               {/* 背景画像 */}
               <div className="absolute inset-0">
                 <img
@@ -180,7 +183,8 @@ export function ProductSection() {
                   <ArrowRight className="w-5 h-5" />
                 </div>
               </div>
-            </motion.a>
+            </motion.div>
+            </Link>
           ))}
         </div>
 

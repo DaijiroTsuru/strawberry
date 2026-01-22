@@ -83,7 +83,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <a 
-                  href="#" 
+                  href="/" 
                   className="transition-colors duration-300"
                   style={{ 
                     color: 'var(--color-neutral-400)',
@@ -92,45 +92,6 @@ export function Footer() {
                   }}
                 >
                   ホーム
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="#products" 
-                  className="transition-colors duration-300"
-                  style={{ 
-                    color: 'var(--color-neutral-400)',
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: '0.95rem'
-                  }}
-                >
-                  商品
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="#about" 
-                  className="transition-colors duration-300"
-                  style={{ 
-                    color: 'var(--color-neutral-400)',
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: '0.95rem'
-                  }}
-                >
-                  農園について
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="#access" 
-                  className="transition-colors duration-300"
-                  style={{ 
-                    color: 'var(--color-neutral-400)',
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: '0.95rem'
-                  }}
-                >
-                  アクセス
                 </a>
               </li>
             </ul>

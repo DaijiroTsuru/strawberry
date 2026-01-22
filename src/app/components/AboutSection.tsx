@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Heart, Leaf, Award, Sprout } from 'lucide-react';
+import { Leaf, Award, Sprout } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
 
 export function AboutSection() {
@@ -109,22 +109,6 @@ export function AboutSection() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="mt-10"
             >
-              <a
-                href="#products"
-                className="group inline-flex items-center gap-2 px-8 py-4 rounded-full transition-all duration-300 relative overflow-hidden"
-                style={{
-                  background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
-                  fontFamily: 'var(--font-sans)',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  boxShadow: '0 4px 16px rgba(220, 38, 38, 0.25)',
-                  letterSpacing: '0.03em'
-                }}
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-[color:var(--color-strawberry-700)] to-[color:var(--color-strawberry-800)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                <span className="text-white relative z-10">商品を見る</span>
-                <span className="text-white relative z-10 group-hover:translate-x-1 transition-transform duration-300">→</span>
-              </a>
             </motion.div>
           </motion.div>
 
