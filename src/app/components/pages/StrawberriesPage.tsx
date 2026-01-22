@@ -1,9 +1,43 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Sparkles, Package, Calendar, ShoppingCart, ArrowLeft } from 'lucide-react';
-import { FARM_INFO, PRODUCTS } from '@/app/constants/farmInfo';
+import { Sparkles, Package, ShoppingCart, ArrowLeft, Check, AlertCircle } from 'lucide-react';
+import { FARM_INFO } from '@/app/constants/farmInfo';
+import { useCart } from '@/app/contexts/CartContext';
+import { fetchProductsByCollectionId, ShopifyProduct, formatPrice } from '@/utils/shopify';
+
+// CollectionID: 486373589215 から商品を取得
+const STRAWBERRY_COLLECTION_ID = '486373589215';
 
 export function StrawberriesPage() {
-  const strawberryProducts = PRODUCTS.strawberries;
+  const [products, setProducts] = useState<ShopifyProduct[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [addedToCart, setAddedToCart] = useState<string | null>(null);
+  const { addToCart, isLoading: isAddingToCart, error: cartError } = useCart();
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        // Collection IDから商品を取得
+        const shopifyProducts = await fetchProductsByCollectionId(STRAWBERRY_COLLECTION_ID, 20);
+        setProducts(shopifyProducts);
+      } catch (error) {
+        console.error('Failed to load products:', error);
+      } finally {
+        setIsLoadingProducts(false);
+      }
+    };
+    loadProducts();
+  }, []);
+
+  const handleAddToCart = async (variantId: string, productId: string) => {
+    try {
+      await addToCart(variantId, 1);
+      setAddedToCart(productId);
+      setTimeout(() => setAddedToCart(null), 3000);
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -112,88 +146,138 @@ export function StrawberriesPage() {
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {strawberryProducts.map((product, index) => {
-              // 商品画像の設定
-              const productImages = [
-                'https://images.unsplash.com/photo-1551280769-56782ff097bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaXVtJTIwc3RyYXdiZXJyeSUyMGJveCUyMGdpZnR8ZW58MXx8fHwxNzY4OTc2MTQ2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-                'https://images.unsplash.com/photo-1752149610530-b2b33a9e5bec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMHN0cmF3YmVycmllcyUyMHBhY2thZ2V8ZW58MXx8fHwxNzY4OTc2MTQ2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-                'https://images.unsplash.com/photo-1656256793479-73199141e777?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHJhd2JlcnJpZXMlMjBjb250YWluZXIlMjBwYWNrfGVufDF8fHx8MTc2ODk3NjE0Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-                'https://images.unsplash.com/photo-1747479465236-35452c184426?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcm96ZW4lMjBzdHJhd2JlcnJpZXN8ZW58MXx8fHwxNzY4OTc2MTQ2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
-              ];
+          {isLoadingProducts ? (
+            <div className="text-center py-20">
+              <div className="inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--color-strawberry-600)' }}></div>
+              <p className="mt-4" style={{ color: 'var(--color-neutral-600)' }}>商品を読み込み中...</p>
+            </div>
+          ) : products.length === 0 ? (
+            <div className="text-center py-20">
+              <p style={{ color: 'var(--color-neutral-600)' }}>現在、販売可能な商品はありません</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {products.map((product, index) => {
+                const variant = product.variants.edges[0]?.node;
+                if (!variant) return null;
 
-              return (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
-                >
-                  {/* 商品画像 */}
-                  <div className="relative overflow-hidden" style={{ aspectRatio: '16/10' }}>
-                    <img
-                      src={productImages[index]}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </div>
+                const imageUrl = product.images.edges[0]?.node.url || 'https://images.unsplash.com/photo-1559483526-22d5a63adc24?w=800';
+                const isAdded = addedToCart === product.id;
 
-                  <div className="p-8">
-                    <h3 className="font-bold text-2xl mb-3" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}>
-                      {product.name}
-                    </h3>
-                    <p className="mb-6" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)', lineHeight: '1.7' }}>
-                      {product.description}
-                    </p>
-
-                    {/* Shopifyから取得する現在価格 */}
-                    <div className="mb-6 p-6 rounded-2xl" style={{ background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)', border: '1px solid var(--color-strawberry-200)' }}>
-                      <div className="flex items-baseline justify-between mb-4">
-                        <span className="text-sm font-medium" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)' }}>現在価格</span>
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-4xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
-                            ¥{product.pricing[0].price.toLocaleString()}
-                          </span>
-                          <span className="text-sm" style={{ color: 'var(--color-neutral-500)' }}>（税込）</span>
-                        </div>
-                      </div>
+                return (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
+                  >
+                    {/* 商品画像 */}
+                    <div className="relative overflow-hidden" style={{ aspectRatio: '16/10' }}>
+                      <img
+                        src={imageUrl}
+                        alt={product.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       
-                      {/* 時期別価格（小さく表示） */}
-                      {product.pricing.length > 1 && (
-                        <details className="text-xs" style={{ color: 'var(--color-neutral-600)' }}>
-                          <summary className="cursor-pointer flex items-center gap-2 mb-2" style={{ fontFamily: 'var(--font-sans)' }}>
-                            <Calendar className="w-3 h-3" />
-                            <span>時期別価格を表示</span>
-                          </summary>
-                          <div className="pl-5 space-y-1 mt-2">
-                            {product.pricing.map((pricing, idx) => (
-                              <div key={idx} className="flex justify-between">
-                                <span>{pricing.month}</span>
-                                <span>¥{pricing.price.toLocaleString()}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </details>
+                      {/* 在庫状況バッジ */}
+                      {!variant.availableForSale && (
+                        <div className="absolute top-4 right-4 px-4 py-2 rounded-full bg-red-500 text-white text-sm font-semibold">
+                          売り切れ
+                        </div>
                       )}
                     </div>
 
-                    <a
-                      href={`#contact`}
-                      className="group/btn w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full transition-all duration-300 relative overflow-hidden"
-                      style={{ background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)', fontFamily: 'var(--font-sans)', fontWeight: 600 }}
-                    >
-                      <span className="absolute inset-0 bg-gradient-to-r from-[color:var(--color-strawberry-700)] to-[color:var(--color-strawberry-800)] opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></span>
-                      <ShoppingCart className="w-5 h-5 text-white relative z-10" />
-                      <span className="text-white relative z-10">カートに追加</span>
-                    </a>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
+                    <div className="p-8">
+                      <h3 className="font-bold text-2xl mb-3" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}>
+                        {product.title}
+                      </h3>
+                      <p className="mb-6 line-clamp-3" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)', lineHeight: '1.7' }}>
+                        {product.description}
+                      </p>
+
+                      {/* 価格表示 */}
+                      <div className="mb-6 p-6 rounded-2xl" style={{ background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)', border: '1px solid var(--color-strawberry-200)' }}>
+                        <div className="flex items-baseline justify-between">
+                          <span className="text-sm font-medium" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)' }}>価格</span>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-4xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
+                              {formatPrice(variant.priceV2.amount, variant.priceV2.currencyCode)}
+                            </span>
+                            <span className="text-sm" style={{ color: 'var(--color-neutral-500)' }}>（税込）</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* ボタングループ */}
+                      <div className="space-y-3">
+                        {/* カートに追加ボタン */}
+                        <button
+                          onClick={() => handleAddToCart(variant.id, product.id)}
+                          disabled={!variant.availableForSale || isAddingToCart || isAdded}
+                          className="group/btn w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full transition-all duration-300 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                          style={{ 
+                            background: isAdded 
+                              ? 'linear-gradient(135deg, rgb(34, 197, 94) 0%, rgb(22, 163, 74) 100%)'
+                              : 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)', 
+                            fontFamily: 'var(--font-sans)', 
+                            fontWeight: 600 
+                          }}
+                        >
+                          <span className="absolute inset-0 bg-gradient-to-r from-[color:var(--color-strawberry-700)] to-[color:var(--color-strawberry-800)] opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></span>
+                          {isAdded ? (
+                            <>
+                              <Check className="w-5 h-5 text-white relative z-10" />
+                              <span className="text-white relative z-10">カートに追加しました</span>
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingCart className="w-5 h-5 text-white relative z-10" />
+                              <span className="text-white relative z-10">
+                                {!variant.availableForSale ? '売り切れ' : 'カートに追加'}
+                              </span>
+                            </>
+                          )}
+                        </button>
+
+                        {/* 詳細を見るボタン */}
+                        <a
+                          href={`/product/${product.handle}`}
+                          className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-full transition-all duration-300 border-2"
+                          style={{ 
+                            borderColor: 'var(--color-strawberry-600)',
+                            color: 'var(--color-strawberry-600)',
+                            fontFamily: 'var(--font-sans)',
+                            fontWeight: 600,
+                            background: 'white'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'var(--color-strawberry-50)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'white';
+                          }}
+                        >
+                          <span>詳細を見る</span>
+                          <ArrowLeft className="w-4 h-4 rotate-180" />
+                        </a>
+                      </div>
+
+                      {/* エラー表示 */}
+                      {cartError && (
+                        <div className="mt-4 p-3 rounded-lg flex items-center gap-2 text-sm" style={{ background: 'rgb(254, 242, 242)', color: 'rgb(185, 28, 28)' }}>
+                          <AlertCircle className="w-4 h-4" />
+                          <span>{cartError}</span>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

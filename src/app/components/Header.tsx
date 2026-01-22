@@ -2,10 +2,16 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ShoppingCart, Menu, X } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
+import { CartDrawer } from './CartDrawer';
+import { useCart } from '@/app/contexts/CartContext';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { cart } = useCart();
+
+  const cartItemCount = cart?.lines.edges.reduce((total, { node }) => total + node.quantity, 0) || 0;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,7 +78,7 @@ export function Header() {
 
           {/* デスクトップナビゲーション */}
           <nav className="hidden md:flex items-center gap-10">
-            {navItems.map((item, index) => (
+            {navItems.map((item) => (
               <a
                 key={item.label}
                 href={item.href}
@@ -98,10 +104,8 @@ export function Header() {
 
           {/* カートボタン */}
           <div className="flex items-center gap-4">
-            <a
-              href="https://YOUR_STORE.myshopify.com/cart"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setIsCartOpen(true)}
               className="hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full transition-all duration-300 group overflow-hidden relative"
               style={{
                 background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
@@ -113,9 +117,16 @@ export function Header() {
               }}
             >
               <span className="absolute inset-0 bg-gradient-to-r from-[color:var(--color-strawberry-700)] to-[color:var(--color-strawberry-800)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              <ShoppingCart className="w-5 h-5 text-white relative z-10 group-hover:scale-110 transition-transform duration-300" />
-              <span className="text-white relative z-10">カート</span>
-            </a>
+              <div className="relative z-10 flex items-center gap-2">
+                <ShoppingCart className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-300" />
+                <span className="text-white">カート</span>
+                {cartItemCount > 0 && (
+                  <span className="bg-white text-strawberry-600 text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center">
+                    {cartItemCount}
+                  </span>
+                )}
+              </div>
+            </button>
 
             {/* モバイルメニューボタン */}
             <button
@@ -155,11 +166,12 @@ export function Header() {
                 {item.label}
               </a>
             ))}
-            <a
-              href="https://YOUR_STORE.myshopify.com/cart"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 justify-center mt-4"
+            <button
+              onClick={() => {
+                setIsCartOpen(true);
+                setIsMobileMenuOpen(false);
+              }}
+              className="flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 justify-center mt-4 w-full"
               style={{
                 background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
                 fontFamily: 'var(--font-sans)',
@@ -169,10 +181,18 @@ export function Header() {
             >
               <ShoppingCart className="w-5 h-5 text-white" />
               <span className="text-white">カート</span>
-            </a>
+              {cartItemCount > 0 && (
+                <span className="bg-white text-strawberry-600 text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </button>
           </nav>
         </motion.div>
       )}
+
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }

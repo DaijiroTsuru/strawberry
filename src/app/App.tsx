@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { CartProvider } from "@/app/contexts/CartContext";
 import { Header } from "@/app/components/Header";
 import { HeroSection } from "@/app/components/HeroSection";
 import { ProductSection } from "@/app/components/ProductSection";
@@ -34,7 +35,7 @@ export default function App() {
   // デザインを切り替えるには、下記の designType を変更してください
   // "modern": モダンデザイン（鮮やか・ダイナミック）
   // "japanese": 和風デザイン（伝統的・上品）
-  const designType: "modern" | "japanese" = "japanese";
+  const designType: "modern" | "japanese" = "modern";
 
   // シンプルなルーティング
   const [currentPage, setCurrentPage] =
@@ -193,5 +194,9 @@ export default function App() {
     );
   };
 
-  return <div className="min-h-screen">{renderPage()}</div>;
+  return (
+    <CartProvider>
+      <div className="min-h-screen">{renderPage()}</div>
+    </CartProvider>
+  );
 }

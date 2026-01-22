@@ -1,15 +1,22 @@
-// Shopify Storefront API統合用ユーティリティ
-// 実際の使用時は、Shopify管理画面から以下を取得してください：
-// 1. Storefront API アクセストークン
-// 2. ストアドメイン
+/// <reference types="../vite-env" />
 
-const SHOPIFY_DOMAIN = 'YOUR_STORE_NAME.myshopify.com';
-const STOREFRONT_ACCESS_TOKEN = 'YOUR_STOREFRONT_ACCESS_TOKEN';
+// Shopify Storefront API統合用ユーティリティ（2026-01バージョン）
+// セットアップ方法は SHOPIFY_SETUP.md を参照してください
 
+const SHOPIFY_DOMAIN = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
+const STOREFRONT_ACCESS_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+const API_VERSION = '2026-01';
+
+if (!SHOPIFY_DOMAIN || !STOREFRONT_ACCESS_TOKEN) {
+  console.warn('Shopify credentials not configured. Using mock data.');
+}
+
+// 型定義
 export interface ShopifyProduct {
   id: string;
   title: string;
   description: string;
+  handle: string;
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -34,9 +41,88 @@ export interface ShopifyProduct {
           currencyCode: string;
         };
         availableForSale: boolean;
+        quantityAvailable?: number;
       };
     }>;
   };
+}
+
+export interface ShopifyCart {
+  id: string;
+  checkoutUrl: string;
+  lines: {
+    edges: Array<{
+      node: {
+        id: string;
+        quantity: number;
+        merchandise: {
+          id: string;
+          title: string;
+          priceV2: {
+            amount: string;
+            currencyCode: string;
+          };
+          product: {
+            title: string;
+            images?: {
+              edges: Array<{
+                node: {
+                  url: string;
+                  altText: string | null;
+                };
+              }>;
+            };
+          };
+        };
+      };
+    }>;
+  };
+  cost: {
+    totalAmount: {
+      amount: string;
+      currencyCode: string;
+    };
+    subtotalAmount: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
+}
+
+// GraphQLクエリヘルパー関数
+async function shopifyFetch({
+  query,
+  variables = {},
+}: {
+  query: string;
+  variables?: Record<string, any>;
+}) {
+  if (!SHOPIFY_DOMAIN || !STOREFRONT_ACCESS_TOKEN) {
+    throw new Error('Shopify credentials not configured');
+  }
+
+  const endpoint = `https://${SHOPIFY_DOMAIN}/api/${API_VERSION}/graphql.json`;
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': STOREFRONT_ACCESS_TOKEN,
+    },
+    body: JSON.stringify({ query, variables }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Shopify API error: ${response.statusText}`);
+  }
+
+  const json = await response.json();
+
+  if (json.errors) {
+    throw new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`);
+  }
+
+  return json;
 }
 
 // Shopify Storefront APIへのGraphQLクエリ
@@ -48,13 +134,14 @@ const PRODUCTS_QUERY = `
           id
           title
           description
+          handle
           priceRange {
             minVariantPrice {
               amount
               currencyCode
             }
           }
-          images(first: 1) {
+          images(first: 5) {
             edges {
               node {
                 url
@@ -72,6 +159,7 @@ const PRODUCTS_QUERY = `
                   currencyCode
                 }
                 availableForSale
+                quantityAvailable
               }
             }
           }
@@ -81,27 +169,464 @@ const PRODUCTS_QUERY = `
   }
 `;
 
-// Shopify APIへのリクエスト関数
+// 商品一覧を取得
 export async function fetchShopifyProducts(count: number = 10): Promise<ShopifyProduct[]> {
   try {
-    const response = await fetch(`https://${SHOPIFY_DOMAIN}/api/2024-01/graphql.json`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': STOREFRONT_ACCESS_TOKEN,
-      },
-      body: JSON.stringify({
-        query: PRODUCTS_QUERY,
-        variables: { first: count },
-      }),
+    const { data } = await shopifyFetch({
+      query: PRODUCTS_QUERY,
+      variables: { first: count },
     });
 
-    const { data } = await response.json();
     return data.products.edges.map((edge: any) => edge.node);
   } catch (error) {
     console.error('Shopify API Error:', error);
     // エラー時はモックデータを返す
     return getMockProducts();
+  }
+}
+
+// Product IDで単一商品を取得（AIカスタムショップ用）
+export async function fetchProductById(productId: string): Promise<ShopifyProduct | null> {
+  const query = `
+    query GetProduct($id: ID!) {
+      product(id: $id) {
+        id
+        title
+        description
+        handle
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+        images(first: 10) {
+          edges {
+            node {
+              url
+              altText
+            }
+          }
+        }
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              priceV2 {
+                amount
+                currencyCode
+              }
+              availableForSale
+              quantityAvailable
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await shopifyFetch({
+      query,
+      variables: { id: productId },
+    });
+
+    return data.product;
+  } catch (error) {
+    console.error('Fetch product by ID error:', error);
+    // エラー時はモックデータから探す
+    const mockProducts = getMockProducts();
+    return mockProducts.find(p => p.id === productId) || null;
+  }
+}
+
+// Handle（URL slug）で商品を取得（AIカスタムショップ用）
+export async function fetchProductByHandle(handle: string): Promise<ShopifyProduct | null> {
+  const query = `
+    query GetProductByHandle($handle: String!) {
+      productByHandle(handle: $handle) {
+        id
+        title
+        description
+        handle
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+        images(first: 10) {
+          edges {
+            node {
+              url
+              altText
+            }
+          }
+        }
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              priceV2 {
+                amount
+                currencyCode
+              }
+              availableForSale
+              quantityAvailable
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await shopifyFetch({
+      query,
+      variables: { handle },
+    });
+
+    return data.productByHandle;
+  } catch (error) {
+    console.error('Fetch product by handle error:', error);
+    // エラー時はモックデータから探す
+    const mockProducts = getMockProducts();
+    return mockProducts.find(p => p.handle === handle) || null;
+  }
+}
+
+// Collection IDから商品一覧を取得（AIカスタムショップ用）
+export async function fetchProductsByCollectionId(
+  collectionId: string,
+  count: number = 10
+): Promise<ShopifyProduct[]> {
+  const query = `
+    query GetProductsByCollection($id: ID!, $first: Int!) {
+      collection(id: $id) {
+        id
+        title
+        products(first: $first) {
+          edges {
+            node {
+              id
+              title
+              description
+              handle
+              priceRange {
+                minVariantPrice {
+                  amount
+                  currencyCode
+                }
+              }
+              images(first: 5) {
+                edges {
+                  node {
+                    url
+                    altText
+                  }
+                }
+              }
+              variants(first: 10) {
+                edges {
+                  node {
+                    id
+                    title
+                    priceV2 {
+                      amount
+                      currencyCode
+                    }
+                    availableForSale
+                    quantityAvailable
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    // Collection IDをShopify GIDフォーマットに変換
+    const gid = collectionId.includes('gid://shopify')
+      ? collectionId
+      : `gid://shopify/Collection/${collectionId}`;
+
+    const { data } = await shopifyFetch({
+      query,
+      variables: { id: gid, first: count },
+    });
+
+    if (!data.collection) {
+      console.warn(`Collection not found: ${collectionId}`);
+      return getMockProducts();
+    }
+
+    return data.collection.products.edges.map((edge: any) => edge.node);
+  } catch (error) {
+    console.error('Fetch products by collection ID error:', error);
+    // エラー時はモックデータを返す
+    return getMockProducts();
+  }
+}
+
+// カートを作成
+export async function createCart() {
+  const query = `
+    mutation CreateCart {
+      cartCreate {
+        cart {
+          id
+          checkoutUrl
+          lines(first: 10) {
+            edges {
+              node {
+                id
+                quantity
+              }
+            }
+          }
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await shopifyFetch({ query });
+    if (data.cartCreate.userErrors.length > 0) {
+      throw new Error(data.cartCreate.userErrors[0].message);
+    }
+    return data.cartCreate.cart;
+  } catch (error) {
+    console.error('Create cart error:', error);
+    throw error;
+  }
+}
+
+// カートに商品を追加
+export async function addToCart(
+  cartId: string,
+  merchandiseId: string,
+  quantity: number = 1
+) {
+  const query = `
+    mutation AddToCart($cartId: ID!, $lines: [CartLineInput!]!) {
+      cartLinesAdd(cartId: $cartId, lines: $lines) {
+        cart {
+          id
+          checkoutUrl
+          lines(first: 10) {
+            edges {
+              node {
+                id
+                quantity
+                merchandise {
+                  ... on ProductVariant {
+                    id
+                    title
+                    priceV2 {
+                      amount
+                      currencyCode
+                    }
+                    product {
+                      title
+                    }
+                  }
+                }
+              }
+            }
+          }
+          cost {
+            totalAmount {
+              amount
+              currencyCode
+            }
+          }
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await shopifyFetch({
+      query,
+      variables: {
+        cartId,
+        lines: [{ merchandiseId, quantity }],
+      },
+    });
+
+    if (data.cartLinesAdd.userErrors.length > 0) {
+      throw new Error(data.cartLinesAdd.userErrors[0].message);
+    }
+
+    return data.cartLinesAdd.cart;
+  } catch (error) {
+    console.error('Add to cart error:', error);
+    throw error;
+  }
+}
+
+// カート内の商品を更新
+export async function updateCartLine(
+  cartId: string,
+  lineId: string,
+  quantity: number
+) {
+  const query = `
+    mutation UpdateCartLine($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+      cartLinesUpdate(cartId: $cartId, lines: $lines) {
+        cart {
+          id
+          lines(first: 10) {
+            edges {
+              node {
+                id
+                quantity
+              }
+            }
+          }
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await shopifyFetch({
+      query,
+      variables: {
+        cartId,
+        lines: [{ id: lineId, quantity }],
+      },
+    });
+
+    if (data.cartLinesUpdate.userErrors.length > 0) {
+      throw new Error(data.cartLinesUpdate.userErrors[0].message);
+    }
+
+    return data.cartLinesUpdate.cart;
+  } catch (error) {
+    console.error('Update cart line error:', error);
+    throw error;
+  }
+}
+
+// カート内の商品を削除
+export async function removeFromCart(cartId: string, lineIds: string[]) {
+  const query = `
+    mutation RemoveFromCart($cartId: ID!, $lineIds: [ID!]!) {
+      cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+        cart {
+          id
+          lines(first: 10) {
+            edges {
+              node {
+                id
+                quantity
+              }
+            }
+          }
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await shopifyFetch({
+      query,
+      variables: { cartId, lineIds },
+    });
+
+    if (data.cartLinesRemove.userErrors.length > 0) {
+      throw new Error(data.cartLinesRemove.userErrors[0].message);
+    }
+
+    return data.cartLinesRemove.cart;
+  } catch (error) {
+    console.error('Remove from cart error:', error);
+    throw error;
+  }
+}
+
+// カート情報を取得
+export async function getCart(cartId: string) {
+  const query = `
+    query GetCart($cartId: ID!) {
+      cart(id: $cartId) {
+        id
+        checkoutUrl
+        lines(first: 10) {
+          edges {
+            node {
+              id
+              quantity
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                  priceV2 {
+                    amount
+                    currencyCode
+                  }
+                  product {
+                    title
+                    images(first: 1) {
+                      edges {
+                        node {
+                          url
+                          altText
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        cost {
+          totalAmount {
+            amount
+            currencyCode
+          }
+          subtotalAmount {
+            amount
+            currencyCode
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await shopifyFetch({
+      query,
+      variables: { cartId },
+    });
+
+    return data.cart;
+  } catch (error) {
+    console.error('Get cart error:', error);
+    throw error;
   }
 }
 
@@ -112,6 +637,7 @@ export function getMockProducts(): ShopifyProduct[] {
       id: 'gid://shopify/Product/1',
       title: 'あまおう（特大サイズ）',
       description: '福岡県産の最高級ブランドいちご。大粒で甘みが強く、贈答用に最適です。',
+      handle: 'amaou-large',
       priceRange: {
         minVariantPrice: {
           amount: '3800',
@@ -139,6 +665,7 @@ export function getMockProducts(): ShopifyProduct[] {
                 currencyCode: 'JPY',
               },
               availableForSale: true,
+              quantityAvailable: 10,
             },
           },
         ],
@@ -148,6 +675,7 @@ export function getMockProducts(): ShopifyProduct[] {
       id: 'gid://shopify/Product/2',
       title: 'とちおとめ（大サイズ）',
       description: '栃木県を代表する品種。程よい酸味と甘みのバランスが絶妙です。',
+      handle: 'tochiotome-large',
       priceRange: {
         minVariantPrice: {
           amount: '2800',
@@ -175,6 +703,7 @@ export function getMockProducts(): ShopifyProduct[] {
                 currencyCode: 'JPY',
               },
               availableForSale: true,
+              quantityAvailable: 15,
             },
           },
         ],
@@ -184,6 +713,7 @@ export function getMockProducts(): ShopifyProduct[] {
       id: 'gid://shopify/Product/3',
       title: '紅ほっぺ（中サイズ）',
       description: '静岡県生まれの人気品種。鮮やかな紅色と豊かな香りが特徴です。',
+      handle: 'benihoppe-medium',
       priceRange: {
         minVariantPrice: {
           amount: '2200',
@@ -211,6 +741,7 @@ export function getMockProducts(): ShopifyProduct[] {
                 currencyCode: 'JPY',
               },
               availableForSale: true,
+              quantityAvailable: 20,
             },
           },
         ],
@@ -220,6 +751,7 @@ export function getMockProducts(): ShopifyProduct[] {
       id: 'gid://shopify/Product/4',
       title: 'いちごジャム（自家製）',
       description: '完熟いちごをたっぷり使用した無添加ジャム。朝食に最適です。',
+      handle: 'strawberry-jam',
       priceRange: {
         minVariantPrice: {
           amount: '1200',
@@ -247,6 +779,7 @@ export function getMockProducts(): ShopifyProduct[] {
                 currencyCode: 'JPY',
               },
               availableForSale: true,
+              quantityAvailable: 30,
             },
           },
         ],
