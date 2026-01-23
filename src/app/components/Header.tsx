@@ -122,7 +122,10 @@ export function Header() {
                 <ShoppingCart className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-300" />
                 <span className="text-white">カート</span>
                 {cartItemCount > 0 && (
-                  <span className="bg-white text-strawberry-600 text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center">
+                  <span 
+                    className="bg-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center"
+                    style={{ color: 'var(--color-strawberry-600)' }}
+                  >
                     {cartItemCount}
                   </span>
                 )}
@@ -183,7 +186,10 @@ export function Header() {
               <ShoppingCart className="w-5 h-5 text-white" />
               <span className="text-white">カート</span>
               {cartItemCount > 0 && (
-                <span className="bg-white text-strawberry-600 text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center">
+                <span 
+                  className="bg-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center"
+                  style={{ color: 'var(--color-strawberry-600)' }}
+                >
                   {cartItemCount}
                 </span>
               )}

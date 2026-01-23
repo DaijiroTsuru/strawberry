@@ -533,12 +533,44 @@ export async function removeFromCart(cartId: string, lineIds: string[]) {
       cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
         cart {
           id
+          checkoutUrl
           lines(first: 10) {
             edges {
               node {
                 id
                 quantity
+                merchandise {
+                  ... on ProductVariant {
+                    id
+                    title
+                    priceV2 {
+                      amount
+                      currencyCode
+                    }
+                    product {
+                      title
+                      images(first: 1) {
+                        edges {
+                          node {
+                            url
+                            altText
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
+            }
+          }
+          cost {
+            totalAmount {
+              amount
+              currencyCode
+            }
+            subtotalAmount {
+              amount
+              currencyCode
             }
           }
         }
