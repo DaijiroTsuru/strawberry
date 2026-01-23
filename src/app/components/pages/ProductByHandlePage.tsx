@@ -16,6 +16,7 @@ export function ProductByHandlePage() {
   const { handle } = useParams({ from: '/product/$handle' });
   const [product, setProduct] = useState<ShopifyProduct | null>(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [addedToCart, setAddedToCart] = useState(false);
   const { addToCart, isLoading: isAddingToCart, error: cartError } = useCart();
@@ -91,7 +92,7 @@ export function ProductByHandlePage() {
   }
 
   const selectedVariant = product.variants.edges[selectedVariantIndex]?.node;
-  const mainImage = product.images.edges[0]?.node.url || '';
+  const mainImage = product.images.edges[selectedImageIndex]?.node.url || '';
 
   return (
     <div className="min-h-screen">
@@ -137,7 +138,12 @@ export function ProductByHandlePage() {
                 {product.images.edges.slice(0, 4).map((image, index) => (
                   <div
                     key={index}
-                    className="rounded-xl overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${
+                      selectedImageIndex === index 
+                        ? 'ring-4 ring-strawberry-500 scale-95' 
+                        : 'hover:opacity-80'
+                    }`}
                   >
                     <img
                       src={image.node.url}
