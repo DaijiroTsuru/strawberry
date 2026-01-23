@@ -1,27 +1,17 @@
 import { motion } from 'motion/react';
 import { Star, Quote } from 'lucide-react';
+import reviewsData from '@/data/reviews.json';
+
+interface Review {
+  name: string;
+  rating: number;
+  comment: string;
+  date: string;
+  photoUrl?: string;
+}
 
 export function TestimonialsSection() {
-  const testimonials = [
-    {
-      name: '田中 美咲 様',
-      location: '東京都',
-      rating: 5,
-      comment: '甘くてジューシーで、今まで食べたいちごの中で一番美味しかったです。贈答用にも最適です。',
-    },
-    {
-      name: '山田 太郎 様',
-      location: '大阪府',
-      rating: 5,
-      comment: '毎年リピートしています。新鮮で粒も大きく、家族全員が大満足です。',
-    },
-    {
-      name: '佐藤 花子 様',
-      location: '福岡県',
-      rating: 5,
-      comment: '子どもが大喜びで食べています。安心して食べられる品質が嬉しいです。',
-    },
-  ];
+  const testimonials: Review[] = reviewsData;
 
   return (
     <section className="py-20 px-4 bg-gradient-to-b from-white to-gray-50">
@@ -71,7 +61,7 @@ export function TestimonialsSection() {
               {/* 顧客情報 */}
               <div className="border-t pt-4">
                 <p className="font-bold text-gray-900">{testimonial.name}</p>
-                <p className="text-sm text-gray-500">{testimonial.location}</p>
+                <p className="text-sm text-gray-500">{testimonial.date}</p>
               </div>
             </motion.div>
           ))}
