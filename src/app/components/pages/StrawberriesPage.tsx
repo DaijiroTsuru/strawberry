@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
-import { Sparkles, Package, ShoppingCart, ArrowLeft, Check, AlertCircle } from 'lucide-react';
+import { Sparkles, Package, ShoppingCart, ArrowLeft, AlertCircle } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductsByCollectionId, ShopifyProduct, formatPrice } from '@/utils/shopify';
@@ -12,8 +12,7 @@ const STRAWBERRY_COLLECTION_ID = '486373589215';
 export function StrawberriesPage() {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
-  const [addedToCart, setAddedToCart] = useState<string | null>(null);
-  const { addToCart, isLoading: isAddingToCart, error: cartError } = useCart();
+  const { buyNow, isLoading: isAddingToCart, error: cartError } = useCart();
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -30,13 +29,13 @@ export function StrawberriesPage() {
     loadProducts();
   }, []);
 
-  const handleAddToCart = async (variantId: string, productId: string) => {
+  const handleAddToCart = async (variantId: string) => {
     try {
-      await addToCart(variantId, 1);
-      setAddedToCart(productId);
-      setTimeout(() => setAddedToCart(null), 3000);
+      const checkoutUrl = await buyNow(variantId, 1);
+      // チェックアウトページにリダイレクト
+      window.location.href = checkoutUrl;
     } catch (error) {
-      console.error('Failed to add to cart:', error);
+      console.error('Failed to checkout:', error);
     }
   };
 
@@ -163,7 +162,6 @@ export function StrawberriesPage() {
                 if (!variant) return null;
 
                 const imageUrl = product.images.edges[0]?.node.url || 'https://images.unsplash.com/photo-1559483526-22d5a63adc24?w=800';
-                const isAdded = addedToCart === product.id;
 
                 return (
                   <motion.div
@@ -221,33 +219,22 @@ export function StrawberriesPage() {
 
                       {/* ボタングループ */}
                       <div className="space-y-3">
-                        {/* カートに追加ボタン */}
+                        {/* 購入ボタン */}
                         <button
-                          onClick={() => handleAddToCart(variant.id, product.id)}
-                          disabled={!variant.availableForSale || isAddingToCart || isAdded}
+                          onClick={() => handleAddToCart(variant.id)}
+                          disabled={!variant.availableForSale || isAddingToCart}
                           className="group/btn w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full transition-all duration-300 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                           style={{ 
-                            background: isAdded 
-                              ? 'linear-gradient(135deg, rgb(34, 197, 94) 0%, rgb(22, 163, 74) 100%)'
-                              : 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)', 
+                            background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)', 
                             fontFamily: 'var(--font-sans)', 
                             fontWeight: 600 
                           }}
                         >
                           <span className="absolute inset-0 bg-gradient-to-r from-[color:var(--color-strawberry-700)] to-[color:var(--color-strawberry-800)] opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></span>
-                          {isAdded ? (
-                            <>
-                              <Check className="w-5 h-5 text-white relative z-10" />
-                              <span className="text-white relative z-10">カートに追加しました</span>
-                            </>
-                          ) : (
-                            <>
-                              <ShoppingCart className="w-5 h-5 text-white relative z-10" />
-                              <span className="text-white relative z-10">
-                                {!variant.availableForSale ? '売り切れ' : 'カートに追加'}
-                              </span>
-                            </>
-                          )}
+                          <ShoppingCart className="w-5 h-5 text-white relative z-10" />
+                          <span className="text-white relative z-10">
+                            {!variant.availableForSale ? '売り切れ' : '購入'}
+                          </span>
                         </button>
 
                         {/* 詳細を見るボタン */}

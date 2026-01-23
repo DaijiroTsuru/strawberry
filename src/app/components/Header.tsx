@@ -103,34 +103,34 @@ export function Header() {
             ))}
           </nav>
 
-          {/* カートボタン */}
+          {/* カートボタン（商品がある場合のみ表示） */}
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full transition-all duration-300 group overflow-hidden relative"
-              style={{
-                background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 600,
-                fontSize: '0.95rem',
-                boxShadow: '0 4px 12px rgba(220, 38, 38, 0.25)',
-                letterSpacing: '0.03em'
-              }}
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-[color:var(--color-strawberry-700)] to-[color:var(--color-strawberry-800)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              <div className="relative z-10 flex items-center gap-2">
-                <ShoppingCart className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-300" />
-                <span className="text-white">カート</span>
-                {cartItemCount > 0 && (
+            {cartItemCount > 0 && (
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full transition-all duration-300 group overflow-hidden relative"
+                style={{
+                  background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 600,
+                  fontSize: '0.95rem',
+                  boxShadow: '0 4px 12px rgba(220, 38, 38, 0.25)',
+                  letterSpacing: '0.03em'
+                }}
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-[color:var(--color-strawberry-700)] to-[color:var(--color-strawberry-800)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <div className="relative z-10 flex items-center gap-2">
+                  <ShoppingCart className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-300" />
+                  <span className="text-white">カート</span>
                   <span 
                     className="bg-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center"
                     style={{ color: 'var(--color-strawberry-600)' }}
                   >
                     {cartItemCount}
                   </span>
-                )}
-              </div>
-            </button>
+                </div>
+              </button>
+            )}
 
             {/* モバイルメニューボタン */}
             <button
@@ -170,30 +170,30 @@ export function Header() {
                 {item.label}
               </a>
             ))}
-            <button
-              onClick={() => {
-                setIsCartOpen(true);
-                setIsMobileMenuOpen(false);
-              }}
-              className="flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 justify-center mt-4 w-full"
-              style={{
-                background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 600,
-                boxShadow: '0 4px 12px rgba(220, 38, 38, 0.25)'
-              }}
-            >
-              <ShoppingCart className="w-5 h-5 text-white" />
-              <span className="text-white">カート</span>
-              {cartItemCount > 0 && (
+            {cartItemCount > 0 && (
+              <button
+                onClick={() => {
+                  setIsCartOpen(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 justify-center mt-4 w-full"
+                style={{
+                  background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 600,
+                  boxShadow: '0 4px 12px rgba(220, 38, 38, 0.25)'
+                }}
+              >
+                <ShoppingCart className="w-5 h-5 text-white" />
+                <span className="text-white">カート</span>
                 <span 
                   className="bg-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center"
                   style={{ color: 'var(--color-strawberry-600)' }}
                 >
                   {cartItemCount}
                 </span>
-              )}
-            </button>
+              </button>
+            )}
           </nav>
         </motion.div>
       )}

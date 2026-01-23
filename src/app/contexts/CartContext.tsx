@@ -13,6 +13,7 @@ interface CartContextType {
   isLoading: boolean;
   error: string | null;
   addToCart: (merchandiseId: string, quantity?: number) => Promise<void>;
+  buyNow: (merchandiseId: string, quantity?: number) => Promise<string>;
   updateQuantity: (lineId: string, quantity: number) => Promise<void>;
   removeItem: (lineId: string) => Promise<void>;
   clearError: () => void;
@@ -74,6 +75,37 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const buyNow = async (merchandiseId: string, quantity: number = 1): Promise<string> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // 新しいカートを作成
+      const newCart = await createCart();
+      const cartId = newCart.id;
+      
+      if (!cartId) {
+        throw new Error('カートの作成に失敗しました');
+      }
+
+      // 商品を追加
+      const updatedCart = await addToCartAPI(cartId, merchandiseId, quantity);
+      
+      // カートIDを保存（途中離脱対応）
+      localStorage.setItem('shopify_cart_id', cartId);
+      setCart(updatedCart);
+
+      // チェックアウトURLを返す
+      return updatedCart.checkoutUrl;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '購入処理に失敗しました';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const updateQuantity = async (lineId: string, quantity: number) => {
     if (!cart) return;
 
@@ -119,6 +151,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         error,
         addToCart,
+        buyNow,
         updateQuantity,
         removeItem,
         clearError,

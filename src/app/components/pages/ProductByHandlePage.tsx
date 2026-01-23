@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from '@tanstack/react-router';
 import { motion } from 'motion/react';
-import { ShoppingCart, Check, AlertCircle, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductByHandle, ShopifyProduct, formatPrice } from '@/utils/shopify';
 
@@ -18,8 +18,7 @@ export function ProductByHandlePage() {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [addedToCart, setAddedToCart] = useState(false);
-  const { addToCart, isLoading: isAddingToCart, error: cartError } = useCart();
+  const { buyNow, isLoading: isAddingToCart, error: cartError } = useCart();
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -44,11 +43,11 @@ export function ProductByHandlePage() {
     if (!selectedVariant) return;
 
     try {
-      await addToCart(selectedVariant.id, 1);
-      setAddedToCart(true);
-      setTimeout(() => setAddedToCart(false), 3000);
+      const checkoutUrl = await buyNow(selectedVariant.id, 1);
+      // チェックアウトページにリダイレクト
+      window.location.href = checkoutUrl;
     } catch (error) {
-      console.error('Failed to add to cart:', error);
+      console.error('Failed to checkout:', error);
     }
   };
 
@@ -252,32 +251,21 @@ export function ProductByHandlePage() {
               </div>
             )}
 
-            {/* カートに追加ボタン */}
+            {/* 購入ボタン */}
             <button
               onClick={handleAddToCart}
-              disabled={!selectedVariant?.availableForSale || isAddingToCart || addedToCart}
+              disabled={!selectedVariant?.availableForSale || isAddingToCart}
               className="w-full flex items-center justify-center gap-3 px-8 py-5 rounded-full transition-all duration-300 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed text-lg font-semibold mb-8"
               style={{ 
-                background: addedToCart 
-                  ? 'linear-gradient(135deg, rgb(34, 197, 94) 0%, rgb(22, 163, 74) 100%)'
-                  : 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
+                background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
                 color: 'white',
                 fontFamily: 'var(--font-sans)'
               }}
             >
-              {addedToCart ? (
-                <>
-                  <Check className="w-6 h-6" />
-                  <span>カートに追加しました</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingCart className="w-6 h-6" />
-                  <span>
-                    {selectedVariant?.availableForSale ? 'カートに追加' : '在庫切れ'}
-                  </span>
-                </>
-              )}
+              <ShoppingCart className="w-6 h-6" />
+              <span>
+                {selectedVariant?.availableForSale ? '購入' : '在庫切れ'}
+              </span>
             </button>
 
             {/* エラー表示 */}
