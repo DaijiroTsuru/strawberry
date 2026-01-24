@@ -424,7 +424,7 @@ export function RicePage() {
                       <h3 className="font-bold text-2xl mb-3" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}>
                         {product.title}
                       </h3>
-                      <p className="mb-6 line-clamp-3" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)', lineHeight: '1.7' }}>
+                      <p className="mb-6 line-clamp-3" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)', lineHeight: '1.7', whiteSpace: 'pre-line' }}>
                         {product.description}
                       </p>
 

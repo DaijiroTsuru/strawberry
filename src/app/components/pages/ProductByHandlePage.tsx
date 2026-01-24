@@ -307,7 +307,7 @@ export function ProductByHandlePage() {
                   style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}
                 >
                   {selectedVariant.availableForSale 
-                    ? `在庫あり ${selectedVariant.quantityAvailable ? `(${selectedVariant.quantityAvailable}個)` : ''}`
+                    ? `在庫あり`
                     : '在庫切れ'
                   }
                 </span>
@@ -344,15 +344,16 @@ export function ProductByHandlePage() {
 
             {/* 商品説明 */}
             <div 
-              className="prose prose-lg"
+              className="prose prose-lg max-w-none"
               style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}
             >
               <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--color-neutral-900)' }}>
                 商品説明
               </h3>
-              <p style={{ lineHeight: '1.8' }}>
-                {product.description}
-              </p>
+              <div 
+                style={{ lineHeight: '1.8' }}
+                dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+              />
             </div>
 
             {/* 商品情報メタデータ */}
