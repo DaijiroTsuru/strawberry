@@ -12,7 +12,7 @@ export function HeroSection() {
       {/* 背景画像 */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1694632872166-c7ae400a5087?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHJhd2JlcnJ5JTIwZmFybSUyMGZpZWxkfGVufDF8fHx8MTc2ODk2MTY0Mnww&ixlib=rb-4.1.0&q=80&w=1080"
+          src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/723E7A30-ABBC-4701-9CAB-224F116EF19C_1_105_c.jpg?v=1768511539"
           alt={FARM_INFO.name}
           className="w-full h-full object-cover scale-105"
         />

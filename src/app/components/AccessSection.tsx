@@ -49,6 +49,65 @@ export function AccessSection() {
           </h2>
         </motion.div>
 
+        {/* 農園の写真 */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-16 lg:mb-20"
+        >
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+            {/* いちご園看板 */}
+            <div className="relative rounded-3xl overflow-hidden shadow-xl group">
+              <div className="relative" style={{ aspectRatio: '16/9' }}>
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/0CEB5C93-92BA-47ED-89A6-140DEFD40174_1_105_c.jpg?v=1768511100"
+                  alt="津留いちご園 看板"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div 
+                  className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                ></div>
+              </div>
+              <div 
+                className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500"
+              >
+                <p 
+                  className="text-lg font-semibold"
+                  style={{ fontFamily: 'var(--font-sans)', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+                >
+                  いちご園看板
+                </p>
+              </div>
+            </div>
+
+            {/* 全体の風景 */}
+            <div className="relative rounded-3xl overflow-hidden shadow-xl group">
+              <div className="relative" style={{ aspectRatio: '16/9' }}>
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/432B94FE-D152-4224-8126-52B0791AC0D0_1_105_c.jpg?v=1768511099"
+                  alt="津留いちご園 全体風景"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div 
+                  className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                ></div>
+              </div>
+              <div 
+                className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500"
+              >
+                <p 
+                  className="text-lg font-semibold"
+                  style={{ fontFamily: 'var(--font-sans)', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+                >
+                  農園全体の風景
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
           {/* 地図 */}
           <motion.div

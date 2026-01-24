@@ -5,6 +5,7 @@ import { Sparkles, Package, ShoppingCart, ArrowLeft, AlertCircle } from 'lucide-
 import { FARM_INFO } from '@/app/constants/farmInfo';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductsByCollectionId, ShopifyProduct, formatPrice } from '@/utils/shopify';
+import { SEO, createBreadcrumbSchema } from '@/app/components/SEO';
 
 // CollectionID: 486373589215 から商品を取得
 const STRAWBERRY_COLLECTION_ID = '486373589215';
@@ -41,6 +42,17 @@ export function StrawberriesPage() {
 
   return (
     <div className="min-h-screen">
+      <SEO 
+        title="厳選いちご"
+        description="その日の朝に収穫した新鮮な「かおり野」を真心込めてお届けします。糖度が高く酸味が少ない、香り高い人気のいちごです。化粧箱入りやパック詰めなど、用途に合わせてお選びいただけます。"
+        keywords="いちご,かおり野,朝摘み,新鮮,化粧箱,パック,宮崎,西都市,通信販売,ギフト"
+        image="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/C575B8A9-AF31-4F3D-A4E0-A168B27A2911_1_105_c.jpg?v=1768511098"
+        url="/strawberries"
+        structuredData={createBreadcrumbSchema([
+          { name: 'ホーム', url: '/' },
+          { name: '厳選いちご', url: '/strawberries' },
+        ])}
+      />
       {/* ヘッダースペース */}
       <div className="h-20 lg:h-24"></div>
 
@@ -93,7 +105,7 @@ export function StrawberriesPage() {
             >
               <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ aspectRatio: '4/5' }}>
                 <img
-                  src="https://images.unsplash.com/photo-1464454709131-ffd692591ee5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                  src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/C575B8A9-AF31-4F3D-A4E0-A168B27A2911_1_105_c.jpg?v=1768511098"
                   alt="かおり野いちご"
                   className="w-full h-full object-cover"
                 />
@@ -173,7 +185,12 @@ export function StrawberriesPage() {
                     className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
                   >
                     {/* 商品画像 */}
-                    <div className="relative overflow-hidden" style={{ aspectRatio: '16/10' }}>
+                    <Link
+                      to="/product/$handle"
+                      params={{ handle: product.handle }}
+                      className="block relative overflow-hidden" 
+                      style={{ aspectRatio: '1/1' }}
+                    >
                       <img
                         src={imageUrl}
                         alt={product.title}
@@ -187,7 +204,7 @@ export function StrawberriesPage() {
                           売り切れ
                         </div>
                       )}
-                    </div>
+                    </Link>
 
                     <div className="p-8">
                       <h3 className="font-bold text-2xl mb-3" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}>

@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { ShoppingCart, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductByHandle, ShopifyProduct, formatPrice } from '@/utils/shopify';
+import { SEO, createProductSchema, createBreadcrumbSchema } from '@/app/components/SEO';
 
 /**
  * 商品Handleから商品詳細ページを表示
@@ -74,7 +75,7 @@ export function ProductByHandlePage() {
             商品が見つかりませんでした
           </p>
           <Link
-            to="/strawberries"
+            to="/"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full"
             style={{ 
               background: 'var(--color-strawberry-600)', 
@@ -83,7 +84,7 @@ export function ProductByHandlePage() {
             }}
           >
             <ArrowLeft className="w-5 h-5" />
-            商品一覧に戻る
+            ホームに戻る
           </Link>
         </div>
       </div>
@@ -93,8 +94,70 @@ export function ProductByHandlePage() {
   const selectedVariant = product.variants.edges[selectedVariantIndex]?.node;
   const mainImage = product.images.edges[selectedImageIndex]?.node.url || '';
 
+  // コレクションに基づいて戻るリンクを決定
+  const getBackLink = () => {
+    const collections = product.collections?.edges || [];
+    
+    // 米のコレクションID
+    const riceCollectionId = 'gid://shopify/Collection/486421135583';
+    // いちごのコレクションID  
+    const strawberryCollectionId = 'gid://shopify/Collection/486373589215';
+    
+    // コレクションIDでチェック
+    if (collections.some(c => c.node.id === riceCollectionId)) {
+      return { to: '/rice', label: 'お米一覧に戻る' };
+    }
+    if (collections.some(c => c.node.id === strawberryCollectionId)) {
+      return { to: '/strawberries', label: 'いちご一覧に戻る' };
+    }
+    
+    // コレクションハンドルでもチェック
+    const collectionHandles = collections.map(c => c.node.handle);
+    if (collectionHandles.includes('rice') || collectionHandles.includes('kome')) {
+      return { to: '/rice', label: 'お米一覧に戻る' };
+    }
+    if (collectionHandles.includes('strawberries') || collectionHandles.includes('ichigo')) {
+      return { to: '/strawberries', label: 'いちご一覧に戻る' };
+    }
+    
+    // デフォルトはいちご
+    return { to: '/strawberries', label: '商品一覧に戻る' };
+  };
+
+  const backLink = getBackLink();
+
+  const productImage = product.images.edges[0]?.node.url || '';
+  const productPrice = selectedVariant?.priceV2.amount || '0';
+
   return (
     <div className="min-h-screen">
+      <SEO 
+        title={product.title}
+        description={product.description || `${product.title}の商品詳細ページです。津留いちご園の厳選商品をご覧ください。`}
+        keywords={`${product.title},${handle},通信販売,オンラインショップ,津留いちご園`}
+        image={productImage}
+        url={`/product/${handle}`}
+        type="product"
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            createProductSchema({
+              name: product.title,
+              description: product.description,
+              image: productImage,
+              price: productPrice,
+              currency: 'JPY',
+              availability: selectedVariant?.availableForSale ? 'InStock' : 'OutOfStock',
+              url: `/product/${handle}`,
+            }),
+            createBreadcrumbSchema([
+              { name: 'ホーム', url: '/' },
+              { name: '商品一覧', url: backLink.to },
+              { name: product.title, url: `/product/${handle}` },
+            ]),
+          ],
+        }}
+      />
       {/* ヘッダースペース */}
       <div className="h-20 lg:h-24"></div>
 
@@ -107,12 +170,12 @@ export function ProductByHandlePage() {
           className="mb-8"
         >
           <Link
-            to="/strawberries"
+            to={backLink.to}
             className="inline-flex items-center gap-2 transition-colors duration-300"
             style={{ color: 'var(--color-neutral-600)', fontFamily: 'var(--font-sans)' }}
           >
             <ArrowLeft className="w-5 h-5" />
-            <span>商品一覧に戻る</span>
+            <span>{backLink.label}</span>
           </Link>
         </motion.div>
 

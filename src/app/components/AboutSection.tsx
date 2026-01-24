@@ -1,209 +1,346 @@
 import { motion } from 'motion/react';
-import { Leaf, Award, Sprout } from 'lucide-react';
+import { Leaf, Award, Sprout, Sun, Heart, Sparkles } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
 
 export function AboutSection() {
-  const features = [
-    {
-      icon: Sprout,
-      title: '土耕栽培へのこだわり',
-      description: '有機質の栄養をたっぷり含んだ土の力で、いちごを健康的に育てています',
-    },
-    {
-      icon: Leaf,
-      title: '無農薬栽培',
-      description: `${FARM_INFO.features.motto}で安心・安全を実現`,
-    },
-    {
-      icon: Award,
-      title: 'かおり野ブランド',
-      description: '大粒で糖度が高く酸味が少ない、上品な香りの「かおり野」を栽培',
-    },
-  ];
-
   return (
     <section id="about" className="py-24 lg:py-32 px-4" style={{ background: 'var(--color-neutral-50)' }}>
       <div className="max-w-7xl mx-auto">
-        {/* メインコンテンツ */}
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center mb-24">
+        {/* ヘッダー */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-20"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+            style={{
+              background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)',
+              border: '1px solid var(--color-strawberry-200)'
+            }}
+          >
+            <Leaf className="w-4 h-4" style={{ color: 'var(--color-strawberry-600)' }} />
+            <span className="text-sm font-medium" 
+              style={{ 
+                color: 'var(--color-strawberry-700)',
+                fontFamily: 'var(--font-sans)',
+                letterSpacing: '0.05em'
+              }}
+            >
+              About Us
+            </span>
+          </div>
+          
+          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold mb-6"
+            style={{ 
+              fontFamily: 'var(--font-serif)',
+              color: 'var(--color-neutral-900)',
+              letterSpacing: '0.02em'
+            }}
+          >
+            自然を味わう、<br className="hidden sm:block" />豊かさを味わう
+          </h2>
+          
+          <p className="text-xl lg:text-2xl max-w-3xl mx-auto"
+            style={{ 
+              fontFamily: 'var(--font-sans)',
+              color: 'var(--color-neutral-600)',
+              lineHeight: '1.8'
+            }}
+          >
+            {FARM_INFO.name}のいちごは、<br className="sm:hidden" />
+            大地の恵みと手仕事の想いが<br className="sm:hidden" />育む、本物の味わいです
+          </p>
+        </motion.div>
+
+        {/* Section 1: 土耕栽培へのこだわり */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-32">
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8 }}
+            className="relative order-2 lg:order-1"
           >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
-              style={{
-                background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)',
-                border: '1px solid var(--color-strawberry-200)'
-              }}
-            >
-              <Leaf className="w-4 h-4" style={{ color: 'var(--color-strawberry-600)' }} />
-              <span 
-                className="text-sm font-medium" 
-                style={{ 
-                  color: 'var(--color-strawberry-700)',
-                  fontFamily: 'var(--font-sans)',
-                  letterSpacing: '0.05em'
-                }}
-              >
-                About Us
-              </span>
-            </motion.div>
-
-            <h2 
-              className="text-4xl lg:text-5xl xl:text-6xl font-bold mb-8"
-              style={{ 
-                fontFamily: 'var(--font-serif)',
-                color: 'var(--color-neutral-900)',
-                letterSpacing: '0.02em',
-                lineHeight: '1.3'
-              }}
-            >
-              {FARM_INFO.name}について
-            </h2>
-            
-            <div className="space-y-6">
-              <p 
-                className="text-lg leading-relaxed"
-                style={{ 
-                  fontFamily: 'var(--font-sans)',
-                  color: 'var(--color-neutral-700)',
-                  lineHeight: '1.9'
-                }}
-              >
-                私たち{FARM_INFO.name}は、{FARM_INFO.features.motto}。
-              </p>
-              <p 
-                className="text-lg leading-relaxed"
-                style={{ 
-                  fontFamily: 'var(--font-sans)',
-                  color: 'var(--color-neutral-700)',
-                  lineHeight: '1.9'
-                }}
-              >
-                有機質肥料（{FARM_INFO.features.fertilizers.slice(0, 4).join('、')}など12種類）を使用し、
-                自然界に存在するもので健康的にいちごを育てています。
-              </p>
-              <p 
-                className="text-lg leading-relaxed"
-                style={{ 
-                  fontFamily: 'var(--font-sans)',
-                  color: 'var(--color-neutral-700)',
-                  lineHeight: '1.9'
-                }}
-              >
-                早朝より手摘みしたいちごの中から、一粒一粒良いものだけを厳選してお届けいたします。
-              </p>
+            <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ aspectRatio: '4/3' }}>
+              <img
+                src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/ABC9DC2F-929C-4CEA-A71B-5E4A9926BAC7_1_105_c.jpg?v=1768511100"
+                alt="豊かな土壌で育ついちご"
+                className="w-full h-full object-cover"
+              />
             </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-10"
-            >
-            </motion.div>
+            <div className="absolute -bottom-6 -left-6 w-48 h-48 rounded-full -z-10 blur-3xl opacity-20"
+              style={{ background: 'var(--color-leaf-400)' }}
+            ></div>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative"
+            transition={{ duration: 0.8 }}
+            className="order-1 lg:order-2"
           >
-            <div 
-              className="rounded-3xl overflow-hidden shadow-2xl relative"
-              style={{ aspectRatio: '4/5' }}
-            >
-              <img
-                src="https://images.unsplash.com/photo-1663908428751-1ee8bfc3e39c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqYXBhbmVzZSUyMGFncmljdWx0dXJlfGVufDF8fHx8MTc2ODk2MTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="農園の様子"
-                className="w-full h-full object-cover"
-              />
-              {/* 装飾グラデーション */}
-              <div 
-                className="absolute inset-0 opacity-20 mix-blend-multiply"
-                style={{
-                  background: 'linear-gradient(135deg, var(--color-strawberry-500) 0%, transparent 100%)'
-                }}
-              ></div>
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Sprout className="w-6 h-6" style={{ color: 'var(--color-strawberry-600)' }} />
+              <span className="text-sm font-semibold tracking-wider"
+                style={{ color: 'var(--color-strawberry-600)', fontFamily: 'var(--font-sans)' }}
+              >
+                COMMITMENT 01
+              </span>
             </div>
             
-            {/* 装飾要素 */}
-            <div 
-              className="absolute -bottom-8 -right-8 w-64 h-64 rounded-full -z-10 blur-3xl opacity-20"
+            <h3 className="text-3xl lg:text-4xl font-bold mb-6"
+              style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}
+            >
+              土が育む、<br />いちご本来の力
+            </h3>
+            
+            <p className="text-lg mb-6 leading-relaxed"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
+            >
+              有機質の栄養をたっぷり含んだ土の力で、いちごを健康的に育てるために、津留いちご園では<strong>土耕栽培</strong>にこだわっています。
+            </p>
+            
+            <p className="text-lg leading-relaxed"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
+            >
+              水耕栽培が主流の現代において、あえて手間のかかる土耕栽培を選ぶ理由。それは、土が持つ無限の可能性を信じているからです。微生物が生きる豊かな土壌が、いちごに深い味わいと確かな栄養を与えてくれます。
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Section 2: 12種類の有機質肥料 */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-32">
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Leaf className="w-6 h-6" style={{ color: 'var(--color-strawberry-600)' }} />
+              <span className="text-sm font-semibold tracking-wider"
+                style={{ color: 'var(--color-strawberry-600)', fontFamily: 'var(--font-sans)' }}
+              >
+                COMMITMENT 02
+              </span>
+            </div>
+            
+            <h3 className="text-3xl lg:text-4xl font-bold mb-6"
+              style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}
+            >
+              自然の恵みが詰まった<br />12種類の有機質肥料
+            </h3>
+            
+            <p className="text-lg mb-6 leading-relaxed"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
+            >
+              油粕、米ヌカ、魚粉など、<strong>12種類に及ぶ有機質肥料</strong>を独自にブレンド。化学肥料に頼らず、自然界に存在する素材だけで、いちごが健康に育つ環境を整えています。
+            </p>
+            
+            <p className="text-lg mb-8 leading-relaxed"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
+            >
+              さらに黒砂糖、ニンニク、イオウなどの天然素材を散布することで、いちご自身の免疫力を高め、農薬に頼らない栽培を実現。「{FARM_INFO.features.motto}」という信念のもと、安心・安全ないちご作りに取り組んでいます。
+            </p>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl" style={{ background: 'var(--color-strawberry-50)', border: '1px solid var(--color-strawberry-200)' }}>
+                <p className="text-sm font-medium mb-1" style={{ color: 'var(--color-strawberry-800)', fontFamily: 'var(--font-sans)' }}>有機質肥料</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-strawberry-600)', fontFamily: 'var(--font-serif)' }}>12種類</p>
+              </div>
+              <div className="p-4 rounded-xl" style={{ background: 'var(--color-leaf-50)', border: '1px solid var(--color-leaf-200)' }}>
+                <p className="text-sm font-medium mb-1" style={{ color: 'var(--color-leaf-800)', fontFamily: 'var(--font-sans)' }}>化学農薬</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-leaf-600)', fontFamily: 'var(--font-serif)' }}>ゼロ</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ aspectRatio: '4/3' }}>
+              <img
+                src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/4D5ACBFA-A81D-4359-A23B-244EB9682E0C_1_105_c.jpg?v=1768511100"
+                alt="有機質肥料で育てる"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute -top-6 -right-6 w-48 h-48 rounded-full -z-10 blur-3xl opacity-20"
               style={{ background: 'var(--color-strawberry-400)' }}
             ></div>
-            <div 
-              className="absolute -top-8 -left-8 w-48 h-48 rounded-full -z-10 blur-3xl opacity-20"
+          </motion.div>
+        </div>
+
+        {/* Section 3: かおり野ブランド */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-32">
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative order-2 lg:order-1"
+          >
+            <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ aspectRatio: '4/3' }}>
+              <img
+                src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/B0CC8765-C46B-46DA-A909-468B88639C7C_1_105_c.jpg?v=1769214971"
+                alt="かおり野いちご"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-6 -left-6 w-48 h-48 rounded-full -z-10 blur-3xl opacity-20"
+              style={{ background: 'var(--color-strawberry-400)' }}
+            ></div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="order-1 lg:order-2"
+          >
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Award className="w-6 h-6" style={{ color: 'var(--color-strawberry-600)' }} />
+              <span className="text-sm font-semibold tracking-wider"
+                style={{ color: 'var(--color-strawberry-600)', fontFamily: 'var(--font-sans)' }}
+              >
+                COMMITMENT 03
+              </span>
+            </div>
+            
+            <h3 className="text-3xl lg:text-4xl font-bold mb-6"
+              style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}
+            >
+              プレミアムブランド<br />「かおり野」
+            </h3>
+            
+            <p className="text-lg mb-6 leading-relaxed"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
+            >
+              この土から育ついちごは、有名ブランド<strong>「かおり野」</strong>。上品な香りとあっさりとしたみずみずしい甘さが特徴の、希少価値の高い品種です。
+            </p>
+            
+            <p className="text-lg leading-relaxed"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
+            >
+              大地の力をたっぷり吸った大粒でとても甘い当園のいちごは、その品質の高さから<strong>贈答用の品</strong>としても大変ご好評をいただいています。大切な方への贈り物に、自信を持っておすすめできる逸品です。
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Section 4: 早朝手摘み */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-32">
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Sun className="w-6 h-6" style={{ color: 'var(--color-strawberry-600)' }} />
+              <span className="text-sm font-semibold tracking-wider"
+                style={{ color: 'var(--color-strawberry-600)', fontFamily: 'var(--font-sans)' }}
+              >
+                COMMITMENT 04
+              </span>
+            </div>
+            
+            <h3 className="text-3xl lg:text-4xl font-bold mb-6"
+              style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}
+            >
+              朝摘みの鮮度、<br />一粒一粒の厳選
+            </h3>
+            
+            <p className="text-lg mb-6 leading-relaxed"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
+            >
+              早朝、まだ日が昇りきらない涼しい時間帯に収穫を始めます。この時間のいちごは、夜の間にたっぷりと養分を蓄え、最も糖度が高く、みずみずしい状態です。
+            </p>
+            
+            <p className="text-lg leading-relaxed"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
+            >
+              手摘みしたいちごの中から、一粒一粒、色・形・大きさを確認し、良いものだけを厳選。その日のうちにお届けすることで、<strong>朝摘みの新鮮さをそのまま</strong>お客様にお届けしています。
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ aspectRatio: '4/3' }}>
+              <img
+                src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/5C7C8AFC-B2FE-4579-8ECE-F782B6599F9C_1_105_c.jpg?v=1768511100"
+                alt="早朝手摘みの様子"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute -top-6 -right-6 w-48 h-48 rounded-full -z-10 blur-3xl opacity-20"
               style={{ background: 'var(--color-leaf-400)' }}
             ></div>
           </motion.div>
         </div>
 
-        {/* 特徴 */}
-        <div className="grid md:grid-cols-3 gap-8 lg:gap-10">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative p-8 lg:p-10 rounded-3xl transition-all duration-500 hover:shadow-2xl"
-              style={{
-                background: 'white',
-                border: '1px solid var(--color-neutral-200)'
-              }}
+        {/* Section 5: 時代のニーズに応える */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative p-12 lg:p-16 rounded-3xl overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-leaf-50) 100%)' }}
+        >
+          <div className="relative z-10 max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Heart className="w-6 h-6" style={{ color: 'var(--color-strawberry-600)' }} />
+              <span className="text-sm font-semibold tracking-wider"
+                style={{ color: 'var(--color-strawberry-600)', fontFamily: 'var(--font-sans)' }}
+              >
+                OUR PHILOSOPHY
+              </span>
+            </div>
+
+            <h3 className="text-3xl lg:text-4xl font-bold mb-8"
+              style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}
             >
-              {/* アイコン背景 */}
-              <div 
-                className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-500"
-                style={{ background: 'var(--color-strawberry-500)' }}
-              ></div>
-              
-              <div 
-                className="inline-flex items-center justify-center w-16 h-16 lg:w-20 lg:h-20 rounded-2xl lg:rounded-3xl mb-6 transition-all duration-500 group-hover:scale-110"
-                style={{
-                  background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)',
-                  border: '1px solid var(--color-strawberry-200)'
-                }}
-              >
-                <feature.icon className="w-8 h-8 lg:w-10 lg:h-10" style={{ color: 'var(--color-strawberry-600)' }} />
-              </div>
-              
-              <h3 
-                className="font-bold text-xl lg:text-2xl mb-4"
-                style={{ 
-                  fontFamily: 'var(--font-serif)',
-                  color: 'var(--color-neutral-900)',
-                  letterSpacing: '0.02em'
-                }}
-              >
-                {feature.title}
-              </h3>
-              
-              <p 
-                className="leading-relaxed"
-                style={{ 
-                  fontFamily: 'var(--font-sans)',
-                  color: 'var(--color-neutral-600)',
-                  lineHeight: '1.8'
-                }}
-              >
-                {feature.description}
-              </p>
-            </motion.div>
-          ))}
-        </div>
+              「豊かさを味わう」という<br className="sm:hidden" />時代のニーズに応えて
+            </h3>
+
+            <p className="text-lg lg:text-xl mb-8 leading-relaxed"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
+            >
+              本物の味わい、安心できる品質、そして自然と調和した農業。<br />
+              津留いちご園は、持続可能な農業を通じて、<br className="hidden sm:block" />
+              次世代に豊かな食文化を繋いでいきます。
+            </p>
+
+            <div className="relative rounded-2xl overflow-hidden shadow-xl" style={{ aspectRatio: '16/9', maxWidth: '800px', margin: '0 auto' }}>
+              <img
+                src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/E3E7EF01-0A10-4ACF-B9FA-43FD5FC485B9_1_105_c.jpg?v=1768717304"
+                alt="生産者"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+          {/* 装飾要素 */}
+          <div className="absolute top-0 left-0 w-64 h-64 rounded-full blur-3xl opacity-10"
+            style={{ background: 'var(--color-strawberry-400)' }}
+          ></div>
+          <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-10"
+            style={{ background: 'var(--color-leaf-400)' }}
+          ></div>
+        </motion.div>
       </div>
     </section>
   );

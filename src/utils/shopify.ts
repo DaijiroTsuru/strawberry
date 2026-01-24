@@ -45,6 +45,15 @@ export interface ShopifyProduct {
       };
     }>;
   };
+  collections?: {
+    edges: Array<{
+      node: {
+        id: string;
+        handle: string;
+        title: string;
+      };
+    }>;
+  };
 }
 
 export interface ShopifyCart {
@@ -275,6 +284,15 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
               }
               availableForSale
               quantityAvailable
+            }
+          }
+        }
+        collections(first: 5) {
+          edges {
+            node {
+              id
+              handle
+              title
             }
           }
         }

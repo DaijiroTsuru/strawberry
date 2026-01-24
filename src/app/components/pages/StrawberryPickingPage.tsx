@@ -80,7 +80,7 @@ export function StrawberryPickingPage() {
             >
               <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ aspectRatio: '4/5' }}>
                 <img
-                  src="https://images.unsplash.com/photo-1518635017498-87f514b751ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                  src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/B0CC8765-C46B-46DA-A909-468B88639C7C_1_105_c.jpg?v=1768511101"
                   alt="いちご狩り"
                   className="w-full h-full object-cover"
                 />

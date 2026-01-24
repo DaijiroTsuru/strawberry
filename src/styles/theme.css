@@ -29,6 +29,18 @@
   --color-leaf-800: hsl(150, 60%, 22%);
   --color-leaf-900: hsl(150, 65%, 15%);
   
+  /* Golden Harvest (for rice) */
+  --color-harvest-50: hsl(45, 85%, 97%);
+  --color-harvest-100: hsl(45, 80%, 92%);
+  --color-harvest-200: hsl(45, 75%, 85%);
+  --color-harvest-300: hsl(45, 70%, 75%);
+  --color-harvest-400: hsl(45, 65%, 65%);
+  --color-harvest-500: hsl(45, 60%, 55%);
+  --color-harvest-600: hsl(42, 70%, 45%);
+  --color-harvest-700: hsl(40, 75%, 38%);
+  --color-harvest-800: hsl(38, 80%, 30%);
+  --color-harvest-900: hsl(36, 85%, 22%);
+  
   /* Neutral Tones */
   --color-neutral-50: hsl(0, 0%, 98%);
   --color-neutral-100: hsl(0, 0%, 96%);

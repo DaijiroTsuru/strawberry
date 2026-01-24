@@ -1,15 +1,15 @@
 import { createRouter, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
 import { Header } from '@/app/components/Header';
 import { Footer } from '@/app/components/Footer';
+import { SEO, createOrganizationSchema, createLocalBusinessSchema } from '@/app/components/SEO';
 import { HeroSection } from '@/app/components/HeroSection';
+import { FeaturedBannerSection } from '@/app/components/FeaturedBannerSection';
 import { ProductSection } from '@/app/components/ProductSection';
 import { AboutSection } from '@/app/components/AboutSection';
 import { TestimonialsSection } from '@/app/components/TestimonialsSection';
 import { AccessSection } from '@/app/components/AccessSection';
 import { RicePage } from '@/app/components/pages/RicePage';
 import { StrawberryPickingPage } from '@/app/components/pages/StrawberryPickingPage';
-import { MochiPage } from '@/app/components/pages/MochiPage';
-import { MisoPage } from '@/app/components/pages/MisoPage';
 import { StrawberriesPage } from '@/app/components/pages/StrawberriesPage';
 import { ProductByHandlePage } from '@/app/components/pages/ProductByHandlePage';
 
@@ -30,7 +30,18 @@ const indexRoute = createRoute({
   path: '/',
   component: () => (
     <main>
+      <SEO 
+        url="/"
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            createOrganizationSchema(),
+            createLocalBusinessSchema(),
+          ],
+        }}
+      />
       <HeroSection />
+      <FeaturedBannerSection />
       <ProductSection />
       <AboutSection />
       <TestimonialsSection />
@@ -53,20 +64,6 @@ const strawberryPickingRoute = createRoute({
   component: StrawberryPickingPage,
 });
 
-// Mochi page route
-const mochiRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/mochi',
-  component: MochiPage,
-});
-
-// Miso page route
-const misoRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/miso',
-  component: MisoPage,
-});
-
 // Strawberries page route
 const strawberriesRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -86,8 +83,6 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   riceRoute,
   strawberryPickingRoute,
-  mochiRoute,
-  misoRoute,
   strawberriesRoute,
   productDetailRoute,
 ]);
