@@ -153,7 +153,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     合計
                   </span>
                   <span className="text-2xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
-                    {formatPrice((parseFloat(totalAmount.amount) + SHIPPING.standardFee).toString(), totalAmount.currencyCode)}
+                    {formatPrice(((Math.round(parseFloat(totalAmount.amount) * 100) + SHIPPING.standardFee * 100) / 100).toFixed(2), totalAmount.currencyCode)}
                   </span>
                 </div>
                 

@@ -449,7 +449,7 @@ export function RicePage() {
                             </div>
                           </div>
                           {variant.title !== 'Default Title' && (
-                            <div className="text-sm font-medium pt-2 border-t border-leaf-200" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-harvest-700)' }}>
+                            <div className="text-sm font-medium pt-2 border-t border-harvest-200" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-harvest-700)' }}>
                               {variant.title}
                             </div>
                           )}
