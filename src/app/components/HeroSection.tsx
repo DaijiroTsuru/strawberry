@@ -57,7 +57,7 @@ export function HeroSection() {
                 letterSpacing: '0.1em'
               }}
             >
-              無農薬・有機栽培
+              こだわりの栽培
             </span>
           </motion.div>
 
@@ -82,18 +82,6 @@ export function HeroSection() {
             }}
           >
             自然の恵みと、丹精込めた栽培
-          </p>
-          
-          <p 
-            className="text-base md:text-lg lg:text-xl mb-12 opacity-90 max-w-2xl mx-auto"
-            style={{ 
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 400,
-              lineHeight: '1.8',
-              letterSpacing: '0.05em'
-            }}
-          >
-            {FARM_INFO.features.motto}
           </p>
         </motion.div>
 

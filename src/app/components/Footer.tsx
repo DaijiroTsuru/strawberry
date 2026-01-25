@@ -53,7 +53,7 @@ export function Footer() {
                 lineHeight: '1.8'
               }}
             >
-              除草剤や農薬を一切使用せず、<br />
+              こだわりの栽培で、<br />
               本物の美味しさをお届けします
             </p>
             
