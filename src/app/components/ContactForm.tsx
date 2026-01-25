@@ -117,6 +117,8 @@ export function ContactForm() {
 
       // EmailJS送信用のパラメータ
       const templateParams = {
+        name: formData.name,
+        email: formData.email,
         from_name: formData.name,
         from_email: formData.email,
         phone: formData.phone || 'なし',
