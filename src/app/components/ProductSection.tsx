@@ -48,17 +48,6 @@ export function ProductSection() {
       image: 'https://cdn.shopify.com/s/files/1/0791/6434/2495/files/A858687D-ADA7-4068-913D-EAE2A9AFC97A_1_105_c.jpg?v=1768511100',
       link: '/product/小もち'
     },
-    {
-      id: 'miso',
-      title: '無添加味噌',
-      description: '厳選素材で作る完全無添加の味噌',
-      icon: Soup,
-      color: 'miso',
-      gradient: 'linear-gradient(135deg, hsl(35, 60%, 55%) 0%, hsl(35, 60%, 45%) 100%)',
-      bgGradient: 'linear-gradient(135deg, hsl(35, 65%, 90%) 0%, hsl(35, 65%, 85%) 100%)',
-      image: 'https://images.unsplash.com/photo-1680137248903-7af5d51a3350?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-      link: '/product/無添加みそ'
-    },
   ];
 
   return (
