@@ -1,7 +1,7 @@
 /// <reference types="../vite-env" />
 
 // Shopify Storefront API統合用ユーティリティ（2026-01バージョン）
-// セットアップ方法は SHOPIFY_SETUP.md を参照してください
+// セットアップ方法は guides/SHOPIFY_SETUP.md を参照してください
 
 const SHOPIFY_DOMAIN = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
 const STOREFRONT_ACCESS_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN;

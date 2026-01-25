@@ -1,11 +1,13 @@
-# EmailJS セットアップガイド（GitHub Pages対応）
+# EmailJS セットアップガイド
 
 ## 📧 EmailJSとは
 
 EmailJSは、サーバーサイドコード不要でメール送信ができるサービスです。
-GitHub Pagesのような完全静的サイトに最適です。
+静的サイトでのメール送信に最適です。
 
 **無料プラン**: 月200通まで無料
+
+**GitHub Pagesへのデプロイ方法**: [GITHUB_PAGES_DEPLOYMENT.md](./GITHUB_PAGES_DEPLOYMENT.md)を参照してください。
 
 ---
 
@@ -205,8 +207,6 @@ reCAPTCHA v2を使用する場合、ユーザーにチェックボックスが�
 
 ### ステップ6: 環境変数の設定
 
-#### ローカル環境（`.env`）
-
 プロジェクトルートの `.env` ファイルを作成・更新:
 
 ```bash
@@ -214,80 +214,13 @@ reCAPTCHA v2を使用する場合、ユーザーにチェックボックスが�
 VITE_EMAILJS_SERVICE_ID=gmail_service
 VITE_EMAILJS_TEMPLATE_ID=template_xxxxxxx
 VITE_EMAILJS_PUBLIC_KEY=Xxxxxxxxxxxxxx
-
-# reCAPTCHA v3設定
-VITE_RECAPTCHA_SITE_KEY=6Lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 **重要**: 
 - すべて `VITE_` プレフィックスが必要（Viteでフロントエンドに公開）
 - `.gitignore` に `.env` が含まれていることを確認
 
-#### GitHub Pages用の設定
-
-GitHub Pagesでは環境変数が使えないため、**ビルド時に埋め込み**が必要です。
-
-**方法1: GitHub Actions Secretsを使用（推奨）**
-
-1. GitHubリポジトリの **Settings** → **Secrets and variables** → **Actions**
-2. 「New repository secret」で以下を追加:
-   - `VITE_EMAILJS_SERVICE_ID`
-   - `VITE_EMAILJS_TEMPLATE_ID`
-   - `VITE_EMAILJS_PUBLIC_KEY`
-   - `VITE_RECAPTCHA_SITE_KEY`
-
-3. `.github/workflows/deploy.yml` を作成:
-
-```yaml
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: [ main ]
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-jobs:
-  build-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Build
-        env:
-          VITE_EMAILJS_SERVICE_ID: ${{ secrets.VITE_EMAILJS_SERVICE_ID }}
-          VITE_EMAILJS_TEMPLATE_ID: ${{ secrets.VITE_EMAILJS_TEMPLATE_ID }}
-          VITE_EMAILJS_PUBLIC_KEY: ${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
-          VITE_RECAPTCHA_SITE_KEY: ${{ secrets.VITE_RECAPTCHA_SITE_KEY }}
-        run: npm run build
-        
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
-          
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-```
-
-**方法2: 直接コードに埋め込み（開発環境のみ推奨）**
-
-⚠️ **セキュリティリスク**: Public Keyは公開されても問題ありませんが、念のため注意
+**GitHub Pagesへのデプロイ**: 環境変数の設定方法は [GITHUB_PAGES_DEPLOYMENT.md](./GITHUB_PAGES_DEPLOYMENT.md) を参照してください。
 
 ---
 
@@ -305,19 +238,9 @@ npm run dev
 4. コンソールに `Form submitted successfully via EmailJS` と表示されることを確認
 5. 設定したメールアドレスにメールが届くことを確認
 
-#### GitHub Pagesへのデプロイ
+#### 本番環境へのデプロイ
 
-```bash
-# ビルド
-npm run build
-
-# GitHub にプッシュ
-git add .
-git commit -m "Add EmailJS contact form"
-git push origin main
-```
-
-GitHub Actionsが自動的にビルド＆デプロイします。
+GitHub Pagesへのデプロイ方法は [GITHUB_PAGES_DEPLOYMENT.md](./GITHUB_PAGES_DEPLOYMENT.md) を参照してください。
 
 ---
 
@@ -407,14 +330,16 @@ await emailjs.send(
 1. EmailJS **Security** → **Allowed Domains** を確認
 2. `localhost` と本番ドメインを追加
 
-### GitHub Pagesでメールが送信されない
+### 本番環境でメールが送信されない
 
-**原因**: 環境変数が埋め込まれていない
+**原因**: 環境変数が正しく設定されていない
 
 **解決方法**:
-1. GitHub Actions Secretsが設定されているか確認
-2. ビルドログで環境変数が設定されているか確認
-3. ビルド後の `dist` ファイルを確認（環境変数が埋め込まれているか）
+1. 環境変数が正しく設定されているか確認
+2. ビルドログで環境変数が読み込まれているか確認
+3. Allowed Domainsに本番ドメインが追加されているか確認
+
+GitHub Pagesの詳細は [GITHUB_PAGES_DEPLOYMENT.md](./GITHUB_PAGES_DEPLOYMENT.md) を参照してください。
 
 ---
 
@@ -455,11 +380,11 @@ await emailjs.send(
 - [ ] `.env` ファイルに環境変数を設定した
 - [ ] ローカル環境でテスト送信が成功した
 - [ ] メールが届くことを確認した
-- [ ] GitHub Actions Secretsを設定した
-- [ ] GitHub Pagesにデプロイした
 - [ ] 本番環境でテスト送信が成功した
 
-全て完了したら、GitHub Pagesで動作する問い合わせフォームの完成です！🎉
+全て完了したら、問い合わせフォームの完成です！🎉
+
+**GitHub Pagesへのデプロイ**: [GITHUB_PAGES_DEPLOYMENT.md](./GITHUB_PAGES_DEPLOYMENT.md) を参照してください。
 
 ---
 
@@ -467,5 +392,4 @@ await emailjs.send(
 
 - [EmailJS公式ドキュメント](https://www.emailjs.com/docs/)
 - [EmailJS React統合](https://www.emailjs.com/docs/examples/reactjs/)
-- [GitHub Pages公式ガイド](https://docs.github.com/pages)
-- [GitHub Actions環境変数](https://docs.github.com/actions/learn-github-actions/variables)
+- [GitHub Pagesデプロイガイド](./GITHUB_PAGES_DEPLOYMENT.md)
