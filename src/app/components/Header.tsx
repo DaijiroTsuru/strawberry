@@ -28,6 +28,7 @@ export function Header() {
     { label: '商品', href: '/#products' },
     { label: '農園について', href: '/#about' },
     { label: 'アクセス', href: '/#access' },
+    { label: 'FAQ', href: '/faq' },
   ];
 
   return (
