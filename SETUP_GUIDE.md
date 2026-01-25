@@ -128,5 +128,5 @@ npm run preview
 ## サポート
 
 ご不明な点がございましたら、以下までお問い合わせください：
-- メール: tsuruichigoen@herb.ocn.ne.jp
+- メール: turuichigoenn@outlook.jp
 - 電話: 0942-53-1038

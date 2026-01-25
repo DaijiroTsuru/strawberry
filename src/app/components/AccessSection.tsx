@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { MapPin, Phone, Mail, Clock, Smartphone } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
+import { ContactForm } from './ContactForm';
 
 export function AccessSection() {
   return (
@@ -315,6 +316,9 @@ export function AccessSection() {
             </div>
           </motion.div>
         </div>
+
+        {/* お問い合わせフォーム */}
+        <ContactForm />
       </div>
     </section>
   );

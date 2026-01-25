@@ -18,7 +18,7 @@ $conf{'spam_block'} = 1;
 $conf{'sendmail'} = '/usr/sbin/sendmail';
 
 #06.設置者のアドレス(カンマ区切り)
-$conf{'mailto'} = 'tsuruichigoen@herb.ocn.ne.jp';
+$conf{'mailto'} = 'turuichigoenn@outlook.jp';
 
 #07.送信完了時にリダイレクトするサンクスページ
 $conf{'thanks'} = 'http://www.tsuru-strawberry-farm.com/?is_thanks=1';

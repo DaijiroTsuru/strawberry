@@ -10,7 +10,7 @@ export const FARM_INFO = {
     phone: '0942-53-1038',
     mobile: '070-5071-9155',
     fax: '0942-53-1182',
-    email: 'tsuruichigoen@herb.ocn.ne.jp'
+    email: 'turuichigoenn@outlook.jp'
   },
   googleMaps: {
     embedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3345.123!2d130.123!3d33.123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDA3JzM0LjAiTiAxMzDCsDA3JzIyLjAiRQ!5e0!3m2!1sja!2sjp!4v1234567890',
