@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, ShoppingCart, Trash2, ExternalLink } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { formatPrice } from '@/utils/shopify';
+import { SHIPPING } from '@/app/constants/farmInfo';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -129,14 +130,36 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             {/* Footer */}
             {cartItems.length > 0 && totalAmount && (
               <div className="border-t p-6 space-y-4">
-                <div className="flex items-center justify-between text-lg">
+                <div className="flex items-center justify-between text-sm">
+                  <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)' }}>
+                    小計
+                  </span>
+                  <span className="font-semibold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-700)' }}>
+                    {formatPrice(totalAmount.amount, totalAmount.currencyCode)}
+                  </span>
+                </div>
+                
+                <div className="flex items-center justify-between text-sm">
+                  <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)' }}>
+                    送料
+                  </span>
+                  <span className="font-semibold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-700)' }}>
+                    {formatPrice(SHIPPING.standardFee.toString(), 'JPY')}
+                  </span>
+                </div>
+                
+                <div className="flex items-center justify-between text-lg pt-3 border-t">
                   <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
                     合計
                   </span>
                   <span className="text-2xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
-                    {formatPrice(totalAmount.amount, totalAmount.currencyCode)}
+                    {formatPrice((parseFloat(totalAmount.amount) + SHIPPING.standardFee).toString(), totalAmount.currencyCode)}
                   </span>
                 </div>
+                
+                <p className="text-xs" style={{ color: 'var(--color-neutral-500)' }}>
+                  {SHIPPING.note}
+                </p>
 
                 <a
                   href={cart.checkoutUrl}

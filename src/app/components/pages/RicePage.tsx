@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { Leaf, Sprout, Shield, Award, ShoppingCart, ArrowLeft, Package } from 'lucide-react';
-import { FARM_INFO } from '@/app/constants/farmInfo';
+import { FARM_INFO, SHIPPING } from '@/app/constants/farmInfo';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductsByCollectionId, ShopifyProduct, formatPrice } from '@/utils/shopify';
 import { SEO, createBreadcrumbSchema } from '@/app/components/SEO';
@@ -440,11 +440,22 @@ export function RicePage() {
                               <span className="text-sm" style={{ color: 'var(--color-neutral-500)' }}>（税込）</span>
                             </div>
                           </div>
+                          <div className="flex items-baseline justify-between pt-2 border-t border-harvest-200">
+                            <span className="text-sm font-medium" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)' }}>送料</span>
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-xl font-semibold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-harvest-600)' }}>
+                                {formatPrice(SHIPPING.standardFee.toString(), 'JPY')}
+                              </span>
+                            </div>
+                          </div>
                           {variant.title !== 'Default Title' && (
                             <div className="text-sm font-medium pt-2 border-t border-leaf-200" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-harvest-700)' }}>
                               {variant.title}
                             </div>
                           )}
+                          <div className="text-xs pt-2" style={{ color: 'var(--color-neutral-500)' }}>
+                            {SHIPPING.note}
+                          </div>
                         </div>
                       </div>
 

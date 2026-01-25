@@ -5,6 +5,7 @@ import { ShoppingCart, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductByHandle, ShopifyProduct, formatPrice } from '@/utils/shopify';
 import { SEO, createProductSchema, createBreadcrumbSchema } from '@/app/components/SEO';
+import { SHIPPING } from '@/app/constants/farmInfo';
 
 /**
  * 商品Handleから商品詳細ページを表示
@@ -239,19 +240,35 @@ export function ProductByHandlePage() {
                 border: '1px solid var(--color-strawberry-200)'
               }}
             >
-              <div className="flex items-baseline gap-3">
-                <span 
-                  className="text-5xl font-bold"
-                  style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}
-                >
-                  {selectedVariant && formatPrice(
-                    selectedVariant.priceV2.amount,
-                    selectedVariant.priceV2.currencyCode
-                  )}
-                </span>
-                <span className="text-lg" style={{ color: 'var(--color-neutral-500)' }}>
-                  （税込）
-                </span>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-sm font-medium" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)' }}>価格</span>
+                  <div className="flex items-baseline gap-3">
+                    <span 
+                      className="text-5xl font-bold"
+                      style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}
+                    >
+                      {selectedVariant && formatPrice(
+                        selectedVariant.priceV2.amount,
+                        selectedVariant.priceV2.currencyCode
+                      )}
+                    </span>
+                    <span className="text-lg" style={{ color: 'var(--color-neutral-500)' }}>
+                      （税込）
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-baseline justify-between pt-3 border-t border-strawberry-200">
+                  <span className="text-sm font-medium" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)' }}>送料</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-semibold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
+                      {formatPrice(SHIPPING.standardFee.toString(), 'JPY')}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-xs pt-2" style={{ color: 'var(--color-neutral-500)' }}>
+                  {SHIPPING.note}
+                </div>
               </div>
             </div>
 
