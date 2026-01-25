@@ -120,7 +120,7 @@ export function AccessSection() {
           >
             {/* Google Maps埋め込み */}
             <iframe
-              src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_PLACES_API_KEY || 'YOUR_API_KEY'}&q=${encodeURIComponent(FARM_INFO.address.full)}`}
+              src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_PLACES_API_KEY}&q=place_id:${import.meta.env.VITE_GOOGLE_PLACE_ID}`}
               width="100%"
               height="100%"
               style={{ border: 0 }}
