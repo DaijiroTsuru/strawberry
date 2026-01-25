@@ -239,7 +239,7 @@ export function ProductByHandlePage() {
                 border: '1px solid var(--color-strawberry-200)'
               }}
             >
-              <div className="flex items-baseline gap-3">
+              <div className="flex items-baseline gap-3 mb-4">
                 <span 
                   className="text-5xl font-bold"
                   style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}
@@ -252,6 +252,27 @@ export function ProductByHandlePage() {
                 <span className="text-lg" style={{ color: 'var(--color-neutral-500)' }}>
                   （税込）
                 </span>
+              </div>
+              
+              {/* 配送料情報 */}
+              <div className="pt-4 border-t" style={{ borderColor: 'var(--color-strawberry-200)' }}>
+                {backLink.to === '/strawberries' ? (
+                  <>
+                    <p className="text-sm font-semibold mb-1" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-700)' }}>
+                      鮮度保持便（クール便・梱包材込）：
+                    </p>
+                    <p className="text-sm mb-2" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
+                      九州 1,550円／九州外 2,300円（一律）
+                    </p>
+                    <p className="text-xs" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-500)' }}>
+                      ※農園から冷蔵で直送します
+                    </p>
+                  </>
+                ) : backLink.to === '/rice' ? (
+                  <p className="text-sm font-semibold" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-700)' }}>
+                    配送料として 九州 1,500円／九州外 2,000円（一律）
+                  </p>
+                ) : null}
               </div>
             </div>
 

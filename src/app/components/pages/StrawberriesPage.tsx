@@ -231,6 +231,17 @@ export function StrawberriesPage() {
                               {variant.title}
                             </div>
                           )}
+                          <div className="pt-3 mt-3 border-t" style={{ borderColor: 'var(--color-strawberry-200)' }}>
+                            <p className="text-sm font-semibold mb-1" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-700)' }}>
+                              鮮度保持便（クール便・梱包材込）：
+                            </p>
+                            <p className="text-sm mb-2" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
+                              九州 1,550円／九州外 2,300円（一律）
+                            </p>
+                            <p className="text-xs" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-500)' }}>
+                              ※農園から冷蔵で直送します
+                            </p>
+                          </div>
                         </div>
                       </div>
 
