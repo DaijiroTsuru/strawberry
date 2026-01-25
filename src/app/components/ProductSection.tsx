@@ -102,8 +102,8 @@ export function ProductSection() {
               lineHeight: '1.8'
             }}
           >
-            その日の朝に収穫した新鮮ないちご、無農薬栽培のお米など、<br className="hidden md:block" />
-            こだわりの商品をお届けします
+            その日の朝に収穫した新鮮ないちご、こだわりのお米など、<br className="hidden md:block" />
+            厳選した商品をお届けします
           </p>
         </motion.div>
 
