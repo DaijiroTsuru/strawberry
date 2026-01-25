@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
-import { HelpCircle, ArrowLeft, Package, Truck, ShoppingCart, Calendar, MapPin, CreditCard } from 'lucide-react';
+import { HelpCircle, ArrowLeft, Package, Truck, ShoppingCart, Calendar, Phone, Mail } from 'lucide-react';
 import { FARM_INFO, SHIPPING } from '@/app/constants/farmInfo';
 import { SEO, createBreadcrumbSchema } from '@/app/components/SEO';
 import {
@@ -305,7 +305,7 @@ export function FaqPage() {
                   fontWeight: 600
                 }}
               >
-                <MapPin className="w-5 h-5" />
+                <Phone className="w-5 h-5" />
                 <div className="text-left">
                   <div className="text-xs opacity-90">お電話でのお問い合わせ</div>
                   <div className="text-lg">{FARM_INFO.contact.phone}</div>
@@ -322,7 +322,7 @@ export function FaqPage() {
                   border: '2px solid var(--color-neutral-300)'
                 }}
               >
-                <CreditCard className="w-5 h-5" style={{ color: 'var(--color-strawberry-600)' }} />
+                <Mail className="w-5 h-5" style={{ color: 'var(--color-strawberry-600)' }} />
                 <div className="text-left">
                   <div className="text-xs" style={{ color: 'var(--color-neutral-500)' }}>メールでのお問い合わせ</div>
                   <div className="text-sm">メールを送る</div>
