@@ -175,17 +175,6 @@ export const PRODUCTS = {
       category: 'mochi',
       price: 3800
     }
-  ],
-  miso: [
-    {
-      id: 'additive-free-miso-1kg',
-      shopifyId: '',
-      name: '無添加味噌 1kg',
-      description: '有機肥料のみを使用した無農薬米、五島灘の塩、国産の大豆を使用。',
-      image: '/images/miso.jpg',
-      category: 'miso',
-      price: 1100
-    }
   ]
 };
 
