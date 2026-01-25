@@ -143,17 +143,13 @@ export function AboutSection() {
             <p className="text-lg mb-8 leading-relaxed"
               style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
             >
-              さらに黒砂糖、ニンニク、イオウなどの天然素材を散布することで、いちご自身の免疫力を高め、農薬に頼らない栽培を実現。「{FARM_INFO.features.motto}」という信念のもと、安心・安全ないちご作りに取り組んでいます。
+              さらに黒砂糖、ニンニク、イオウなどの天然素材を散布することで、いちご自身の免疫力を高め、安心・安全ないちご作りに取り組んでいます。
             </p>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl" style={{ background: 'var(--color-strawberry-50)', border: '1px solid var(--color-strawberry-200)' }}>
-                <p className="text-sm font-medium mb-1" style={{ color: 'var(--color-strawberry-800)', fontFamily: 'var(--font-sans)' }}>有機質肥料</p>
-                <p className="text-2xl font-bold" style={{ color: 'var(--color-strawberry-600)', fontFamily: 'var(--font-serif)' }}>12種類</p>
-              </div>
-              <div className="p-4 rounded-xl" style={{ background: 'var(--color-leaf-50)', border: '1px solid var(--color-leaf-200)' }}>
-                <p className="text-sm font-medium mb-1" style={{ color: 'var(--color-leaf-800)', fontFamily: 'var(--font-sans)' }}>化学農薬</p>
-                <p className="text-2xl font-bold" style={{ color: 'var(--color-leaf-600)', fontFamily: 'var(--font-serif)' }}>ゼロ</p>
+            <div className="inline-block">
+              <div className="p-6 rounded-xl" style={{ background: 'var(--color-strawberry-50)', border: '1px solid var(--color-strawberry-200)' }}>
+                <p className="text-sm font-medium mb-2" style={{ color: 'var(--color-strawberry-800)', fontFamily: 'var(--font-sans)' }}>有機質肥料</p>
+                <p className="text-3xl font-bold" style={{ color: 'var(--color-strawberry-600)', fontFamily: 'var(--font-serif)' }}>12種類</p>
               </div>
             </div>
           </motion.div>
