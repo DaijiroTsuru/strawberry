@@ -13,11 +13,10 @@ export interface SEOProps {
 const DEFAULT_SEO = {
   siteName: '津留いちご園',
   defaultTitle: '津留いちご園｜久留米、筑後のいちご狩り【通信販売で全国配送も承ります】',
-  defaultDescription: '宮崎県西都市の津留いちご園では、無農薬・有機栽培にこだわった新鮮ないちごと安心安全なお米をお届けしています。朝摘みの「かおり野」いちごと、12種類の有機質肥料で育てた無農薬栽培米を全国へ通信販売。いちご狩り体験も実施中。',
-  defaultKeywords: 'いちご狩り,久留米,筑後,いちご,かおり野,無農薬,有機栽培,お米,宮崎,西都市,通信販売,オンラインショップ',
+  defaultDescription: '福岡県筑後市の津留いちご園では、こだわりの栽培で新鮮ないちごと安心安全なお米をお届けしています。朝摘みの「かおり野」いちごと、12種類の有機質肥料で育てた無農薬栽培米を全国へ通信販売。いちご狩り体験も実施中。',
+  defaultKeywords: 'いちご狩り,久留米,筑後,いちご,かおり野,無農薬米,有機栽培,お米,福岡,筑後市,通信販売,オンラインショップ',
   defaultImage: 'https://cdn.shopify.com/s/files/1/0791/6434/2495/files/723E7A30-ABBC-4701-9CAB-224F116EF19C_1_105_c.jpg?v=1768511539',
   siteUrl: 'https://www.tsuru-strawberry-farm.com',
-  twitterHandle: '@tsurutsuru719',
 };
 
 export function SEO({
@@ -70,7 +69,6 @@ export function SEO({
 
     // Twitter Card
     updateMetaTag('twitter:card', 'summary_large_image');
-    updateMetaTag('twitter:site', DEFAULT_SEO.twitterHandle);
     updateMetaTag('twitter:title', pageTitle);
     updateMetaTag('twitter:description', description);
     updateMetaTag('twitter:image', image);
@@ -112,20 +110,17 @@ export const createOrganizationSchema = () => ({
   description: DEFAULT_SEO.defaultDescription,
   address: {
     '@type': 'PostalAddress',
-    addressRegion: '宮崎県',
-    addressLocality: '西都市',
+    addressRegion: '福岡県',
+    addressLocality: '筑後市',
     addressCountry: 'JP',
   },
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+81-983-43-5785',
+    telephone: '+81-942-53-1038',
     contactType: 'customer service',
     areaServed: 'JP',
     availableLanguage: 'Japanese',
-  },
-  sameAs: [
-    'https://instagram.com/tsurutsuru719',
-  ],
+  }
 });
 
 export const createProductSchema = (product: {
@@ -163,18 +158,18 @@ export const createLocalBusinessSchema = () => ({
   image: DEFAULT_SEO.defaultImage,
   description: DEFAULT_SEO.defaultDescription,
   url: DEFAULT_SEO.siteUrl,
-  telephone: '+81-983-43-5785',
+  telephone: '+81-942-53-1038',
   priceRange: '¥¥',
   address: {
     '@type': 'PostalAddress',
-    addressRegion: '宮崎県',
-    addressLocality: '西都市',
+    addressRegion: '福岡県',
+    addressLocality: '筑後市',
     addressCountry: 'JP',
   },
   geo: {
     '@type': 'GeoCoordinates',
-    latitude: 32.1067,
-    longitude: 131.4009,
+    latitude: 33.22603439554186,
+    longitude: 130.46901652672733,
   },
   openingHoursSpecification: [
     {
@@ -183,9 +178,6 @@ export const createLocalBusinessSchema = () => ({
       opens: '09:00',
       closes: '17:00',
     },
-  ],
-  sameAs: [
-    'https://instagram.com/tsurutsuru719',
   ],
 });
 
