@@ -27,6 +27,10 @@ GitHubリポジトリで環境変数をSecretsとして設定します。
 - **Name**: `VITE_EMAILJS_PUBLIC_KEY`
 - **Value**: EmailJSのPublic Key
 
+#### reCAPTCHA設定（お問い合わせフォームのスパム対策）
+- **Name**: `VITE_RECAPTCHA_SITE_KEY`
+- **Value**: reCAPTCHA v3のサイトキー
+
 #### Shopify設定
 - **Name**: `VITE_SHOPIFY_STORE_DOMAIN`
 - **Value**: `your-store.myshopify.com`
@@ -85,6 +89,8 @@ jobs:
           VITE_EMAILJS_SERVICE_ID: ${{ secrets.VITE_EMAILJS_SERVICE_ID }}
           VITE_EMAILJS_TEMPLATE_ID: ${{ secrets.VITE_EMAILJS_TEMPLATE_ID }}
           VITE_EMAILJS_PUBLIC_KEY: ${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
+          # reCAPTCHA設定
+          VITE_RECAPTCHA_SITE_KEY: ${{ secrets.VITE_RECAPTCHA_SITE_KEY }}
           # Shopify設定
           VITE_SHOPIFY_STORE_DOMAIN: ${{ secrets.VITE_SHOPIFY_STORE_DOMAIN }}
           VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN }}

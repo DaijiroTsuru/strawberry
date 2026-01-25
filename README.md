@@ -40,6 +40,9 @@ VITE_EMAILJS_SERVICE_ID=your_service_id
 VITE_EMAILJS_TEMPLATE_ID=your_template_id
 VITE_EMAILJS_PUBLIC_KEY=your_public_key
 
+# reCAPTCHA v3設定（スパム対策）
+VITE_RECAPTCHA_SITE_KEY=your_recaptcha_site_key
+
 # Google Places API設定
 VITE_GOOGLE_PLACES_API_KEY=your_google_api_key
 VITE_GOOGLE_PLACE_ID=your_place_id
