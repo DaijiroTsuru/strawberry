@@ -445,6 +445,11 @@ export function RicePage() {
                               {variant.title}
                             </div>
                           )}
+                          <div className="pt-3 mt-3 border-t" style={{ borderColor: 'var(--color-harvest-200)' }}>
+                            <p className="text-sm font-semibold" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-harvest-700)' }}>
+                              配送料として 九州 1,500円／九州外 2,000円（一律）
+                            </p>
+                          </div>
                         </div>
                       </div>
 
