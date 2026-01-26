@@ -5,6 +5,7 @@ import { ShoppingCart, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductByHandle, ShopifyProduct, formatPrice } from '@/utils/shopify';
 import { SEO, createProductSchema, createBreadcrumbSchema } from '@/app/components/SEO';
+import { trackAddToCart, trackBeginCheckout } from '@/utils/analytics';
 
 /**
  * 商品Handleから商品詳細ページを表示
@@ -44,7 +45,23 @@ export function ProductByHandlePage() {
     if (!selectedVariant) return;
 
     try {
+      // Google Analytics: カート追加イベント
+      trackAddToCart({
+        productName: product.title,
+        variantName: selectedVariant.title,
+        price: parseFloat(selectedVariant.price.amount),
+      });
+      
       const checkoutUrl = await buyNow(selectedVariant.id, 1);
+      
+      // Google Analytics: チェックアウト開始イベント
+      trackBeginCheckout([{
+        item_name: product.title,
+        item_variant: selectedVariant.title,
+        price: parseFloat(selectedVariant.price.amount),
+        quantity: 1,
+      }]);
+      
       // チェックアウトページにリダイレクト
       window.location.href = checkoutUrl;
     } catch (error) {
