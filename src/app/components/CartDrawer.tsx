@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, ShoppingCart, Trash2, ExternalLink } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { formatPrice } from '@/utils/shopify';
+import { useState, useEffect } from 'react';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -10,7 +11,29 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const { cart, removeItem, isLoading } = useCart();
+  const { cart, removeItem, updateCartNote, isLoading } = useCart();
+  const [note, setNote] = useState('');
+  const maxNoteLength = 500;
+
+  // カートが読み込まれたら既存のnoteを設定
+  useEffect(() => {
+    if (cart?.note) {
+      setNote(cart.note);
+    }
+  }, [cart?.note]);
+
+  // noteが変更されたらデバウンスして保存
+  useEffect(() => {
+    if (!cart) return;
+    
+    const timer = setTimeout(() => {
+      if (note !== (cart.note || '')) {
+        updateCartNote(note).catch(console.error);
+      }
+    }, 1000); // 1秒のデバウンス
+
+    return () => clearTimeout(timer);
+  }, [note, cart, updateCartNote]);
 
   const cartItems = cart?.lines.edges || [];
   const totalAmount = cart?.cost.totalAmount;
@@ -87,7 +110,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
                         <div className="flex-1 min-w-0">
                           <h3
-                            className="font-semibold mb-1 truncate"
+                            className="font-semibold mb-1"
                             style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-900)' }}
                           >
                             {product.title}
@@ -138,6 +161,35 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   </span>
                 </div>
 
+                {/* 備考欄 */}
+                <div className="space-y-2">
+                  <label 
+                    htmlFor="cart-note" 
+                    className="block text-sm font-semibold"
+                    style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}
+                  >
+                    ご要望・熨斗など
+                  </label>
+                  <textarea
+                    id="cart-note"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value.slice(0, maxNoteLength))}
+                    maxLength={maxNoteLength}
+                    placeholder="熨斗のご希望や配送に関するご要望などをご記入ください（500文字まで）"
+                    rows={4}
+                    className="w-full px-4 py-3 rounded-lg border resize-none focus:outline-none focus:ring-2"
+                    style={{
+                      borderColor: 'var(--color-neutral-300)',
+                      fontFamily: 'var(--font-sans)',
+                      color: 'var(--color-neutral-900)',
+                      '--tw-ring-color': 'var(--color-strawberry-400)',
+                    } as React.CSSProperties}
+                  />
+                  <div className="flex justify-end text-xs" style={{ color: 'var(--color-neutral-500)' }}>
+                    {note.length} / {maxNoteLength}文字
+                  </div>
+                </div>
+
                 <a
                   href={cart.checkoutUrl}
                   target="_blank"
@@ -150,7 +202,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     color: 'white'
                   }}
                 >
-                  <span>チェックアウト</span>
+                  <span>購入手続きへ</span>
                   <ExternalLink className="w-5 h-5" />
                 </a>
 

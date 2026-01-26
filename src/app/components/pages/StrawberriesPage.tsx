@@ -13,7 +13,7 @@ const STRAWBERRY_COLLECTION_ID = '486373589215';
 export function StrawberriesPage() {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
-  const { buyNow, isLoading: isAddingToCart, error: cartError } = useCart();
+  const { addToCart, openCart, isLoading: isAddingToCart, error: cartError } = useCart();
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -32,11 +32,11 @@ export function StrawberriesPage() {
 
   const handleAddToCart = async (variantId: string) => {
     try {
-      const checkoutUrl = await buyNow(variantId, 1);
-      // チェックアウトページにリダイレクト
-      window.location.href = checkoutUrl;
+      await addToCart(variantId, 1);
+      // カートドロワーを開く
+      openCart();
     } catch (error) {
-      console.error('Failed to checkout:', error);
+      console.error('Failed to add to cart:', error);
     }
   };
 

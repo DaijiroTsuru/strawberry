@@ -9,8 +9,7 @@ import { useCart } from '@/app/contexts/CartContext';
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const { cart } = useCart();
+  const { cart, isCartOpen, openCart, closeCart } = useCart();
 
   const cartItemCount = cart?.lines.edges.reduce((total, { node }) => total + node.quantity, 0) || 0;
 
@@ -107,7 +106,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             {cartItemCount > 0 && (
               <button
-                onClick={() => setIsCartOpen(true)}
+                onClick={() => openCart()}
                 className="hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full transition-all duration-300 group overflow-hidden relative"
                 style={{
                   background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
@@ -173,7 +172,7 @@ export function Header() {
             {cartItemCount > 0 && (
               <button
                 onClick={() => {
-                  setIsCartOpen(true);
+                  openCart();
                   setIsMobileMenuOpen(false);
                 }}
                 className="flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 justify-center mt-4 w-full"
@@ -199,7 +198,7 @@ export function Header() {
       )}
 
       {/* Cart Drawer */}
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartDrawer isOpen={isCartOpen} onClose={() => closeCart()} />
     </header>
   );
 }
