@@ -216,40 +216,6 @@ export function ContactForm() {
           </p>
         </div>
 
-        {status === 'success' && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 rounded-2xl flex items-center gap-3"
-            style={{
-              background: 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)',
-              border: '1px solid #6ee7b7'
-            }}
-          >
-            <CheckCircle2 className="w-5 h-5 flex-shrink-0" style={{ color: '#059669' }} />
-            <p style={{ color: '#065f46', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>
-              お問い合わせを送信しました。ご連絡ありがとうございます！
-            </p>
-          </motion.div>
-        )}
-
-        {status === 'error' && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 rounded-2xl flex items-center gap-3"
-            style={{
-              background: 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)',
-              border: '1px solid #fca5a5'
-            }}
-          >
-            <AlertCircle className="w-5 h-5 flex-shrink-0" style={{ color: '#dc2626' }} />
-            <p style={{ color: '#991b1b', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>
-              送信中にエラーが発生しました。もう一度お試しください。
-            </p>
-          </motion.div>
-        )}
-
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* お名前 */}
           <div>
@@ -482,6 +448,42 @@ export function ContactForm() {
               </>
             )}
           </motion.button>
+
+          {/* Success Message */}
+          {status === 'success' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-6 p-4 rounded-2xl flex items-center gap-3"
+              style={{
+                background: 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)',
+                border: '1px solid #6ee7b7'
+              }}
+            >
+              <CheckCircle2 className="w-5 h-5 flex-shrink-0" style={{ color: '#059669' }} />
+              <p style={{ color: '#065f46', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>
+                お問い合わせを送信しました。ご連絡ありがとうございます！
+              </p>
+            </motion.div>
+          )}
+
+          {/* Error Message */}
+          {status === 'error' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-6 p-4 rounded-2xl flex items-center gap-3"
+              style={{
+                background: 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)',
+                border: '1px solid #fca5a5'
+              }}
+            >
+              <AlertCircle className="w-5 h-5 flex-shrink-0" style={{ color: '#dc2626' }} />
+              <p style={{ color: '#991b1b', fontFamily: 'var(--font-sans)', fontWeight: 500 }}>
+                送信中にエラーが発生しました。もう一度お試しください。
+              </p>
+            </motion.div>
+          )}
 
           {/* reCAPTCHA v3 バッジ表示の注記 */}
           {recaptchaLoaded && (
