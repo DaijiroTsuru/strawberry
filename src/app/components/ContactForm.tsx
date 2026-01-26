@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Send, CheckCircle2, AlertCircle, Shield } from 'lucide-react';
 import emailjs from '@emailjs/browser';
-import { trackContactFormSubmission } from '../../../utils/analytics';
+import { trackContactFormSubmission } from '@/utils/analytics';
 
 interface FormData {
   name: string;
