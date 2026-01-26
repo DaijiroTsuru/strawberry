@@ -60,6 +60,7 @@ export interface ShopifyProduct {
 export interface ShopifyCart {
   id: string;
   checkoutUrl: string;
+  note?: string | null;
   lines: {
     edges: Array<{
       node: {
@@ -394,13 +395,14 @@ export async function fetchProductsByCollectionId(
 }
 
 // カートを作成
-export async function createCart() {
+export async function createCart(note?: string) {
   const query = `
-    mutation CreateCart {
-      cartCreate {
+    mutation CreateCart($input: CartInput) {
+      cartCreate(input: $input) {
         cart {
           id
           checkoutUrl
+          note
           lines(first: 10) {
             edges {
               node {
@@ -419,7 +421,8 @@ export async function createCart() {
   `;
 
   try {
-    const { data } = await shopifyFetch({ query });
+    const variables = note ? { input: { note } } : {};
+    const { data } = await shopifyFetch({ query, variables });
     if (data.cartCreate.userErrors.length > 0) {
       throw new Error(data.cartCreate.userErrors[0].message);
     }
@@ -626,6 +629,7 @@ export async function getCart(cartId: string) {
       cart(id: $cartId) {
         id
         checkoutUrl
+        note
         lines(first: 10) {
           edges {
             node {
@@ -678,6 +682,80 @@ export async function getCart(cartId: string) {
     return data.cart;
   } catch (error) {
     console.error('Get cart error:', error);
+    throw error;
+  }
+}
+
+// カートのnoteを更新
+export async function updateCartNote(cartId: string, note: string) {
+  const query = `
+    mutation UpdateCartNote($cartId: ID!, $note: String!) {
+      cartNoteUpdate(cartId: $cartId, note: $note) {
+        cart {
+          id
+          note
+          checkoutUrl
+          lines(first: 10) {
+            edges {
+              node {
+                id
+                quantity
+                merchandise {
+                  ... on ProductVariant {
+                    id
+                    title
+                    priceV2 {
+                      amount
+                      currencyCode
+                    }
+                    product {
+                      title
+                      images(first: 1) {
+                        edges {
+                          node {
+                            url
+                            altText
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          cost {
+            totalAmount {
+              amount
+              currencyCode
+            }
+            subtotalAmount {
+              amount
+              currencyCode
+            }
+          }
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await shopifyFetch({
+      query,
+      variables: { cartId, note },
+    });
+
+    if (data.cartNoteUpdate.userErrors.length > 0) {
+      throw new Error(data.cartNoteUpdate.userErrors[0].message);
+    }
+
+    return data.cartNoteUpdate.cart;
+  } catch (error) {
+    console.error('Update cart note error:', error);
     throw error;
   }
 }

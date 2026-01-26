@@ -5,6 +5,7 @@ import {
   updateCartLine,
   removeFromCart as removeFromCartAPI,
   getCart,
+  updateCartNote as updateCartNoteAPI,
   ShopifyCart,
 } from '@/utils/shopify';
 
@@ -12,10 +13,14 @@ interface CartContextType {
   cart: ShopifyCart | null;
   isLoading: boolean;
   error: string | null;
+  isCartOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
   addToCart: (merchandiseId: string, quantity?: number) => Promise<void>;
   buyNow: (merchandiseId: string, quantity?: number) => Promise<string>;
   updateQuantity: (lineId: string, quantity: number) => Promise<void>;
   removeItem: (lineId: string) => Promise<void>;
+  updateCartNote: (note: string) => Promise<void>;
   clearError: () => void;
 }
 
@@ -25,6 +30,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<ShopifyCart | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   // ローカルストレージからカートIDを取得
   useEffect(() => {
@@ -142,6 +148,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateCartNote = async (note: string) => {
+    if (!cart) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const updatedCart = await updateCartNoteAPI(cart.id, note);
+      setCart(updatedCart);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '備考欄の更新に失敗しました';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
   const clearError = () => setError(null);
 
   return (
@@ -150,10 +176,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         cart,
         isLoading,
         error,
+        isCartOpen,
+        openCart,
+        closeCart,
         addToCart,
         buyNow,
         updateQuantity,
         removeItem,
+        updateCartNote,
         clearError,
       }}
     >

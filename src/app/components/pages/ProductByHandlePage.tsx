@@ -20,7 +20,7 @@ export function ProductByHandlePage() {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const { buyNow, isLoading: isAddingToCart, error: cartError } = useCart();
+  const { addToCart, openCart, isLoading: isAddingToCart, error: cartError } = useCart();
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -56,24 +56,12 @@ export function ProductByHandlePage() {
         console.warn('GA tracking error (add_to_cart):', gaError);
       }
       
-      const checkoutUrl = await buyNow(selectedVariant.id, 1);
+      await addToCart(selectedVariant.id, 1);
       
-      // Google Analytics: チェックアウト開始イベント（エラーが発生しても継続）
-      try {
-        trackBeginCheckout([{
-          item_name: product.title,
-          item_variant: selectedVariant.title,
-          price: selectedVariant.priceV2?.amount ? parseFloat(selectedVariant.priceV2.amount) : undefined,
-          quantity: 1,
-        }]);
-      } catch (gaError) {
-        console.warn('GA tracking error (begin_checkout):', gaError);
-      }
-      
-      // チェックアウトページにリダイレクト
-      window.location.href = checkoutUrl;
+      // カートドロワーを開く
+      openCart();
     } catch (error) {
-      console.error('Failed to checkout:', error);
+      console.error('Failed to add to cart:', error);
     }
   };
 
