@@ -139,11 +139,15 @@ export function ContactForm() {
       console.log('Form submitted successfully via EmailJS');
       setStatus('success');
       
-      // Google Analyticsコンバージョントラッキング
-      trackContactFormSubmission({
-        subject: formData.subject,
-        email: formData.email,
-      });
+      // Google Analyticsコンバージョントラッキング（エラーが発生してもフォーム送信は成功とする）
+      try {
+        trackContactFormSubmission({
+          subject: formData.subject,
+          email: formData.email,
+        });
+      } catch (gaError) {
+        console.warn('GA tracking error (contact_form_submit):', gaError);
+      }
       
       // フォームをリセット
       setFormData({

@@ -45,22 +45,30 @@ export function ProductByHandlePage() {
     if (!selectedVariant) return;
 
     try {
-      // Google Analytics: カート追加イベント
-      trackAddToCart({
-        productName: product.title,
-        variantName: selectedVariant.title,
-        price: parseFloat(selectedVariant.price.amount),
-      });
+      // Google Analytics: カート追加イベント（エラーが発生しても継続）
+      try {
+        trackAddToCart({
+          productName: product.title,
+          variantName: selectedVariant.title,
+          price: selectedVariant.priceV2?.amount ? parseFloat(selectedVariant.priceV2.amount) : undefined,
+        });
+      } catch (gaError) {
+        console.warn('GA tracking error (add_to_cart):', gaError);
+      }
       
       const checkoutUrl = await buyNow(selectedVariant.id, 1);
       
-      // Google Analytics: チェックアウト開始イベント
-      trackBeginCheckout([{
-        item_name: product.title,
-        item_variant: selectedVariant.title,
-        price: parseFloat(selectedVariant.price.amount),
-        quantity: 1,
-      }]);
+      // Google Analytics: チェックアウト開始イベント（エラーが発生しても継続）
+      try {
+        trackBeginCheckout([{
+          item_name: product.title,
+          item_variant: selectedVariant.title,
+          price: selectedVariant.priceV2?.amount ? parseFloat(selectedVariant.priceV2.amount) : undefined,
+          quantity: 1,
+        }]);
+      } catch (gaError) {
+        console.warn('GA tracking error (begin_checkout):', gaError);
+      }
       
       // チェックアウトページにリダイレクト
       window.location.href = checkoutUrl;
