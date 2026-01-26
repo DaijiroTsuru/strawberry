@@ -44,7 +44,7 @@ export function RicePage() {
       <SEO 
         title="無農薬栽培米"
         description="除草剤や農薬を一切使用せず、油粕、米糠、海草、魚粉等12種類に及ぶ有機質肥料を使用して栽培した安心・安全なお米。いかに無農薬で強く美味しいお米をつける稲を育てるかにこだわった津留いちご園のヒノヒカリをお届けします。"
-        keywords="無農薬,お米,ヒノヒカリ,有機栽培,玄米,白米,7分づき米,宮崎,西都市,通信販売"
+        keywords="無農薬,お米,ヒノヒカリ,有機栽培,玄米,白米,7分づき米,福岡,筑後,通信販売"
         image="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/01F69287-C88A-464C-9CD4-7CE4CA3CB3C4_1_105_c.jpg?v=1768511100"
         url="/rice"
         structuredData={createBreadcrumbSchema([
@@ -128,7 +128,7 @@ export function RicePage() {
                 津留農園のお米
               </h2>
               <p className="text-lg mb-6" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
-                宮崎の豊かな自然の中で、除草剤や農薬を一切使用せず、12種類の有機質肥料を使って丁寧に育てたお米です。
+                福岡の豊かな自然の中で、除草剤や農薬を一切使用せず、12種類の有機質肥料を使って丁寧に育てたお米です。
               </p>
               <p className="text-lg mb-6" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
                 太陽の光をたっぷりと浴びて育った稲穂は、黄金色に輝き、一粒一粒に旨味と栄養が凝縮されています。
