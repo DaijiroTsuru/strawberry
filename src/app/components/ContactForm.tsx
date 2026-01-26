@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Send, CheckCircle2, AlertCircle, Shield } from 'lucide-react';
 import emailjs from '@emailjs/browser';
+import { trackContactFormSubmission } from '../../../utils/analytics';
 
 interface FormData {
   name: string;
@@ -137,6 +138,12 @@ export function ContactForm() {
       // 成功時の処理
       console.log('Form submitted successfully via EmailJS');
       setStatus('success');
+      
+      // Google Analyticsコンバージョントラッキング
+      trackContactFormSubmission({
+        subject: formData.subject,
+        email: formData.email,
+      });
       
       // フォームをリセット
       setFormData({
