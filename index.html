@@ -39,6 +39,11 @@
             history.replaceState(null, null, redirect);
           }
         })();
+        
+        // Redirect /index.html to root path for proper routing
+        if (window.location.pathname === '/index.html') {
+          window.location.replace('/');
+        }
       </script>
     </head>
 
