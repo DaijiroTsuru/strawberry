@@ -13,6 +13,7 @@ import { StrawberryPickingPage } from '@/app/components/pages/StrawberryPickingP
 import { StrawberriesPage } from '@/app/components/pages/StrawberriesPage';
 import { ProductByHandlePage } from '@/app/components/pages/ProductByHandlePage';
 import { FaqPage } from '@/app/components/pages/FaqPage';
+import { ContactPage } from '@/app/components/pages/ContactPage';
 
 // Root route
 const rootRoute = createRootRoute({
@@ -86,6 +87,13 @@ const faqRoute = createRoute({
   component: FaqPage,
 });
 
+// Contact page route
+const contactRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/contact',
+  component: ContactPage,
+});
+
 // Create route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -94,6 +102,7 @@ const routeTree = rootRoute.addChildren([
   strawberriesRoute,
   productDetailRoute,
   faqRoute,
+  contactRoute,
 ]);
 
 // Create router

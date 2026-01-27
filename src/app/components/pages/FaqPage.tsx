@@ -312,7 +312,7 @@ export function FaqPage() {
                 </div>
               </a>
               <a
-                href={`mailto:${FARM_INFO.contact.email}`}
+                href="/contact"
                 className="flex items-center justify-center gap-3 px-8 py-5 rounded-2xl transition-all duration-300 hover:shadow-lg"
                 style={{ 
                   background: 'white', 

@@ -63,14 +63,14 @@ export function RicePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <a
-              href="/"
+            <Link
+              to="/"
               className="inline-flex items-center gap-2 mb-8 transition-colors duration-300"
               style={{ color: 'var(--color-neutral-600)', fontFamily: 'var(--font-sans)' }}
             >
               <ArrowLeft className="w-5 h-5" />
               <span>ホームに戻る</span>
-            </a>
+            </Link>
 
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ background: 'linear-gradient(135deg, var(--color-harvest-100) 0%, var(--color-harvest-200) 100%)', border: '1px solid var(--color-harvest-300)' }}>
               <Sprout className="w-4 h-4" style={{ color: 'var(--color-harvest-700)' }} />
@@ -523,7 +523,7 @@ export function RicePage() {
                 電話で注文
               </a>
               <a
-                href={`mailto:${FARM_INFO.contact.email}`}
+                href="/contact"
                 className="px-8 py-4 rounded-full transition-all duration-300 text-lg font-semibold"
                 style={{ background: 'rgba(0,0,0,0.05)', color: 'var(--color-neutral-700)', fontFamily: 'var(--font-sans)', border: '2px solid var(--color-neutral-300)' }}
               >

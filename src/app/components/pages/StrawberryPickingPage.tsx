@@ -1,6 +1,15 @@
-import { motion } from 'motion/react';
-import { Calendar, Clock, Users, Info, Phone, ArrowLeft, Sparkles } from 'lucide-react';
-import { FARM_INFO, STRAWBERRY_PICKING } from '@/app/constants/farmInfo';
+import { motion } from "motion/react";
+import {
+  Calendar,
+  Clock,
+  Users,
+  Info,
+  Phone,
+  ArrowLeft,
+  Sparkles,
+} from "lucide-react";
+import { FARM_INFO, STRAWBERRY_PICKING } from "@/app/constants/farmInfo";
+import { Link } from "@tanstack/react-router";
 
 export function StrawberryPickingPage() {
   return (
@@ -9,39 +18,89 @@ export function StrawberryPickingPage() {
       <div className="h-20 lg:h-24"></div>
 
       {/* ヒーローセクション */}
-      <section className="relative py-20 lg:py-32 px-4 overflow-hidden" style={{ background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-neutral-50) 100%)' }}>
+      <section
+        className="relative py-20 lg:py-32 px-4 overflow-hidden"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-neutral-50) 100%)",
+        }}
+      >
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <a
-              href="/"
+            <Link
+              to="/"
               className="inline-flex items-center gap-2 mb-8 transition-colors duration-300"
-              style={{ color: 'var(--color-neutral-600)', fontFamily: 'var(--font-sans)' }}
+              style={{
+                color: "var(--color-neutral-600)",
+                fontFamily: "var(--font-sans)",
+              }}
             >
               <ArrowLeft className="w-5 h-5" />
               <span>ホームに戻る</span>
-            </a>
+            </Link>
 
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ background: 'linear-gradient(135deg, var(--color-strawberry-100) 0%, var(--color-strawberry-200) 100%)', border: '1px solid var(--color-strawberry-300)' }}>
-              <Sparkles className="w-4 h-4" style={{ color: 'var(--color-strawberry-700)' }} />
-              <span className="text-sm font-medium" style={{ color: 'var(--color-strawberry-800)', fontFamily: 'var(--font-sans)', letterSpacing: '0.05em' }}>Strawberry Picking</span>
+            <div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
+              style={{
+                background:
+                  "linear-gradient(135deg, var(--color-strawberry-100) 0%, var(--color-strawberry-200) 100%)",
+                border: "1px solid var(--color-strawberry-300)",
+              }}
+            >
+              <Sparkles
+                className="w-4 h-4"
+                style={{ color: "var(--color-strawberry-700)" }}
+              />
+              <span
+                className="text-sm font-medium"
+                style={{
+                  color: "var(--color-strawberry-800)",
+                  fontFamily: "var(--font-sans)",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Strawberry Picking
+              </span>
             </div>
 
-            <h1 className="text-5xl lg:text-7xl font-bold mb-6" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)', letterSpacing: '0.02em' }}>
+            <h1
+              className="text-5xl lg:text-7xl font-bold mb-6"
+              style={{
+                fontFamily: "var(--font-serif)",
+                color: "var(--color-neutral-900)",
+                letterSpacing: "0.02em",
+              }}
+            >
               いちご狩り
             </h1>
-            <p className="text-xl lg:text-2xl mb-8 max-w-3xl" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.8' }}>
-              柔らかい春の日差しを感じながら、摘みたてこだわりいちご「{FARM_INFO.features.strawberryVariety}」を心ゆくまでお楽しみください
+            <p
+              className="text-xl lg:text-2xl mb-8 max-w-3xl"
+              style={{
+                fontFamily: "var(--font-sans)",
+                color: "var(--color-neutral-700)",
+                lineHeight: "1.8",
+              }}
+            >
+              柔らかい春の日差しを感じながら、摘みたてこだわりいちご「
+              {FARM_INFO.features.strawberryVariety}
+              」を心ゆくまでお楽しみください
             </p>
           </motion.div>
         </div>
 
         {/* 装飾要素 */}
-        <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full blur-3xl opacity-20" style={{ background: 'var(--color-strawberry-400)' }}></div>
-        <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full blur-3xl opacity-20" style={{ background: 'var(--color-strawberry-300)' }}></div>
+        <div
+          className="absolute -top-20 -right-20 w-96 h-96 rounded-full blur-3xl opacity-20"
+          style={{ background: "var(--color-strawberry-400)" }}
+        ></div>
+        <div
+          className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full blur-3xl opacity-20"
+          style={{ background: "var(--color-strawberry-300)" }}
+        ></div>
       </section>
 
       {/* かおり野について */}
@@ -54,17 +113,50 @@ export function StrawberryPickingPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}>
+              <h2
+                className="text-4xl lg:text-5xl font-bold mb-6"
+                style={{
+                  fontFamily: "var(--font-serif)",
+                  color: "var(--color-neutral-900)",
+                }}
+              >
                 「{FARM_INFO.features.strawberryVariety}」について
               </h2>
-              <p className="text-lg mb-6" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
+              <p
+                className="text-lg mb-6"
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  color: "var(--color-neutral-700)",
+                  lineHeight: "1.9",
+                }}
+              >
                 上品な香りとあっさりとしたみずみずしい甘さがある人気のブランドいちご。大粒なのに糖度が高く酸味が少ないのが特徴です。
               </p>
-              <p className="text-lg mb-6" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
+              <p
+                className="text-lg mb-6"
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  color: "var(--color-neutral-700)",
+                  lineHeight: "1.9",
+                }}
+              >
                 だから、敢えて練乳や砂糖はご用意していません。いちごが持つ本来の甘みとみずみずしさを、たっぷり味わっていただけたらと思います。
               </p>
-              <div className="p-6 rounded-2xl" style={{ background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)', border: '1px solid var(--color-strawberry-200)' }}>
-                <p className="font-medium" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-800)' }}>
+              <div
+                className="p-6 rounded-2xl"
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)",
+                  border: "1px solid var(--color-strawberry-200)",
+                }}
+              >
+                <p
+                  className="font-medium"
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    color: "var(--color-strawberry-800)",
+                  }}
+                >
                   <Info className="inline w-5 h-5 mr-2" />
                   {STRAWBERRY_PICKING.note}
                 </p>
@@ -78,21 +170,30 @@ export function StrawberryPickingPage() {
               transition={{ duration: 0.8 }}
               className="relative"
             >
-              <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ aspectRatio: '4/5' }}>
+              <div
+                className="rounded-3xl overflow-hidden shadow-2xl"
+                style={{ aspectRatio: "4/5" }}
+              >
                 <img
                   src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/B0CC8765-C46B-46DA-A909-468B88639C7C_1_105_c.jpg?v=1768511101"
                   alt="いちご狩り"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute -bottom-8 -right-8 w-64 h-64 rounded-full -z-10 blur-3xl opacity-20" style={{ background: 'var(--color-strawberry-400)' }}></div>
+              <div
+                className="absolute -bottom-8 -right-8 w-64 h-64 rounded-full -z-10 blur-3xl opacity-20"
+                style={{ background: "var(--color-strawberry-400)" }}
+              ></div>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* 料金表 */}
-      <section className="py-20 lg:py-32 px-4" style={{ background: 'var(--color-neutral-50)' }}>
+      <section
+        className="py-20 lg:py-32 px-4"
+        style={{ background: "var(--color-neutral-50)" }}
+      >
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -101,7 +202,13 @@ export function StrawberryPickingPage() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl lg:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}>
+            <h2
+              className="text-4xl lg:text-5xl font-bold mb-4"
+              style={{
+                fontFamily: "var(--font-serif)",
+                color: "var(--color-neutral-900)",
+              }}
+            >
               入園料
             </h2>
           </motion.div>
@@ -118,30 +225,94 @@ export function StrawberryPickingPage() {
               >
                 <div className="p-8">
                   <div className="text-center mb-6">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ background: 'linear-gradient(135deg, var(--color-strawberry-100) 0%, var(--color-strawberry-200) 100%)' }}>
-                      <Calendar className="w-4 h-4" style={{ color: 'var(--color-strawberry-700)' }} />
-                      <span className="text-sm font-medium" style={{ color: 'var(--color-strawberry-800)', fontFamily: 'var(--font-sans)' }}>
+                    <div
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, var(--color-strawberry-100) 0%, var(--color-strawberry-200) 100%)",
+                      }}
+                    >
+                      <Calendar
+                        className="w-4 h-4"
+                        style={{ color: "var(--color-strawberry-700)" }}
+                      />
+                      <span
+                        className="text-sm font-medium"
+                        style={{
+                          color: "var(--color-strawberry-800)",
+                          fontFamily: "var(--font-sans)",
+                        }}
+                      >
                         {pricing.period}
                       </span>
                     </div>
                   </div>
 
                   <div className="space-y-4 mb-6">
-                    <div className="flex justify-between items-center pb-4" style={{ borderBottom: '1px solid var(--color-neutral-200)' }}>
-                      <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>小学生以上</span>
-                      <span className="text-2xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
+                    <div
+                      className="flex justify-between items-center pb-4"
+                      style={{
+                        borderBottom: "1px solid var(--color-neutral-200)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-sans)",
+                          color: "var(--color-neutral-700)",
+                        }}
+                      >
+                        小学生以上
+                      </span>
+                      <span
+                        className="text-2xl font-bold"
+                        style={{
+                          fontFamily: "var(--font-serif)",
+                          color: "var(--color-strawberry-600)",
+                        }}
+                      >
                         ¥{pricing.adult.toLocaleString()}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center pb-4" style={{ borderBottom: '1px solid var(--color-neutral-200)' }}>
-                      <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>幼児（3歳以上）</span>
-                      <span className="text-2xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
+                    <div
+                      className="flex justify-between items-center pb-4"
+                      style={{
+                        borderBottom: "1px solid var(--color-neutral-200)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-sans)",
+                          color: "var(--color-neutral-700)",
+                        }}
+                      >
+                        幼児（3歳以上）
+                      </span>
+                      <span
+                        className="text-2xl font-bold"
+                        style={{
+                          fontFamily: "var(--font-serif)",
+                          color: "var(--color-strawberry-600)",
+                        }}
+                      >
                         ¥{pricing.child.toLocaleString()}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>お持ち帰り</span>
-                      <span className="text-xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-sans)",
+                          color: "var(--color-neutral-700)",
+                        }}
+                      >
+                        お持ち帰り
+                      </span>
+                      <span
+                        className="text-xl font-bold"
+                        style={{
+                          fontFamily: "var(--font-serif)",
+                          color: "var(--color-strawberry-600)",
+                        }}
+                      >
                         ¥{pricing.takeaway}/100g
                       </span>
                     </div>
@@ -157,9 +328,19 @@ export function StrawberryPickingPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             className="mt-12 max-w-3xl mx-auto p-6 rounded-2xl"
-            style={{ background: 'white', border: '1px solid var(--color-neutral-200)' }}
+            style={{
+              background: "white",
+              border: "1px solid var(--color-neutral-200)",
+            }}
           >
-            <p className="text-center" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)', lineHeight: '1.8' }}>
+            <p
+              className="text-center"
+              style={{
+                fontFamily: "var(--font-sans)",
+                color: "var(--color-neutral-600)",
+                lineHeight: "1.8",
+              }}
+            >
               {STRAWBERRY_PICKING.footwearNote}
             </p>
           </motion.div>
@@ -175,31 +356,50 @@ export function StrawberryPickingPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             className="text-center p-12 lg:p-16 rounded-3xl relative overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)' }}
+            style={{
+              background:
+                "linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)",
+            }}
           >
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-            
+
             <div className="relative z-10">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-6 text-white" style={{ fontFamily: 'var(--font-serif)' }}>
+              <h2
+                className="text-3xl lg:text-4xl font-bold mb-6 text-white"
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
                 ご予約・お問い合わせ
               </h2>
-              <p className="text-lg mb-8 text-white/90" style={{ fontFamily: 'var(--font-sans)', lineHeight: '1.8' }}>
+              <p
+                className="text-lg mb-8 text-white/90"
+                style={{ fontFamily: "var(--font-sans)", lineHeight: "1.8" }}
+              >
                 いちご狩りは完全予約制です。お電話またはメールにてご予約ください
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
                   href={`tel:${FARM_INFO.contact.phone}`}
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full transition-all duration-300 text-lg font-semibold"
-                  style={{ background: 'white', color: 'var(--color-strawberry-600)', fontFamily: 'var(--font-sans)' }}
+                  style={{
+                    background: "white",
+                    color: "var(--color-strawberry-600)",
+                    fontFamily: "var(--font-sans)",
+                  }}
                 >
                   <Phone className="w-5 h-5" />
                   電話で予約
                 </a>
                 <a
-                  href={`mailto:${FARM_INFO.contact.email}`}
+                  href="/contact"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full transition-all duration-300 text-lg font-semibold"
-                  style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)', border: '2px solid white', color: 'white', fontFamily: 'var(--font-sans)' }}
+                  style={{
+                    background: "rgba(255,255,255,0.1)",
+                    backdropFilter: "blur(12px)",
+                    border: "2px solid white",
+                    color: "white",
+                    fontFamily: "var(--font-sans)",
+                  }}
                 >
                   メールで予約
                 </a>

@@ -323,7 +323,7 @@ export function StrawberriesPage() {
                 電話で注文
               </a>
               <a
-                href={`mailto:${FARM_INFO.contact.email}`}
+                href="/contact"
                 className="px-8 py-4 rounded-full transition-all duration-300 text-lg font-semibold"
                 style={{ background: 'rgba(0,0,0,0.05)', color: 'var(--color-neutral-700)', fontFamily: 'var(--font-sans)', border: '2px solid var(--color-neutral-300)' }}
               >
