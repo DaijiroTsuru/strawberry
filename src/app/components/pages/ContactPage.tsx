@@ -30,7 +30,7 @@ export function ContactPage() {
             "linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-neutral-50) 100%)",
         }}
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -38,10 +38,11 @@ export function ContactPage() {
           >
             <Link
               to="/"
-              className="inline-flex items-center gap-2 mb-8 transition-colors duration-300 hover:text-[color:var(--color-strawberry-600)] cursor-pointer"
+              className="inline-flex items-center gap-2 mb-8 transition-colors duration-300 hover:text-[color:var(--color-strawberry-600)]"
               style={{
                 color: "var(--color-neutral-600)",
                 fontFamily: "var(--font-sans)",
+                cursor: "pointer",
               }}
             >
               <ArrowLeft className="w-5 h-5" />
