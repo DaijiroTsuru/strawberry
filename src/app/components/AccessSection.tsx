@@ -1,8 +1,7 @@
-import { motion } from 'motion/react';
-import { MapPin, Phone, Mail, Clock, Smartphone } from 'lucide-react';
-import { FARM_INFO } from '@/app/constants/farmInfo';
-import { ContactForm } from './ContactForm';
-
+import { motion } from "motion/react";
+import { MapPin, Phone, Mail, Clock, Smartphone } from "lucide-react";
+import { FARM_INFO } from "@/app/constants/farmInfo";
+import { ContactForm } from "./ContactForm";import { ContactInfo } from './ContactInfo';
 export function AccessSection() {
   return (
     <section id="access" className="py-24 lg:py-32 px-4 bg-white">
@@ -21,29 +20,33 @@ export function AccessSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
             style={{
-              background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)',
-              border: '1px solid var(--color-strawberry-200)'
+              background:
+                "linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)",
+              border: "1px solid var(--color-strawberry-200)",
             }}
           >
-            <MapPin className="w-4 h-4" style={{ color: 'var(--color-strawberry-600)' }} />
-            <span 
-              className="text-sm font-medium" 
-              style={{ 
-                color: 'var(--color-strawberry-700)',
-                fontFamily: 'var(--font-sans)',
-                letterSpacing: '0.05em'
+            <MapPin
+              className="w-4 h-4"
+              style={{ color: "var(--color-strawberry-600)" }}
+            />
+            <span
+              className="text-sm font-medium"
+              style={{
+                color: "var(--color-strawberry-700)",
+                fontFamily: "var(--font-sans)",
+                letterSpacing: "0.05em",
               }}
             >
               Access
             </span>
           </motion.div>
 
-          <h2 
+          <h2
             className="text-4xl lg:text-5xl xl:text-6xl font-bold mb-4"
-            style={{ 
-              fontFamily: 'var(--font-serif)',
-              color: 'var(--color-neutral-900)',
-              letterSpacing: '0.02em'
+            style={{
+              fontFamily: "var(--font-serif)",
+              color: "var(--color-neutral-900)",
+              letterSpacing: "0.02em",
             }}
           >
             アクセス・お問い合わせ
@@ -61,22 +64,21 @@ export function AccessSection() {
           <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
             {/* いちご園看板 */}
             <div className="relative rounded-3xl overflow-hidden shadow-xl group">
-              <div className="relative" style={{ aspectRatio: '16/9' }}>
+              <div className="relative" style={{ aspectRatio: "16/9" }}>
                 <img
                   src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/0CEB5C93-92BA-47ED-89A6-140DEFD40174_1_105_c.jpg?v=1768511100"
                   alt="津留いちご園 看板"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div 
-                  className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                ></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
-              <div 
-                className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500"
-              >
-                <p 
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                <p
                   className="text-lg font-semibold"
-                  style={{ fontFamily: 'var(--font-sans)', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    textShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                  }}
                 >
                   いちご園看板
                 </p>
@@ -85,22 +87,21 @@ export function AccessSection() {
 
             {/* 全体の風景 */}
             <div className="relative rounded-3xl overflow-hidden shadow-xl group">
-              <div className="relative" style={{ aspectRatio: '16/9' }}>
+              <div className="relative" style={{ aspectRatio: "16/9" }}>
                 <img
                   src="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/432B94FE-D152-4224-8126-52B0791AC0D0_1_105_c.jpg?v=1768511099"
                   alt="津留いちご園 全体風景"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div 
-                  className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                ></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
-              <div 
-                className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500"
-              >
-                <p 
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                <p
                   className="text-lg font-semibold"
-                  style={{ fontFamily: 'var(--font-sans)', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    textShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                  }}
                 >
                   農園全体の風景
                 </p>
@@ -139,44 +140,53 @@ export function AccessSection() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="space-y-6"
           >
-            <div 
+            <div
               className="group p-8 rounded-3xl transition-all duration-500 hover:shadow-xl"
               style={{
-                background: 'linear-gradient(135deg, var(--color-neutral-50) 0%, white 100%)',
-                border: '1px solid var(--color-neutral-200)'
+                background:
+                  "linear-gradient(135deg, var(--color-neutral-50) 0%, white 100%)",
+                border: "1px solid var(--color-neutral-200)",
               }}
             >
               <div className="flex items-start gap-5">
-                <div 
+                <div
                   className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                   style={{
-                    background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
-                    boxShadow: '0 4px 12px rgba(220, 38, 38, 0.2)'
+                    background:
+                      "linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)",
+                    boxShadow: "0 4px 12px rgba(220, 38, 38, 0.2)",
                   }}
                 >
                   <MapPin className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h3 
+                  <h3
                     className="font-bold text-xl mb-3"
-                    style={{ 
-                      fontFamily: 'var(--font-serif)',
-                      color: 'var(--color-neutral-900)'
+                    style={{
+                      fontFamily: "var(--font-serif)",
+                      color: "var(--color-neutral-900)",
                     }}
                   >
                     住所
                   </h3>
-                  <p 
+                  <p
                     className="leading-relaxed"
-                    style={{ 
-                      fontFamily: 'var(--font-sans)',
-                      color: 'var(--color-neutral-700)',
-                      lineHeight: '1.8'
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      color: "var(--color-neutral-700)",
+                      lineHeight: "1.8",
                     }}
                   >
-                    {FARM_INFO.address.postal}<br />
-                    {FARM_INFO.address.full}<br />
-                    <span style={{ color: 'var(--color-neutral-500)', fontSize: '0.9rem' }}>
+                    {FARM_INFO.address.postal}
+                    <br />
+                    {FARM_INFO.address.full}
+                    <br />
+                    <span
+                      style={{
+                        color: "var(--color-neutral-500)",
+                        fontSize: "0.9rem",
+                      }}
+                    >
                       （{FARM_INFO.address.note}）
                     </span>
                   </p>
@@ -184,87 +194,97 @@ export function AccessSection() {
               </div>
             </div>
 
-            <div 
+            <div
               className="group p-8 rounded-3xl transition-all duration-500 hover:shadow-xl"
               style={{
-                background: 'linear-gradient(135deg, var(--color-neutral-50) 0%, white 100%)',
-                border: '1px solid var(--color-neutral-200)'
+                background:
+                  "linear-gradient(135deg, var(--color-neutral-50) 0%, white 100%)",
+                border: "1px solid var(--color-neutral-200)",
               }}
             >
               <div className="flex items-start gap-5">
-                <div 
+                <div
                   className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                   style={{
-                    background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
-                    boxShadow: '0 4px 12px rgba(220, 38, 38, 0.2)'
+                    background:
+                      "linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)",
+                    boxShadow: "0 4px 12px rgba(220, 38, 38, 0.2)",
                   }}
                 >
                   <Phone className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h3 
+                  <h3
                     className="font-bold text-xl mb-3"
-                    style={{ 
-                      fontFamily: 'var(--font-serif)',
-                      color: 'var(--color-neutral-900)'
+                    style={{
+                      fontFamily: "var(--font-serif)",
+                      color: "var(--color-neutral-900)",
                     }}
                   >
                     電話番号
                   </h3>
-                  <a 
+                  <a
                     href={`tel:${FARM_INFO.contact.phone}`}
                     className="block mb-2 transition-colors duration-300 hover:underline"
-                    style={{ 
-                      fontFamily: 'var(--font-sans)',
-                      color: 'var(--color-strawberry-600)',
-                      fontSize: '1.125rem',
-                      fontWeight: 600
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      color: "var(--color-strawberry-600)",
+                      fontSize: "1.125rem",
+                      fontWeight: 600,
                     }}
                   >
                     {FARM_INFO.contact.phone}
                   </a>
-                  <p style={{ color: 'var(--color-neutral-500)', fontSize: '0.875rem', fontFamily: 'var(--font-sans)' }}>
+                  <p
+                    style={{
+                      color: "var(--color-neutral-500)",
+                      fontSize: "0.875rem",
+                      fontFamily: "var(--font-sans)",
+                    }}
+                  >
                     ※いちご狩りは要予約です
                   </p>
                 </div>
               </div>
             </div>
 
-            <div 
+            <div
               className="group p-8 rounded-3xl transition-all duration-500 hover:shadow-xl"
               style={{
-                background: 'linear-gradient(135deg, var(--color-neutral-50) 0%, white 100%)',
-                border: '1px solid var(--color-neutral-200)'
+                background:
+                  "linear-gradient(135deg, var(--color-neutral-50) 0%, white 100%)",
+                border: "1px solid var(--color-neutral-200)",
               }}
             >
               <div className="flex items-start gap-5">
-                <div 
+                <div
                   className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                   style={{
-                    background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
-                    boxShadow: '0 4px 12px rgba(220, 38, 38, 0.2)'
+                    background:
+                      "linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)",
+                    boxShadow: "0 4px 12px rgba(220, 38, 38, 0.2)",
                   }}
                 >
                   <Smartphone className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h3 
+                  <h3
                     className="font-bold text-xl mb-3"
-                    style={{ 
-                      fontFamily: 'var(--font-serif)',
-                      color: 'var(--color-neutral-900)'
+                    style={{
+                      fontFamily: "var(--font-serif)",
+                      color: "var(--color-neutral-900)",
                     }}
                   >
                     携帯電話
                   </h3>
-                  <a 
+                  <a
                     href={`tel:${FARM_INFO.contact.mobile}`}
                     className="transition-colors duration-300 hover:underline"
-                    style={{ 
-                      fontFamily: 'var(--font-sans)',
-                      color: 'var(--color-strawberry-600)',
-                      fontSize: '1.125rem',
-                      fontWeight: 600
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      color: "var(--color-strawberry-600)",
+                      fontSize: "1.125rem",
+                      fontWeight: 600,
                     }}
                   >
                     {FARM_INFO.contact.mobile}
@@ -273,43 +293,54 @@ export function AccessSection() {
               </div>
             </div>
 
-            <div 
+            <div
               className="group p-8 rounded-3xl transition-all duration-500 hover:shadow-xl"
               style={{
-                background: 'linear-gradient(135deg, var(--color-neutral-50) 0%, white 100%)',
-                border: '1px solid var(--color-neutral-200)'
+                background:
+                  "linear-gradient(135deg, var(--color-neutral-50) 0%, white 100%)",
+                border: "1px solid var(--color-neutral-200)",
               }}
             >
               <div className="flex items-start gap-5">
-                <div 
+                <div
                   className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                   style={{
-                    background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
-                    boxShadow: '0 4px 12px rgba(220, 38, 38, 0.2)'
+                    background:
+                      "linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)",
+                    boxShadow: "0 4px 12px rgba(220, 38, 38, 0.2)",
                   }}
                 >
                   <Mail className="w-7 h-7 text-white" />
                 </div>
                 <div className="min-w-0">
-                  <h3 
+                  <h3
                     className="font-bold text-xl mb-3"
-                    style={{ 
-                      fontFamily: 'var(--font-serif)',
-                      color: 'var(--color-neutral-900)'
+                    style={{
+                      fontFamily: "var(--font-serif)",
+                      color: "var(--color-neutral-900)",
                     }}
                   >
                     メール
                   </h3>
-                  <a 
+                  <a
                     href={`mailto:${FARM_INFO.contact.email}`}
                     className="break-all transition-colors duration-300 hover:underline"
-                    style={{ 
-                      fontFamily: 'var(--font-sans)',
-                      color: 'var(--color-strawberry-600)',
-                      fontWeight: 500
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      color: "var(--color-strawberry-600)",
+                      fontWeight: 500,
                     }}
                   >
                     {FARM_INFO.contact.email}
+                    <p
+                      className="text-xs mt-2"
+                      style={{
+                        color: "var(--color-neutral-500)",
+                        fontFamily: "var(--font-sans)",
+                      }}
+                    >
+                      ※クリックでメールアプリが開きます
+                    </p>
                   </a>
                 </div>
               </div>

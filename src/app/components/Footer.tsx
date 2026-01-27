@@ -1,5 +1,5 @@
 import { Facebook, Instagram, Mail } from 'lucide-react';
-import { FARM_INFO } from '@/app/constants/farmInfo';
+import { FARM_INFO, NAV_ITEMS } from '@/app/constants/farmInfo';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -60,7 +60,7 @@ export function Footer() {
             {/* SNS */}
             <div className="flex gap-3">
               <a
-                href={`mailto:${FARM_INFO.contact.email}`}
+                href="/contact"
                 className="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 group"
                 style={{
                   background: 'rgba(255, 255, 255, 0.05)',
@@ -81,19 +81,21 @@ export function Footer() {
               メニュー
             </h3>
             <ul className="space-y-3">
-              <li>
-                <a 
-                  href="/" 
-                  className="transition-colors duration-300"
-                  style={{ 
-                    color: 'var(--color-neutral-400)',
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: '0.95rem'
-                  }}
-                >
-                  ホーム
-                </a>
-              </li>
+              {NAV_ITEMS.map((item) => (
+                <li key={item.label}>
+                  <a 
+                    href={item.href} 
+                    className="transition-colors duration-300 hover:text-[color:var(--color-strawberry-400)]"
+                    style={{ 
+                      color: 'var(--color-neutral-400)',
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: '0.95rem'
+                    }}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -128,7 +130,7 @@ export function Footer() {
               </li>
               <li>
                 <a 
-                  href={`mailto:${FARM_INFO.contact.email}`} 
+                  href="/contact" 
                   className="break-all transition-colors duration-300"
                   style={{ color: 'var(--color-neutral-400)' }}
                 >
