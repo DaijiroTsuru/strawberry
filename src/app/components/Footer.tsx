@@ -1,5 +1,5 @@
 import { Facebook, Instagram, Mail } from 'lucide-react';
-import { FARM_INFO } from '@/app/constants/farmInfo';
+import { FARM_INFO, NAV_ITEMS } from '@/app/constants/farmInfo';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -81,19 +81,21 @@ export function Footer() {
               メニュー
             </h3>
             <ul className="space-y-3">
-              <li>
-                <a 
-                  href="/" 
-                  className="transition-colors duration-300"
-                  style={{ 
-                    color: 'var(--color-neutral-400)',
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: '0.95rem'
-                  }}
-                >
-                  ホーム
-                </a>
-              </li>
+              {NAV_ITEMS.map((item) => (
+                <li key={item.label}>
+                  <a 
+                    href={item.href} 
+                    className="transition-colors duration-300 hover:text-[color:var(--color-strawberry-400)]"
+                    style={{ 
+                      color: 'var(--color-neutral-400)',
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: '0.95rem'
+                    }}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 

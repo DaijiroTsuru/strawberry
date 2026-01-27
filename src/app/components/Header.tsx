@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { ShoppingCart, Menu, X } from 'lucide-react';
-import { FARM_INFO } from '@/app/constants/farmInfo';
+import { FARM_INFO, NAV_ITEMS } from '@/app/constants/farmInfo';
 import { CartDrawer } from './CartDrawer';
 import { useCart } from '@/app/contexts/CartContext';
 
@@ -21,14 +21,6 @@ export function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const navItems = [
-    { label: 'ホーム', href: '/' },
-    { label: '商品', href: '/#products' },
-    { label: '農園について', href: '/#about' },
-    { label: 'アクセス', href: '/#access' },
-    { label: 'FAQ', href: '/faq' },
-  ];
 
   return (
     <header
@@ -79,7 +71,7 @@ export function Header() {
 
           {/* デスクトップナビゲーション */}
           <nav className="hidden md:flex items-center gap-10">
-            {navItems.map((item) => (
+            {NAV_ITEMS.map((item) => (
               <a
                 key={item.label}
                 href={item.href}
@@ -154,7 +146,7 @@ export function Header() {
           style={{ borderTop: '1px solid var(--color-strawberry-100)' }}
         >
           <nav className="px-4 py-6 space-y-1">
-            {navItems.map((item) => (
+            {NAV_ITEMS.map((item) => (
               <a
                 key={item.label}
                 href={item.href}

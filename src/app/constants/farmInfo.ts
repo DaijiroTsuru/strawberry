@@ -182,3 +182,12 @@ export const SHIPPING = {
   standardFee: 2300,
   note: '※離島につきましてはお取り扱いしておりません。'
 };
+
+// ナビゲーションメニュー
+export const NAV_ITEMS = [
+  { label: 'ホーム', href: '/' },
+  { label: '商品', href: '/#products' },
+  { label: '農園について', href: '/#about' },
+  { label: 'アクセス', href: '/#access' },
+  { label: 'よくあるご質問', href: '/faq' },
+];
