@@ -189,5 +189,5 @@ export const NAV_ITEMS = [
   { label: '商品', href: '/#products' },
   { label: '農園について', href: '/#about' },
   { label: 'アクセス', href: '/#access' },
-  { label: 'よくあるご質問', href: '/faq' },
+//  { label: 'よくあるご質問', href: '/faq' },
 ];
