@@ -6,6 +6,7 @@ import { FARM_INFO } from '@/app/constants/farmInfo';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductsByCollectionId, ShopifyProduct, formatPrice } from '@/utils/shopify';
 import { SEO, createBreadcrumbSchema } from '@/app/components/SEO';
+import { FaqSection } from '@/app/components/common/FaqSection';
 
 const RICE_COLLECTION_ID = '486421135583';
 
@@ -498,6 +499,14 @@ export function RicePage() {
           )}
         </div>
       </section>
+
+      {/* よくあるご質問セクション */}
+      <FaqSection 
+        tags={['米', '購入']}
+        title="お米購入に関するよくあるご質問"
+        description="お米のご注文・購入に関してよくいただくご質問をまとめました"
+        maxQuestions={6}
+      />
 
       {/* お問い合わせCTA */}
       <section id="contact" className="py-20 lg:py-32 px-4 bg-white">

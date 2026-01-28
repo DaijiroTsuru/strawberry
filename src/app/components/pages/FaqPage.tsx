@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
-import { HelpCircle, ArrowLeft, Package, Truck, ShoppingCart, Calendar, Phone, Mail } from 'lucide-react';
-import { FARM_INFO, SHIPPING } from '@/app/constants/farmInfo';
+import { HelpCircle, ArrowLeft, Phone, Mail } from 'lucide-react';
+import { FARM_INFO } from '@/app/constants/farmInfo';
 import { SEO, createBreadcrumbSchema } from '@/app/components/SEO';
 import {
   Accordion,
@@ -9,146 +9,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/app/components/ui/accordion';
+import { faqCategories } from '@/app/constants/faqData';
 
 export function FaqPage() {
-  const faqCategories = [
-    {
-      category: '商品について',
-      icon: Package,
-      questions: [
-        {
-          id: 'product-1',
-          question: 'いちごの品種は何ですか？',
-          answer: `当園では「${FARM_INFO.features.strawberryVariety}」という品種を栽培しています。上品な香りとあっさりとしたみずみずしい甘さがある人気のブランドいちごで、大粒なのに糖度が高く酸味が少ないのが特徴です。`,
-        },
-        {
-          id: 'product-2',
-          question: '無農薬栽培とはどういう意味ですか？',
-          answer: '当園で栽培しているお米は、化学合成農薬や除草剤を一切使わず、油粕、米糠、海藻、魚粉、黒砂糖などの有機質肥料のみで育てています。安心・安全な農産物をお届けすることを第一に考えています。',
-        },
-        {
-          id: 'product-3',
-          question: 'いちごの鮮度はどうですか？',
-          answer: 'その日の朝に収穫した新鮮ないちごを、一粒ずつ丁寧に選別してお届けしています。収穫から発送まで最短時間で行うため、届いたその日から最高の状態でお楽しみいただけます。',
-        },
-        {
-          id: 'product-4',
-          question: 'いちごの保存方法を教えてください',
-          answer: '冷蔵庫の野菜室で保存してください。洗わずにヘタをつけたまま保存し、食べる直前に洗うことをおすすめします。なるべく早くお召し上がりいただくことで、より美味しくお楽しみいただけます。',
-        },
-      ],
-    },
-    {
-      category: 'ご注文・お支払いについて',
-      icon: ShoppingCart,
-      questions: [
-        {
-          id: 'order-1',
-          question: '注文方法を教えてください',
-          answer: `オンラインショップからのご注文のほか、お電話（${FARM_INFO.contact.phone}）、メール（${FARM_INFO.contact.email}）でもご注文を承っております。お気軽にお問い合わせください。`,
-        },
-        {
-          id: 'order-2',
-          question: 'どのような支払い方法がありますか？',
-          answer: 'オンラインショップではクレジットカード決済のみとなります。お電話・メールでのご注文の場合は、クレジットカード決済、銀行振込、代金引換をご利用いただけます。',
-        },
-        {
-          id: 'order-3',
-          question: '注文のキャンセルや変更はできますか？',
-          answer: '発送前であればキャンセル・変更が可能です。発送準備に入る前にお早めにご連絡ください。発送後のキャンセルはお受けできかねますので、ご了承ください。',
-        },
-        {
-          id: 'order-4',
-          question: '領収書は発行できますか？',
-          answer: '領収書が必要な場合は、ご注文時の備考欄にその旨をご記入いただくか、お電話・メールにてお知らせください。商品に同梱、または別途郵送にて発行させていただきます。',
-        },
-      ],
-    },
-    {
-      category: '配送について',
-      icon: Truck,
-      questions: [
-        {
-          id: 'shipping-1',
-          question: '送料はいくらですか？',
-          answer: 'いちごの送料は、九州内1,550円、九州外2,300円（一律）となります。※離島につきましてはお取り扱いしておりません。\nお米の配送料は、九州内1,500円、九州外2,000円（一律）となります。',
-        },
-        {
-          id: 'shipping-2',
-          question: '配送日時の指定はできますか？',
-          answer: 'はい、可能です。ご注文時に配送日時をご指定いただけます。ただし、天候や収穫状況により、ご希望に添えない場合もございますので、あらかじめご了承ください。',
-        },
-        {
-          id: 'shipping-3',
-          question: 'いつ頃届きますか？',
-          answer: 'ご注文確定後、通常3〜7日程度でお届けします。収穫時期や天候により前後する場合がございます。お急ぎの場合は、ご注文時にお知らせください。',
-        },
-        {
-          id: 'shipping-4',
-          question: 'ギフト包装はできますか？',
-          answer: '化粧箱入りの商品は、ギフトに最適な包装でお届けします。熨斗やメッセージカードのご希望がある場合は、ご注文時にお知らせください。',
-        },
-      ],
-    },
-    {
-      category: 'いちご狩りについて',
-      icon: Calendar,
-      questions: [
-        {
-          id: 'picking-1',
-          question: 'いちご狩りの予約は必要ですか？',
-          answer: 'はい、いちご狩りは完全予約制です。事前にお電話またはメールにてご予約ください。当日のご来園はお受けできない場合がございますので、必ずご予約をお願いいたします。',
-        },
-        {
-          id: 'picking-2',
-          question: 'いちご狩りの料金を教えてください',
-          answer: '料金は時期により異なります。12月〜2月：大人2,000円、子供1,000円、3月：大人1,900円、子供950円、4月〜：大人1,800円、子供900円です。30分間の食べ放題となっています。',
-        },
-        {
-          id: 'picking-3',
-          question: 'いちご狩りの期間はいつですか？',
-          answer: '例年12月から5月頃までいちご狩りをお楽しみいただけます。その年の生育状況により期間が変わる場合がございますので、詳しくはお問い合わせください。',
-        },
-        {
-          id: 'picking-4',
-          question: 'どのような服装で行けばいいですか？',
-          answer: 'ビニールハウス内は暖かいため、調整しやすい服装がおすすめです。また、足元の土が緩んでいることがありますので、靴はスニーカーや長靴などをおすすめいたします。',
-        },
-        {
-          id: 'picking-5',
-          question: '持ち帰りはできますか？',
-          answer: 'はい、別料金にて持ち帰り用のいちごもご用意しております。時期により100gあたり250円〜300円でお持ち帰りいただけます。',
-        },
-      ],
-    },
-    {
-      category: 'その他',
-      icon: HelpCircle,
-      questions: [
-        {
-          id: 'other-1',
-          question: '農園の営業時間を教えてください',
-          answer: '営業時間は9:00〜17:00です。定休日や臨時休業がある場合がございますので、ご来園前にお電話にてご確認いただくことをおすすめします。',
-        },
-        {
-          id: 'other-2',
-          question: '駐車場はありますか？',
-          answer: 'はい、無料駐車場をご用意しております。お車でお越しの際は、八女ICより約20分です。',
-        },
-        {
-          id: 'other-3',
-          question: 'アレルギーへの対応はありますか？',
-          answer: '当園ではいちごとお米を中心に栽培しており、いちごにアレルギーのある方はお召し上がりになれません。その他、ご不安な点がございましたら、事前にお問い合わせください。',
-        },
-        {
-          id: 'other-4',
-          question: '直売所での購入はできますか？',
-          answer: `はい、農園の直売所でも商品をお買い求めいただけます。ただし、商品の在庫状況により、ご希望の商品がない場合もございますので、ご来園前にお電話（${FARM_INFO.contact.phone}）にてご確認いただくことをおすすめします。`,
-        },
-      ],
-    },
-  ];
-
   return (
     <div className="min-h-screen">
       <SEO 

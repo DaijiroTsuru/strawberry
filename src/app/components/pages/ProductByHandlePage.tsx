@@ -6,6 +6,8 @@ import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductByHandle, ShopifyProduct, formatPrice } from '@/utils/shopify';
 import { SEO, createProductSchema, createBreadcrumbSchema } from '@/app/components/SEO';
 import { trackAddToCart, trackBeginCheckout } from '@/utils/analytics';
+import { FaqSection } from '@/app/components/common/FaqSection';
+import type { FaqTag } from '@/app/constants/faqData';
 
 /**
  * 商品Handleから商品詳細ページを表示
@@ -421,6 +423,36 @@ export function ProductByHandlePage() {
           </motion.div>
         </div>
       </div>
+
+      {/* よくあるご質問セクション */}
+      {product && (
+        <FaqSection 
+          tags={getProductTags(product)}
+          title="商品購入に関するよくあるご質問"
+          description="ご注文・購入に関してよくいただくご質問をまとめました"
+          maxQuestions={12}
+        />
+      )}
     </div>
   );
+}
+
+/**
+ * 商品からFAQタグを判定する
+ */
+function getProductTags(product: ShopifyProduct): FaqTag[] {
+  const tags: FaqTag[] = ['購入'];
+  
+  // 商品タイトルや説明文から判定
+  const content = `${product.title}`.toLowerCase();
+  
+  if (content.includes('いちご') || content.includes('strawberry') || content.includes('かおり野')) {
+    tags.push('いちご');
+  }
+  
+  if (content.includes('米') || content.includes('お米') || content.includes('rice') || content.includes('ヒノヒカリ')) {
+    tags.push('米');
+  }
+  
+  return tags;
 }

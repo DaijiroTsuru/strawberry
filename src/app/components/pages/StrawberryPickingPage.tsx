@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { FARM_INFO, STRAWBERRY_PICKING } from "@/app/constants/farmInfo";
 import { Link } from "@tanstack/react-router";
+import { FaqSection } from "@/app/components/common/FaqSection";
 
 export function StrawberryPickingPage() {
   return (
@@ -346,6 +347,13 @@ export function StrawberryPickingPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* よくあるご質問セクション */}
+      <FaqSection 
+        tags={['いちご狩り']}
+        title="いちご狩りに関するよくあるご質問"
+        description="いちご狩りについてよくいただくご質問をまとめました"
+      />
 
       {/* 予約CTA */}
       <section className="py-20 lg:py-32 px-4 bg-white">
