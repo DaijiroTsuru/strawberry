@@ -95,13 +95,13 @@ export const faqCategories: FaqCategory[] = [
     questions: [
       {
         id: 'shipping-1-2',
-        question: '送料はいくらですか?',
+        question: 'いちごの送料はいくらですか?',
         answer: 'いちごの送料は、九州内1,550円、九州外2,300円（一律）となります。※離島につきましてはお取り扱いしておりません。',
         tags: ['いちご'],
       },
       {
         id: 'shipping-1',
-        question: '送料はいくらですか?',
+        question: 'お米の送料はいくらですか?',
         answer: 'お米の配送料は、九州内1,500円、九州外2,000円（一律）となります。※離島につきましてはお取り扱いしておりません。',
         tags: ['米'],
       },
