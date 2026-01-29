@@ -207,6 +207,17 @@ async function main() {
     console.log(`   Total pages rendered: ${allRoutes.length}\n`);
   } catch (error) {
     console.error('\n❌ Prerendering failed:', error);
+    
+    // クリーンアップしてから終了
+    try {
+      if (browser) {
+        await browser.close();
+      }
+      await server.kill();
+    } catch (cleanupError) {
+      console.error('Cleanup error:', cleanupError);
+    }
+    
     process.exit(1);
   } finally {
     // クリーンアップ
@@ -224,4 +235,12 @@ async function main() {
   }
 }
 
-main();
+main()
+  .then(() => {
+    console.log('🎉 Prerendering process completed');
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error('💥 Fatal error:', error);
+    process.exit(1);
+  });
