@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Send, CheckCircle2, AlertCircle, Shield } from 'lucide-react';
 import emailjs from '@emailjs/browser';
-import { trackContactFormSubmission } from '@/utils/analytics';
+import { trackContactFormSubmission, trackStrawberryPickingConversion } from '@/utils/analytics';
 
 interface FormData {
   name: string;
@@ -145,6 +145,11 @@ export function ContactForm() {
           subject: formData.subject,
           email: formData.email,
         });
+        
+        // いちご狩り関連の問い合わせの場合、Google広告コンバージョンも送信
+        if (formData.subject.includes('いちご狩り') || formData.message.includes('いちご狩り')) {
+          trackStrawberryPickingConversion();
+        }
       } catch (gaError) {
         console.warn('GA tracking error (contact_form_submit):', gaError);
       }

@@ -1,5 +1,6 @@
 import { Facebook, Instagram, Mail } from 'lucide-react';
 import { FARM_INFO, NAV_ITEMS } from '@/app/constants/farmInfo';
+import { trackStrawberryPickingPhoneReservation } from '@/utils/analytics';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -112,7 +113,8 @@ export function Footer() {
               <li style={{ color: 'var(--color-neutral-400)' }}>{FARM_INFO.address.full}</li>
               <li>
                 <a 
-                  href={`tel:${FARM_INFO.contact.phone}`} 
+                  href={`tel:${FARM_INFO.contact.phone}`}
+                  onClick={() => trackStrawberryPickingPhoneReservation(FARM_INFO.contact.phone)}
                   className="transition-colors duration-300"
                   style={{ color: 'var(--color-neutral-400)' }}
                 >
@@ -121,7 +123,8 @@ export function Footer() {
               </li>
               <li>
                 <a 
-                  href={`tel:${FARM_INFO.contact.mobile}`} 
+                  href={`tel:${FARM_INFO.contact.mobile}`}
+                  onClick={() => trackStrawberryPickingPhoneReservation(FARM_INFO.contact.mobile)}
                   className="transition-colors duration-300"
                   style={{ color: 'var(--color-neutral-400)' }}
                 >

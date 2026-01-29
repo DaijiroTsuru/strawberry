@@ -126,3 +126,42 @@ export function trackEmailClick(email: string) {
     value: email,
   });
 }
+
+/**
+ * Google広告コンバージョンイベント - いちご狩り予約・問い合わせ
+ */
+export function trackStrawberryPickingConversion(url?: string) {
+  const callback = function () {
+    if (typeof url !== 'undefined') {
+      window.location.href = url;
+    }
+  };
+
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'conversion', {
+      'send_to': 'AW-17913747934/_9PYCI30zO4bEN6z-N1C',
+      'value': 2000.0,
+      'currency': 'JPY',
+      'transaction_id': '',
+      'event_callback': callback
+    });
+    console.log('Google Ads Conversion tracked: Strawberry Picking');
+  } else {
+    console.warn('Google Ads tracking is not loaded');
+    // gtagが読み込まれていなくてもコールバックは実行
+    callback();
+  }
+
+  return false;
+}
+
+/**
+ * いちご狩り電話予約トラッキング（電話リンククリック時）
+ */
+export function trackStrawberryPickingPhoneReservation(phoneNumber: string) {
+  // Google Analyticsイベント
+  trackPhoneClick(phoneNumber);
+  
+  // Google広告コンバージョン
+  trackStrawberryPickingConversion();
+}

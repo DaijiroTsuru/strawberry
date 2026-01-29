@@ -11,6 +11,7 @@ import {
 import { FARM_INFO, STRAWBERRY_PICKING } from "@/app/constants/farmInfo";
 import { Link } from "@tanstack/react-router";
 import { FaqSection } from "@/app/components/common/FaqSection";
+import { trackStrawberryPickingPhoneReservation, trackStrawberryPickingConversion } from "@/utils/analytics";
 
 export function StrawberryPickingPage() {
   return (
@@ -388,6 +389,7 @@ export function StrawberryPickingPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
                   href={`tel:${FARM_INFO.contact.phone}`}
+                  onClick={() => trackStrawberryPickingPhoneReservation(FARM_INFO.contact.phone)}
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full transition-all duration-300 text-lg font-semibold"
                   style={{
                     background: "white",
@@ -400,6 +402,7 @@ export function StrawberryPickingPage() {
                 </a>
                 <a
                   href="/contact"
+                  onClick={() => trackStrawberryPickingConversion()}
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full transition-all duration-300 text-lg font-semibold"
                   style={{
                     background: "rgba(255,255,255,0.1)",

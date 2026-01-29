@@ -1,7 +1,9 @@
 import { motion } from "motion/react";
 import { MapPin, Phone, Mail, Clock, Smartphone } from "lucide-react";
 import { FARM_INFO } from "@/app/constants/farmInfo";
-import { ContactForm } from "./ContactForm";import { ContactInfo } from './ContactInfo';
+import { ContactForm } from "./ContactForm";
+import { ContactInfo } from './ContactInfo';
+import { trackStrawberryPickingPhoneReservation } from '@/utils/analytics';
 export function AccessSection() {
   return (
     <section id="access" className="py-24 lg:py-32 px-4 bg-white">
@@ -225,6 +227,7 @@ export function AccessSection() {
                   </h3>
                   <a
                     href={`tel:${FARM_INFO.contact.phone}`}
+                    onClick={() => trackStrawberryPickingPhoneReservation(FARM_INFO.contact.phone)}
                     className="block mb-2 transition-colors duration-300 hover:underline"
                     style={{
                       fontFamily: "var(--font-sans)",
