@@ -25,9 +25,16 @@ export function StrawberryPickingPage() {
       const command = isMuted ? "unMute" : "mute";
       iframeRef.current.contentWindow?.postMessage(
         JSON.stringify({ event: "command", func: command, args: "" }),
-        "*"
+        "https://www.youtube.com"
       );
       setIsMuted(!isMuted);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleMute();
     }
   };
   return (
@@ -256,12 +263,12 @@ export function StrawberryPickingPage() {
                   style={{ border: 0 }}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  loading="lazy"
                 ></iframe>
                 
                 {/* 音声切り替えボタン */}
                 <button
                   onClick={toggleMute}
+                  onKeyDown={handleKeyDown}
                   className="absolute bottom-4 right-4 p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
                   style={{
                     background: "rgba(0, 0, 0, 0.7)",
