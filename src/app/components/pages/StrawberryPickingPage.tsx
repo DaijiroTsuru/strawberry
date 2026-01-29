@@ -51,10 +51,10 @@ export function StrawberryPickingPage() {
         }}
       >
         {/* 背景動画 */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden">
+        <div className="absolute inset-0 w-full h-full overflow-hidden" role="presentation">
           <iframe
             ref={iframeRef}
-            src="https://www.youtube.com/embed/I8I8PZ2jPuY?autoplay=1&mute=1&loop=1&playlist=I8I8PZ2jPuY&controls=0&showinfo=0&enablejsapi=1&rel=0"
+            src="https://www.youtube.com/embed/I8I8PZ2jPuY?autoplay=1&mute=1&loop=1&playlist=I8I8PZ2jPuY&controls=0&enablejsapi=1&rel=0"
             title="いちご狩りの様子（背景動画）"
             className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto"
             style={{ 
@@ -63,6 +63,7 @@ export function StrawberryPickingPage() {
               pointerEvents: 'none'
             }}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            aria-hidden="true"
           ></iframe>
           {/* オーバーレイ */}
           <div 
@@ -77,7 +78,7 @@ export function StrawberryPickingPage() {
         <button
           onClick={toggleMute}
           onKeyDown={handleKeyDown}
-          className="absolute top-4 right-4 p-3 rounded-full transition-all duration-300 hover:scale-110 z-20"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 p-3 rounded-full transition-all duration-300 hover:scale-110 z-20"
           style={{
             background: "rgba(0, 0, 0, 0.7)",
             backdropFilter: "blur(8px)",
