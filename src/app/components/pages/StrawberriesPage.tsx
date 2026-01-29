@@ -305,7 +305,7 @@ export function StrawberriesPage() {
         tags={['いちご', '購入']}
         title="いちご購入に関するよくあるご質問"
         description="いちごのご注文・購入に関してよくいただくご質問をまとめました"
-        maxQuestions={6}
+        maxQuestions={10}
       />
 
       {/* お問い合わせCTA */}
