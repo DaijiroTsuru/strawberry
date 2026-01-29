@@ -7,13 +7,29 @@ import {
   Phone,
   ArrowLeft,
   Sparkles,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { FARM_INFO, STRAWBERRY_PICKING } from "@/app/constants/farmInfo";
 import { Link } from "@tanstack/react-router";
 import { FaqSection } from "@/app/components/common/FaqSection";
 import { trackStrawberryPickingPhoneReservation, trackStrawberryPickingConversion } from "@/utils/analytics";
+import { useState, useRef } from "react";
 
 export function StrawberryPickingPage() {
+  const [isMuted, setIsMuted] = useState(true);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const toggleMute = () => {
+    if (iframeRef.current) {
+      const command = isMuted ? "unMute" : "mute";
+      iframeRef.current.contentWindow?.postMessage(
+        JSON.stringify({ event: "command", func: command, args: "" }),
+        "*"
+      );
+      setIsMuted(!isMuted);
+    }
+  };
   return (
     <div className="min-h-screen">
       {/* ヘッダースペース */}
@@ -188,6 +204,91 @@ export function StrawberryPickingPage() {
               ></div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* YouTube動画セクション */}
+      <section className="py-20 lg:py-32 px-4 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12"
+          >
+            <h2
+              className="text-4xl lg:text-5xl font-bold mb-4"
+              style={{
+                fontFamily: "var(--font-serif)",
+                color: "var(--color-neutral-900)",
+              }}
+            >
+              いちご狩りの様子
+            </h2>
+            <p
+              className="text-lg"
+              style={{
+                fontFamily: "var(--font-sans)",
+                color: "var(--color-neutral-700)",
+                lineHeight: "1.8",
+              }}
+            >
+              実際のいちご狩りの雰囲気を動画でご覧ください
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-5xl mx-auto"
+          >
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+              <div className="relative" style={{ aspectRatio: "16/9" }}>
+                <iframe
+                  ref={iframeRef}
+                  src="https://www.youtube.com/embed/I8I8PZ2jPuY?autoplay=1&mute=1&enablejsapi=1&rel=0"
+                  title="いちご狩りの様子"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                ></iframe>
+                
+                {/* 音声切り替えボタン */}
+                <button
+                  onClick={toggleMute}
+                  className="absolute bottom-4 right-4 p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
+                  style={{
+                    background: "rgba(0, 0, 0, 0.7)",
+                    backdropFilter: "blur(8px)",
+                    border: "2px solid rgba(255, 255, 255, 0.3)",
+                  }}
+                  aria-label={isMuted ? "音声をオンにする" : "音声をオフにする"}
+                >
+                  {isMuted ? (
+                    <VolumeX className="w-6 h-6 text-white" />
+                  ) : (
+                    <Volume2 className="w-6 h-6 text-white" />
+                  )}
+                </button>
+              </div>
+            </div>
+            
+            <p
+              className="text-center mt-6 text-sm"
+              style={{
+                fontFamily: "var(--font-sans)",
+                color: "var(--color-neutral-500)",
+              }}
+            >
+              ※動画は自動再生されます。音声ボタンで音のオン・オフを切り替えられます
+            </p>
+          </motion.div>
         </div>
       </section>
 
