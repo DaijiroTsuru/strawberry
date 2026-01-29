@@ -36,7 +36,7 @@ function loadProductRoutes(): string[] {
 }
 
 // ローカルサーバーを起動
-async function startPreviewServer(): Promise<{ url: string; kill: () => void }> {
+async function startPreviewServer(): Promise<{ url: string; kill: () => Promise<void> }> {
   return new Promise((resolve, reject) => {
     console.log('🚀 Starting preview server...');
     
@@ -56,7 +56,41 @@ async function startPreviewServer(): Promise<{ url: string; kill: () => void }> 
         serverUrl = 'http://localhost:4173';
         resolve({
           url: serverUrl,
-          kill: () => server.kill(),
+          kill: async () => {
+            return new Promise<void>((resolveKill) => {
+              // サーバーが既に終了している場合
+              if (server.killed || server.exitCode !== null) {
+                resolveKill();
+                return;
+              }
+
+              // プロセス終了時のハンドラー
+              const onExit = () => {
+                resolveKill();
+              };
+
+              server.once('exit', onExit);
+              server.once('close', onExit);
+
+              // まずSIGTERMを送信
+              server.kill('SIGTERM');
+
+              // 3秒後にまだ終了していなければSIGKILLを送信
+              setTimeout(() => {
+                if (!server.killed && server.exitCode === null) {
+                  console.log('⚠️  Server did not exit gracefully, forcing...');
+                  server.kill('SIGKILL');
+                }
+              }, 3000);
+
+              // 最大5秒待機
+              setTimeout(() => {
+                server.removeListener('exit', onExit);
+                server.removeListener('close', onExit);
+                resolveKill();
+              }, 5000);
+            });
+          },
         });
       }
     });
@@ -72,7 +106,7 @@ async function startPreviewServer(): Promise<{ url: string; kill: () => void }> 
     // タイムアウト（10秒）
     setTimeout(() => {
       if (!serverReady) {
-        server.kill();
+        server.kill('SIGKILL');
         reject(new Error('Server startup timeout'));
       }
     }, 10000);
@@ -176,13 +210,17 @@ async function main() {
     process.exit(1);
   } finally {
     // クリーンアップ
+    console.log('🧹 Cleaning up...');
+    
     if (browser) {
       await browser.close();
+      console.log('  ✓ Browser closed');
     }
-    server.kill();
     
-    // サーバーの終了を待つ
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await server.kill();
+    console.log('  ✓ Server stopped');
+    
+    console.log('\n✨ Done!\n');
   }
 }
 
