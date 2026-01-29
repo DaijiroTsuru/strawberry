@@ -50,7 +50,49 @@ export function StrawberryPickingPage() {
             "linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-neutral-50) 100%)",
         }}
       >
-        <div className="max-w-7xl mx-auto">
+        {/* 背景動画 */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
+          <iframe
+            ref={iframeRef}
+            src="https://www.youtube.com/embed/I8I8PZ2jPuY?autoplay=1&mute=1&loop=1&playlist=I8I8PZ2jPuY&controls=0&showinfo=0&enablejsapi=1&rel=0"
+            title="いちご狩りの様子（背景動画）"
+            className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto"
+            style={{ 
+              border: 0,
+              transform: 'translate(-50%, -50%)',
+              pointerEvents: 'none'
+            }}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          ></iframe>
+          {/* オーバーレイ */}
+          <div 
+            className="absolute inset-0 w-full h-full"
+            style={{
+              background: "linear-gradient(135deg, rgba(254, 242, 242, 0.85) 0%, rgba(250, 250, 250, 0.85) 100%)"
+            }}
+          ></div>
+        </div>
+
+        {/* 音声切り替えボタン（ヒーローセクション用） */}
+        <button
+          onClick={toggleMute}
+          onKeyDown={handleKeyDown}
+          className="absolute top-4 right-4 p-3 rounded-full transition-all duration-300 hover:scale-110 z-20"
+          style={{
+            background: "rgba(0, 0, 0, 0.7)",
+            backdropFilter: "blur(8px)",
+            border: "2px solid rgba(255, 255, 255, 0.3)",
+          }}
+          aria-label={isMuted ? "音声をオンにする" : "音声をオフにする"}
+        >
+          {isMuted ? (
+            <VolumeX className="w-6 h-6 text-white" />
+          ) : (
+            <Volume2 className="w-6 h-6 text-white" />
+          )}
+        </button>
+
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -211,91 +253,6 @@ export function StrawberryPickingPage() {
               ></div>
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* YouTube動画セクション */}
-      <section className="py-20 lg:py-32 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12"
-          >
-            <h2
-              className="text-4xl lg:text-5xl font-bold mb-4"
-              style={{
-                fontFamily: "var(--font-serif)",
-                color: "var(--color-neutral-900)",
-              }}
-            >
-              いちご狩りの様子
-            </h2>
-            <p
-              className="text-lg"
-              style={{
-                fontFamily: "var(--font-sans)",
-                color: "var(--color-neutral-700)",
-                lineHeight: "1.8",
-              }}
-            >
-              実際のいちご狩りの雰囲気を動画でご覧ください
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="max-w-5xl mx-auto"
-          >
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-              <div className="relative" style={{ aspectRatio: "16/9" }}>
-                <iframe
-                  ref={iframeRef}
-                  src="https://www.youtube.com/embed/I8I8PZ2jPuY?autoplay=1&mute=1&enablejsapi=1&rel=0"
-                  title="いちご狩りの様子"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-                
-                {/* 音声切り替えボタン */}
-                <button
-                  onClick={toggleMute}
-                  onKeyDown={handleKeyDown}
-                  className="absolute bottom-4 right-4 p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
-                  style={{
-                    background: "rgba(0, 0, 0, 0.7)",
-                    backdropFilter: "blur(8px)",
-                    border: "2px solid rgba(255, 255, 255, 0.3)",
-                  }}
-                  aria-label={isMuted ? "音声をオンにする" : "音声をオフにする"}
-                >
-                  {isMuted ? (
-                    <VolumeX className="w-6 h-6 text-white" />
-                  ) : (
-                    <Volume2 className="w-6 h-6 text-white" />
-                  )}
-                </button>
-              </div>
-            </div>
-            
-            <p
-              className="text-center mt-6 text-sm"
-              style={{
-                fontFamily: "var(--font-sans)",
-                color: "var(--color-neutral-500)",
-              }}
-            >
-              ※動画は自動再生されます。音声ボタンで音のオン・オフを切り替えられます
-            </p>
-          </motion.div>
         </div>
       </section>
 
