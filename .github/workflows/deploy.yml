@@ -32,6 +32,7 @@ jobs:
         run: npm ci
         
       - name: Build
+        timeout-minutes: 30
         env:
           # EmailJS設定
           VITE_EMAILJS_SERVICE_ID: ${{ secrets.VITE_EMAILJS_SERVICE_ID }}

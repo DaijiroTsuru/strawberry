@@ -4,7 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "npm run fetch-reviews && vite build",
+    "prebuild": "tsx scripts/get-product-handles.ts",
+    "build": "npm run fetch-reviews && vite build && npm run prerender",
+    "prerender": "tsx scripts/prerender.ts",
     "dev": "vite",
     "fetch-reviews": "tsx scripts/fetch-reviews.ts"
   },
@@ -73,6 +75,7 @@
     "@vercel/node": "^5.5.27",
     "@vitejs/plugin-react": "4.7.0",
     "dotenv": "^17.2.3",
+    "puppeteer": "^24.36.1",
     "tailwindcss": "4.1.12",
     "tsx": "^4.21.0",
     "vite": "6.3.5"
