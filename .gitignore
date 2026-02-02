@@ -19,4 +19,4 @@ dist
 product-routes.json
 
 # Migration runtime data
-scripts/migration/data/
+# scripts/migration/data/
