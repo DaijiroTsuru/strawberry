@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(file:*)",
+      "Bash(iconv:*)",
+      "Bash(wc:*)",
+      "Bash(ls:*)",
+      "Bash(for f in *.csv)",
+      "Bash(do echo \"=== $f ===\")",
+      "Bash(python3:*)",
+      "Bash(done)",
+      "WebSearch",
+      "WebFetch(domain:developer.shop-pro.jp)",
+      "WebFetch(domain:naeco.jp)",
+      "WebFetch(domain:api.shop-pro.jp)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

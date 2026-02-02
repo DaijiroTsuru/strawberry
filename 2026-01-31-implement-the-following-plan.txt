@@ -1,0 +1,940 @@
+
+╭─── Claude Code v2.1.27 ──────────────────────────────────────────────────────╮
+│                                                    │ Tips for getting        │
+│                 Welcome back tsuru!                │ started                 │
+│                                                    │ Run /init to create a … │
+│                      ▗ ▗   ▖ ▖                     │ ─────────────────────── │
+│                                                    │ Recent activity         │
+│                        ▘▘ ▝▝                       │ No recent activity      │
+│                                                    │                         │
+│   Opus 4.5 · Claude Pro · tsuru@on-sight.ne.jp's   │                         │
+│   Organization                                     │                         │
+│                   ~/wk/strawberry                  │                         │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ Plan to implement                                                            │
+│                                                                              │
+│ カラーミーショップ → Shopify 移行スクリプト実装計画                          │
+│                                                                              │
+│ 概要                                                                         │
+│                                                                              │
+│ カラーミーショップのCSV＋APIからデータを抽出し、Shopify Admin REST           │
+│ API経由で登録するTypeScriptスクリプトを作成する。                            │
+│                                                                              │
+│ データソース                                                                 │
+│ データ: 商品                                                                 │
+│ ソース: product.csv（CP932）                                                 │
+│ 件数: 26商品                                                                 │
+│ 理由: CSVで十分                                                              │
+│ ────────────────────────────────────────                                     │
+│ データ: 顧客                                                                 │
+│ ソース: customer.csv（CP932）                                                │
+│ 件数: 321顧客                                                                │
+│ 理由: CSVで十分                                                              │
+│ ────────────────────────────────────────                                     │
+│ データ: 注文                                                                 │
+│ ソース: カラーミーAPI GET /v1/sales.json                                     │
+│ 件数: 435注文                                                                │
+│ 理由: CSVでは商品明細が直近3ヶ月分のみ。APIなら全件の明細取得可能            │
+│ Step 0: カラーミーショップAPI OAuth設定                                      │
+│                                                                              │
+│ デベロッパー登録 → アプリ作成 → トークン取得                                 │
+│                                                                              │
+│ 1. https://developer.shop-pro.jp/ でデベロッパー登録                         │
+│ 2. アプリケーションを作成（リダイレクトURIは http://localhost:3000/callback  │
+│ でOK）                                                                       │
+│ 3. クライアントID・シークレットを .env に設定                                │
+│ 4. 移行スクリプト内のOAuth認可フローでアクセストークンを取得（ブラウザで認可 │
+│ →コールバックでトークン取得）                                                │
+│ 5. 必要スコープ: read_sales（受注・顧客データ参照）                          │
+│                                                                              │
+│ .env に追加する設定                                                          │
+│                                                                              │
+│ COLORME_CLIENT_ID=your_client_id                                             │
+│ COLORME_CLIENT_SECRET=your_client_secret                                     │
+│ COLORME_ACCESS_TOKEN=           # OAuth認可後に自動設定                      │
+│                                                                              │
+│ ファイル構成                                                                 │
+│                                                                              │
+│ scripts/migration/                                                           │
+│ ├── config.ts              # 環境変数、パス、CLI フラグ                      │
+│ ├── types.ts               # ColorMe CSV/API型 + Shopify API型               │
+│ ├── csv-reader.ts          # CP932 CSV パーサー                              │
+│ ├── colorme-client.ts      # カラーミーAPI OAuthクライアント（認可フロー +   │
+│ APIコール）                                                                  │
+│ ├── colorme-auth.ts        #                                                 │
+│ OAuth認可フロー（ローカルHTTPサーバーでコールバック受信）                    │
+│ ├── extract-orders.ts      # カラーミーAPIから全注文データ抽出 →             │
+│ data/colorme-orders.json                                                     │
+│ ├── shopify-client.ts      # Shopify REST APIクライアント（レート制限付き）  │
+│ ├── id-map.ts              # カラーミーID → Shopify ID 永続マッピング        │
+│ ├── logger.ts              # ファイル＋コンソールログ                        │
+│ ├── helpers.ts             #                                                 │
+│ 日本語名前分割、電話番号E.164変換、住所分割、日付変換                        │
+│ ├── transformers/                                                            │
+│ │   ├── product.ts         # 商品データ変換（CSV → Shopify）                 │
+│ │   ├── customer.ts        # 顧客データ変換（CSV → Shopify）                 │
+│ │   └── order.ts           # 注文データ変換（API JSON → Shopify）            │
+│ ├── migrate-products.ts    # 商品移行エントリポイント                        │
+│ ├── migrate-customers.ts   # 顧客移行エントリポイント                        │
+│ ├── migrate-orders.ts      # 注文移行エントリポイント                        │
+│ ├── migrate-all.ts         # 全体オーケストレーター                          │
+│ ├── verify.ts              # 移行後検証                                      │
+│ └── data/                  # ランタイムデータ（gitignore）                   │
+│     ├── colorme-orders.json # APIから抽出した全注文データ                    │
+│     ├── id-map.json                                                          │
+│     └── migration.log                                                        │
+│                                                                              │
+│ 追加パッケージ                                                               │
+│                                                                              │
+│ npm install --save-dev iconv-lite csv-parse                                  │
+│                                                                              │
+│ - iconv-lite: CP932デコード（Node.js標準の TextDecoder('shift_jis')          │
+│ ではCP932固有バイトで失敗する）                                              │
+│ - csv-parse: RFC4180準拠CSVパーサー（商品説明に改行・カンマ含むため必須）    │
+│                                                                              │
+│ npm scripts 追加                                                             │
+│                                                                              │
+│ {                                                                            │
+│   "migrate:auth":      "tsx scripts/migration/colorme-auth.ts",              │
+│   "migrate:extract":   "tsx scripts/migration/extract-orders.ts",            │
+│   "migrate:products":  "tsx scripts/migration/migrate-products.ts",          │
+│   "migrate:customers": "tsx scripts/migration/migrate-customers.ts",         │
+│   "migrate:orders":    "tsx scripts/migration/migrate-orders.ts",            │
+│   "migrate:all":       "tsx scripts/migration/migrate-all.ts",               │
+│   "migrate:verify":    "tsx scripts/migration/verify.ts"                     │
+│ }                                                                            │
+│                                                                              │
+│ 実行順序                                                                     │
+│                                                                              │
+│ 1. migrate:auth →                                                            │
+│ カラーミーOAuth認可。ブラウザが開き認可後、アクセストークンを .env に保存    │
+│ 2. migrate:extract → カラーミーAPIから全注文データ抽出 →                     │
+│ data/colorme-orders.json に保存                                              │
+│ 3. migrate:products → 商品CSVをShopifyに登録。IDマップに保存                 │
+│ 4. migrate:customers → 顧客CSVをShopifyに登録。IDマップに保存                │
+│ 5. migrate:orders → 抽出済みJSONからShopifyに注文作成（IDマップ参照）        │
+│ 6. migrate:verify → Shopify APIで照合検証                                    │
+│                                                                              │
+│ migrate:all はステップ3〜5を順番に実行するオーケストレーター。               │
+│                                                                              │
+│ 主要な変換ロジック                                                           │
+│                                                                              │
+│ 商品 (product.csv → POST /products.json)                                     │
+│ カラーミー列: 商品名                                                         │
+│ Shopify フィールド: title                                                    │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 商品説明 / 簡易説明                                            │
+│ Shopify フィールド: body_html                                                │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 販売価格                                                       │
+│ Shopify フィールド: variants[0].price                                        │
+│ 変換: そのまま（税込）                                                       │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 定価                                                           │
+│ Shopify フィールド: variants[0].compare_at_price                             │
+│ 変換: 販売価格と異なる場合のみ                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 型番                                                           │
+│ Shopify フィールド: variants[0].sku                                          │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 在庫数                                                         │
+│ Shopify フィールド: inventory level                                          │
+│ 変換: POST /inventory_levels/set.json                                        │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 在庫管理                                                       │
+│ Shopify フィールド: inventory_management                                     │
+│ 変換: "在庫管理する" → "shopify"                                             │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 原価                                                           │
+│ Shopify フィールド: inventory item cost                                      │
+│ 変換: PUT /inventory_items/{id}.json                                         │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 商品画像URL + その他画像1〜9                                   │
+│ Shopify フィールド: images[]                                                 │
+│ 変換: URLをそのまま渡しShopifyに取り込ませる                                 │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 大カテゴリー                                                   │
+│ Shopify フィールド: product_type                                             │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 小カテゴリー                                                   │
+│ Shopify フィールド: tags                                                     │
+│ 変換: タグに追加                                                             │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 掲載設定                                                       │
+│ Shopify フィールド: status                                                   │
+│ 変換: "掲載する" → active, "掲載しない" → draft                              │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: ブランド                                                       │
+│ Shopify フィールド: vendor                                                   │
+│ 変換: 空の場合 "津留いちご園"                                                │
+│ 商品作成後、追加APIコール: 在庫レベル設定 + 原価設定                         │
+│                                                                              │
+│ 顧客 (customer.csv → POST /customers.json)                                   │
+│ カラーミー列: 名前                                                           │
+│ Shopify フィールド: last_name + first_name                                   │
+│ 変換: スペース区切りで分割（なければ全て last_name）                         │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: メールアドレス                                                 │
+│ Shopify フィールド: email                                                    │
+│ 変換: そのまま（Shopifyはユニーク制約）                                      │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 電話番号                                                       │
+│ Shopify フィールド: phone                                                    │
+│ 変換: E.164変換（"090..." → "+8190..."）                                     │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 郵便番号                                                       │
+│ Shopify フィールド: addresses[0].zip                                         │
+│ 変換: ハイフン付き7桁フォーマット                                            │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 都道府県名                                                     │
+│ Shopify フィールド: addresses[0].province                                    │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: 住所                                                           │
+│ Shopify フィールド: addresses[0].address1/2                                  │
+│ 変換: 全角スペースで建物名を分割                                             │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: フリガナ                                                       │
+│ Shopify フィールド: note                                                     │
+│ 変換: "フリガナ: xxx" として備考に                                           │
+│ ────────────────────────────────────────                                     │
+│ カラーミー列: メルマガ受信可否                                               │
+│ Shopify フィールド: email_marketing_consent                                  │
+│ 変換: "受信する" → subscribed                                                │
+│ 重複メール対応: 422エラー時に既存顧客を検索してIDマップにリンク。            │
+│ send_email_invite: false で招待メールを送信しない。                          │
+│                                                                              │
+│ 注文データ抽出 (extract-orders.ts: カラーミーAPI → JSON)                     │
+│                                                                              │
+│ カラーミーAPI GET /v1/sales.json で全注文を取得。レスポンスに                │
+│ details[]（商品明細）と sale_deliveries[]（配送先）が含まれる。              │
+│                                                                              │
+│ 処理フロー:                                                                  │
+│ 1. GET /v1/sales.json?limit=100&offset=0（ページネーション）                 │
+│ 2. 全ページ取得するまで offset を加算しながらループ                          │
+│ 3. 全注文データを data/colorme-orders.json に保存                            │
+│                                                                              │
+│ レート制限: 120リクエスト/分。435件 ÷ 100件/リクエスト = 5リクエストで完了。 │
+│                                                                              │
+│ 注文 (colorme-orders.json → POST /orders.json)                               │
+│                                                                              │
+│ 全435件が商品明細付きでインポート可能。                                      │
+│ カラーミーAPI フィールド: sale.make_date                                     │
+│ Shopify フィールド: created_at / processed_at                                │
+│ 変換: ISO8601変換                                                            │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale.customer.id                                   │
+│ Shopify フィールド: customer.id                                              │
+│ 変換: IDマップ参照                                                           │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: details[].product_id                               │
+│ Shopify フィールド: line_items[].variant_id                                  │
+│ 変換: IDマップ参照                                                           │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: details[].product_name                             │
+│ Shopify フィールド: line_items[].title                                       │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: details[].price_with_tax                           │
+│ Shopify フィールド: line_items[].price                                       │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: details[].product_num                              │
+│ Shopify フィールド: line_items[].quantity                                    │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale_deliveries[].name                             │
+│ Shopify フィールド: shipping_address.last/first_name                         │
+│ 変換: 名前分割                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale_deliveries[].postal                           │
+│ Shopify フィールド: shipping_address.zip                                     │
+│ 変換: フォーマット                                                           │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale_deliveries[].pref_name                        │
+│ Shopify フィールド: shipping_address.province                                │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale_deliveries[].address1/2                       │
+│ Shopify フィールド: shipping_address.address1/2                              │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale_deliveries[].tel                              │
+│ Shopify フィールド: shipping_address.phone                                   │
+│ 変換: E.164変換                                                              │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale_deliveries[].delivery_charge                  │
+│ Shopify フィールド: shipping_lines[0].price                                  │
+│ 変換: そのまま                                                               │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale.paid                                          │
+│ Shopify フィールド: financial_status                                         │
+│ 変換: true → paid, false → pending                                           │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale.delivered                                     │
+│ Shopify フィールド: fulfillment_status                                       │
+│ 変換: true → fulfilled, false → null                                         │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale_deliveries[].preferred_date                   │
+│ Shopify フィールド: note_attributes                                          │
+│ 変換: メタデータ保存                                                         │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale_deliveries[].preferred_period                 │
+│ Shopify フィールド: note_attributes                                          │
+│ 変換: メタデータ保存                                                         │
+│ ────────────────────────────────────────                                     │
+│ カラーミーAPI フィールド: sale.id                                            │
+│ Shopify フィールド: note_attributes                                          │
+│ 変換: colorme_order_id として保存                                            │
+│ 重要フラグ:                                                                  │
+│ - send_receipt: false — 顧客にメール通知しない                               │
+│ - send_fulfillment_receipt: false — 発送通知しない                           │
+│ - inventory_behaviour: 'bypass' — 在庫減算しない                             │
+│ - 金額0の注文はデフォルトでスキップ（--include-zero-orders で含める）        │
+│                                                                              │
+│ Shopify APIクライアント設計                                                  │
+│                                                                              │
+│ - レート制限: 550ms間隔（2req/sec以下を維持）                                │
+│ - X-Shopify-Shop-Api-Call-Limit ヘッダーでバケット監視、80%超で追加待機      │
+│ - 429/5xx エラーは指数バックオフで最大3回リトライ                            │
+│ - 401/403 は即時中断（API権限エラー）                                        │
+│ - --dry-run フラグ: CSV読込・変換のみ実行、APIコールなし                     │
+│                                                                              │
+│ レジューム機能                                                               │
+│                                                                              │
+│ data/id-map.json に各APIコール成功時にID対応を即座に保存。スクリプト再起動時 │
+│ 、既にマップ済みのアイテムはスキップ。                                       │
+│                                                                              │
+│ 検証 (verify.ts)                                                             │
+│                                                                              │
+│ 移行後にShopify APIで各リソースをGETし、元データと照合:                      │
+│ - 商品: title, price, 画像数                                                 │
+│ - 顧客: email, last_name                                                     │
+│ - 注文: created_at日付, financial_status, fulfillment_status                 │
+│                                                                              │
+│ colorme-auth.ts: OAuth認可フロー                                             │
+│                                                                              │
+│ 1. ローカルHTTPサーバーを localhost:3000 で起動                              │
+│ 2. ブラウザで認可URL（https://api.shop-pro.jp/oauth/authorize?...scope=read_ │
+│ sales）を自動オープン                                                        │
+│ 3. ユーザーが「許可」をクリック → /callback にリダイレクト                   │
+│ 4. 認可コードを受け取り、POST /oauth/token でアクセストークン取得            │
+│ 5. トークンを .env の COLORME_ACCESS_TOKEN に書き込み                        │
+│ 6. サーバー終了                                                              │
+│                                                                              │
+│ 修正するファイル                                                             │
+│ ┌────────────────────────────┬──────────────────────────────────────┐        │
+│ │          ファイル          │               変更内容               │        │
+│ ├────────────────────────────┼──────────────────────────────────────┤        │
+│ │ package.json               │ npm scripts追加, devDependencies追加 │        │
+│ ├────────────────────────────┼──────────────────────────────────────┤        │
+│ │ .env.example               │ COLORME_* 環境変数追加               │        │
+│ ├────────────────────────────┼──────────────────────────────────────┤        │
+│ │ .gitignore                 │ scripts/migration/data/ 追加         │        │
+│ ├────────────────────────────┼──────────────────────────────────────┤        │
+│ │ scripts/migration/* (新規) │ 全移行スクリプト                     │        │
+│ └────────────────────────────┴──────────────────────────────────────┘        │
+│ テスト手順                                                                   │
+│                                                                              │
+│ 1. npm run migrate:auth → ブラウザでカラーミーOAuth認可、トークン取得        │
+│ 2. npm run migrate:extract →                                                 │
+│ カラーミーAPIから全注文データ抽出、data/colorme-orders.json 確認             │
+│ 3. npm run migrate:products -- --dry-run → 26商品のペイロード確認            │
+│ 4. npm run migrate:products → Shopify管理画面で商品確認                      │
+│ 5. npm run migrate:customers -- --dry-run → 顧客ペイロード確認               │
+│ 6. npm run migrate:customers → Shopify管理画面で顧客確認                     │
+│ 7. npm run migrate:orders -- --dry-run → 注文ペイロード確認                  │
+│ 8. npm run migrate:orders → Shopify管理画面で注文確認                        │
+│ 9. npm run migrate:verify → 自動検証                                         │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+⏺ 計画を確認しました。大規模な実装タスクなので、まず既存のプロジェクト構造を把握
+  してから、並列で効率的に実装を進めます。
+
+⏺ Explore(Explore project structure)
+  ⎿  Done (9 tool uses · 23.7k tokens · 21s)
+
+⏺ プロジェクト構造を把握しました。tsx は既にインストール済みで、TypeScriptの厳密
+  モードが有効です。それでは実装を開始します。
+
+  まず、タスクリストを作成し、依存パッケージのインストールから始めます。
+
+⏺ Bash(npm install --save-dev iconv-lite csv-parse 2>&1)
+  ⎿  added 3 packages, and audited 516 packages in 7s
+
+     63 packages are looking for funding
+     … +11 lines (ctrl+o to expand)
+
+⏺ ディレクトリ構造を作成し、基盤ファイルを書いていきます。
+
+⏺ Bash(mkdir -p
+      /Users/tsuru.daijiro/wk/strawberry/scripts/migration/transformers
+      /Users/tsuru.daijiro/wk/strawberry/scripts/migration/data)
+  ⎿  (No content)
+
+⏺ それでは基盤ファイルを並列で作成します。
+
+⏺ Write(scripts/migration/config.ts)
+  ⎿  Wrote 51 lines to scripts/migration/config.ts
+       1 import { config as dotenvConfig } from "dotenv";
+       2 import path from "path";
+       3 
+       4 dotenvConfig({ path: path.resolve(process.cwd(), ".env") });
+       5 
+       6 const args = process.argv.slice(2);
+       7 
+       8 export const config = {
+       9   dryRun: args.includes("--dry-run"),
+      10   includeZeroOrders: args.includes("--include-zero-orders"),
+     … +41 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/types.ts)
+  ⎿  Wrote 188 lines to scripts/migration/types.ts
+       1 // ── カラーミーCSV型 ──
+       2 
+       3 export interface ColormeProductCsv {
+       4   商品ID: string;
+       5   商品名: string;
+       6   商品説明: string;
+       7   簡易説明: string;
+       8   販売価格: string;
+       9   定価: string;
+      10   型番: string;
+     … +178 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/logger.ts)
+  ⎿  Wrote 42 lines to scripts/migration/logger.ts
+       1 import fs from "fs";
+       2 import path from "path";
+       3 import { config } from "./config.js";
+       4 
+       5 const logDir = path.dirname(config.paths.logFile);
+       6 
+       7 function ensureDir() {
+       8   if (!fs.existsSync(logDir)) {
+       9     fs.mkdirSync(logDir, { recursive: true });
+      10   }
+     … +32 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/helpers.ts)
+  ⎿  Wrote 76 lines to scripts/migration/helpers.ts
+       1 /**
+       2  * 日本語名前を姓・名に分割する。
+       3  * スペース（全角・半角）で区切れない場合は全体を姓として返す。
+       4  */
+       5 export function splitName(fullName: string): {
+       6   lastName: string;
+       7   firstName: string;
+       8 } {
+       9   const trimmed = fullName.trim();
+      10   // 全角スペースまたは半角スペースで分割
+     … +66 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/csv-reader.ts)
+  ⎿  Wrote 24 lines to scripts/migration/csv-reader.ts
+       1 import fs from "fs";
+       2 import iconv from "iconv-lite";
+       3 import { parse } from "csv-parse/sync";
+       4 
+       5 /**
+       6  * CP932エンコードのCSVファイルを読み込み、レコード配列として返
+         す。
+       7  * RFC4180準拠パーサーを使用（改行・カンマを含むフィールドに対応
+         ）。
+       8  */
+       9 export function readCp932Csv<T extends Record<string, string>>(
+      10   filePath: string,
+     … +14 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/id-map.ts)
+  ⎿  Wrote 50 lines to scripts/migration/id-map.ts
+       1 import fs from "fs";
+       2 import { config } from "./config.js";
+       3 import type { IdMap } from "./types.js";
+       4 
+       5 const emptyMap: IdMap = {
+       6   products: {},
+       7   customers: {},
+       8   orders: {},
+       9   variants: {},
+      10   inventoryItems: {},
+     … +40 lines (ctrl+o to expand)
+
+⏺ 次にカラーミーAPIクライアントとShopifyクライアント、Transformersを並列で作成し
+  ます。
+
+⏺ Write(scripts/migration/colorme-client.ts)
+  ⎿  Wrote 81 lines to scripts/migration/colorme-client.ts
+       1 import { config } from "./config.js";
+       2 import { logger } from "./logger.js";
+       3 import { sleep } from "./helpers.js";
+       4 import type { ColormeSalesResponse } from "./types.js";
+       5 
+       6 /**
+       7  * カラーミーショップ REST APIクライアント。
+       8  * レート制限（120req/min）に対応。
+       9  */
+      10 export class ColormeClient {
+     … +71 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/colorme-auth.ts)
+  ⎿  Wrote 122 lines to scripts/migration/colorme-auth.ts
+       1 import http from "http";
+       2 import fs from "fs";
+       3 import path from "path";
+       4 import { config } from "./config.js";
+       5 import { logger } from "./logger.js";
+       6 
+       7 /**
+       8  * カラーミーショップ OAuth認可フロー。
+       9  * 1. ローカルHTTPサーバーを起動
+      10  * 2. ブラウザで認可URLを開く
+     … +112 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/extract-orders.ts)
+  ⎿  Wrote 27 lines to scripts/migration/extract-orders.ts
+       1 import fs from "fs";
+       2 import { config } from "./config.js";
+       3 import { logger } from "./logger.js";
+       4 import { ColormeClient } from "./colorme-client.js";
+       5 
+       6 async function main() {
+       7   logger.info("=== カラーミー注文データ抽出開始 ===");
+       8 
+       9   const client = new ColormeClient();
+      10   const sales = await client.fetchAllSales();
+     … +17 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/shopify-client.ts)
+  ⎿  Wrote 164 lines to scripts/migration/shopify-client.ts
+       1 import { config } from "./config.js";
+       2 import { logger } from "./logger.js";
+       3 import { sleep } from "./helpers.js";
+       4 
+       5 /**
+       6  * Shopify Admin REST APIクライアント。
+       7  * レート制限管理、リトライ、dry-runモードを提供。
+       8  */
+       9 export class ShopifyClient {
+      10   private lastCallAt = 0;
+     … +154 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/transformers/product.ts)
+  ⎿  Wrote 54 lines to scripts/migration/transformers/product.ts
+       1 import { config } from "../config.js";
+       2 import type { ColormeProductCsv, ShopifyProductPayload } from ".
+         ./types.js";
+       3 
+       4 export function transformProduct(
+       5   row: ColormeProductCsv,
+       6 ): ShopifyProductPayload {
+       7   const price = row["販売価格"] ?? "0";
+       8   const compareAtPrice = row["定価"] ?? "";
+       9 
+      10   // 画像URL収集（空でないもののみ）
+     … +44 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/transformers/customer.ts)
+  ⎿  Wrote 51 lines to scripts/migration/transformers/customer.ts
+       1 import type { ColormeCustomerCsv, ShopifyCustomerPayload } from 
+         "../types.js";
+       2 import { splitName, toE164, formatZip, splitAddress } from "../h
+         elpers.js";
+       3 
+       4 export function transformCustomer(
+       5   row: ColormeCustomerCsv,
+       6 ): ShopifyCustomerPayload {
+       7   const { lastName, firstName } = splitName(row["名前"] ?? "");
+       8   const phone = toE164(row["電話番号"] ?? "");
+       9   const zip = formatZip(row["郵便番号"] ?? "");
+      10   const { address1, address2 } = splitAddress(row["住所"] ?? "")
+         ;
+     … +41 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/transformers/order.ts)
+  ⎿  Wrote 92 lines to scripts/migration/transformers/order.ts
+       1 import type {
+       2   ColormeSale,
+       3   IdMap,
+       4   ShopifyOrderPayload,
+       5 } from "../types.js";
+       6 import { splitName, toE164, formatZip, unixToIso } from "../help
+         ers.js";
+       7 
+       8 export function transformOrder(
+       9   sale: ColormeSale,
+      10   idMap: IdMap,
+     … +82 lines (ctrl+o to expand)
+
+⏺ 次に移行エントリポイントを作成します。
+
+⏺ Write(scripts/migration/migrate-products.ts)
+  ⎿  Wrote 116 lines to scripts/migration/migrate-products.ts
+       1 import { config } from "./config.js";
+       2 import { logger } from "./logger.js";
+       3 import { readCp932Csv } from "./csv-reader.js";
+       4 import { ShopifyClient } from "./shopify-client.js";
+       5 import { loadIdMap, setMapping } from "./id-map.js";
+       6 import { transformProduct } from "./transformers/product.js";
+       7 import type { ColormeProductCsv } from "./types.js";
+       8 
+       9 export async function migrateProducts() {
+      10   logger.info("=== 商品移行開始 ===");
+     … +106 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/migrate-customers.ts)
+  ⎿  Wrote 96 lines to scripts/migration/migrate-customers.ts
+       1 import { config } from "./config.js";
+       2 import { logger } from "./logger.js";
+       3 import { readCp932Csv } from "./csv-reader.js";
+       4 import { ShopifyClient } from "./shopify-client.js";
+       5 import { loadIdMap, setMapping } from "./id-map.js";
+       6 import { transformCustomer } from "./transformers/customer.js";
+       7 import type { ColormeCustomerCsv } from "./types.js";
+       8 
+       9 export async function migrateCustomers() {
+      10   logger.info("=== 顧客移行開始 ===");
+     … +86 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/migrate-orders.ts)
+  ⎿  Wrote 87 lines to scripts/migration/migrate-orders.ts
+       1 import fs from "fs";
+       2 import { config } from "./config.js";
+       3 import { logger } from "./logger.js";
+       4 import { ShopifyClient } from "./shopify-client.js";
+       5 import { loadIdMap, setMapping } from "./id-map.js";
+       6 import { transformOrder } from "./transformers/order.js";
+       7 import type { ColormeSale } from "./types.js";
+       8 
+       9 export async function migrateOrders() {
+      10   logger.info("=== 注文移行開始 ===");
+     … +77 lines (ctrl+o to expand)
+
+⏺ Write(scripts/migration/migrate-all.ts)
+  ⎿  Wrote 27 lines to scripts/migration/migrate-all.ts
+      1 import { logger } from "./logger.js";
+      2 import { migrateProducts } from "./migrate-products.js";
+      3 import { migrateCustomers } from "./migrate-customers.js";
+      4 import { migrateOrders } from "./migrate-orders.js";
+      5 
+      6 async function main() {
+      7   logger.info("========================================");
+      8   logger.info("  カラーミー → Shopify 全体移行開始");
+      9   logger.info("========================================");
+     … +17 lines (ctrl+o to expand)
+
+❯ /upgrade 
+
+⏺ Write(scripts/migration/verify.ts)
+  ⎿  Wrote 178 lines to scripts/migration/verify.ts
+       1 import fs from "fs";
+       2 import { config } from "./config.js";
+       3 import { logger } from "./logger.js";
+       4 import { readCp932Csv } from "./csv-reader.js";
+       5 import { ShopifyClient } from "./shopify-client.js";
+       6 import { loadIdMap } from "./id-map.js";
+       7 import type {
+       8   ColormeProductCsv,
+       9   ColormeCustomerCsv,
+      10   ColormeSale,
+     … +168 lines (ctrl+o to expand)
+
+⏺ 最後に既存ファイルの更新です。
+
+⏺ Read 3 files (ctrl+o to expand)
+
+⏺ 3ファイルを並列で更新します。
+
+⏺ Update(package.json)
+  ⎿  Added 8 lines, removed 1 line
+       8      "build": "npm run fetch-reviews && vite build && npm run pr
+          erender",
+       9      "prerender": "tsx scripts/prerender.ts",
+      10      "dev": "vite",
+      11 -    "fetch-reviews": "tsx scripts/fetch-reviews.ts"            
+      11 +    "fetch-reviews": "tsx scripts/fetch-reviews.ts",           
+      12 +    "migrate:auth": "tsx scripts/migration/colorme-auth.ts",   
+      13 +    "migrate:extract": "tsx scripts/migration/extract-orders.ts
+         +",                                                             
+      14 +    "migrate:products": "tsx scripts/migration/migrate-products
+         +.ts",                                                          
+      15 +    "migrate:customers": "tsx scripts/migration/migrate-custome
+         +rs.ts",                                                        
+      16 +    "migrate:orders": "tsx scripts/migration/migrate-orders.ts"
+         +,                                                              
+      17 +    "migrate:all": "tsx scripts/migration/migrate-all.ts",     
+      18 +    "migrate:verify": "tsx scripts/migration/verify.ts"        
+      19    },
+      20    "dependencies": {
+      21      "@emailjs/browser": "^4.4.1",
+
+⏺ Update(.env.example)
+  ⎿  Added 6 lines
+      31  # Google PlaceのPlace IDを設定してください
+      32  # Place IDの取得方法: https://developers.google.com/maps/docume
+          ntation/places/web-service/place-id
+      33  VITE_GOOGLE_PLACE_ID=your_place_id_here
+      34 +                                                               
+      35 +# カラーミーショップAPI設定（移行スクリプト用）                
+      36 +# デベロッパー登録: https://developer.shop-pro.jp/             
+      37 +COLORME_CLIENT_ID=your_client_id                               
+      38 +COLORME_CLIENT_SECRET=your_client_secret                       
+      39 +COLORME_ACCESS_TOKEN=                                          
+
+⏺ Update(.gitignore)
+  ⎿  Added 3 lines
+      17  
+      18  # Prerendering generated files
+      19  product-routes.json
+      20 +                                                               
+      21 +# Migration runtime data                                       
+      22 +scripts/migration/data/                                        
+
+⏺ 全ファイルを作成しました。TypeScriptの型チェックを確認します。
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ tsconfig.node.json が scripts/**/*.ts
+  をincludeしているので、移行スクリプトも対象に含まれています。strict
+  が設定されていないので、メインの tsconfig.json
+  の設定を確認しつつ、型チェックを実行してみます。
+
+⏺ Bash(npx tsc --project tsconfig.node.json --noEmit 2>&1)
+  ⎿  Error: Exit code 2
+     scripts/fetch-reviews.ts(3,24): error TS2792: Cannot find module 'dotenv'. 
+     Did you mean to set the 'moduleResolution' option to 'node', or to add 
+     aliases to the 'paths' option?
+     scripts/get-product-handles.ts(7,24): error TS2792: Cannot find module 
+     'dotenv'. Did you mean to set the 'moduleResolution' option to 'node', or t
+      add aliases to the 'paths' option?
+     scripts/migration/config.ts(1,40): error TS2792: Cannot find module 
+     'dotenv'. Did you mean to set the 'moduleResolution' option to 'node', or t
+      add aliases to the 'paths' option?
+     scripts/migration/config.ts(15,9): error TS1056: Accessors are only 
+     available when targeting ECMAScript 5 and higher.
+     scripts/migration/config.ts(35,9): error TS1056: Accessors are only 
+     available when targeting ECMAScript 5 and higher.
+     scripts/migration/config.ts(38,9): error TS1056: Accessors are only 
+     available when targeting ECMAScript 5 and higher.
+     scripts/migration/config.ts(41,9): error TS1056: Accessors are only 
+     available when targeting ECMAScript 5 and higher.
+     scripts/migration/csv-reader.ts(2,19): error TS2792: Cannot find module 
+     'iconv-lite'. Did you mean to set the 'moduleResolution' option to 'node', 
+     or to add aliases to the 'paths' option?
+     scripts/migration/csv-reader.ts(3,23): error TS2792: Cannot find module 
+     'csv-parse/sync'. Did you mean to set the 'moduleResolution' option to 
+     'node', or to add aliases to the 'paths' option?
+     … +5 lines (ctrl+o to see all)
+
+⏺ tsconfig.node.json は moduleResolution: "bundler" が原因でtscコマンドでは問題
+  が出ますが、これは既存のプロジェクトの設定によるもので、tsx
+  ランタイムでは問題ありません（既存の scripts/fetch-reviews.ts
+  なども同じ状態）。
+
+  ただし、config.ts の getter (get apiBase() 等) について TS1056
+  エラーが出ています。これは tsconfig.node.json に target
+  が設定されていないためです。tsx では問題なく動作しますが、念のため as const
+  を使わない形に修正して安全にします。
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ getterを使わない形に書き換えます。
+
+⏺ Write(scripts/migration/config.ts)
+  ⎿  Added 10 lines, removed 15 lines
+       5  
+       6  const args = process.argv.slice(2);
+       7  
+       8 +const storeDomain = process.env.VITE_SHOPIFY_STORE_DOMAIN ?? ""
+         +;                                                              
+       9 +const dataDir = path.resolve(process.cwd(), "scripts/migration/
+         +data");                                                        
+      10 +                                                               
+      11  export const config = {
+      12    dryRun: args.includes("--dry-run"),
+      13    includeZeroOrders: args.includes("--include-zero-orders"),
+      14  
+      15    shopify: {
+      13 -    storeDomain: process.env.VITE_SHOPIFY_STORE_DOMAIN ?? "",  
+      16 +    storeDomain,                                               
+      17      adminApiToken: process.env.SHOPIFY_ADMIN_API_TOKEN ?? "",
+      15 -    get apiBase() {                                            
+      16 -      return `https://${config.shopify.storeDomain}/admin/api/2
+         -024-01`;                                                       
+      17 -    },                                                         
+      18 +    apiBase: `https://${storeDomain}/admin/api/2024-01`,       
+      19    },
+      20  
+      21    colorme: {
+     ...
+      32    paths: {
+      33      productCsv: path.resolve(process.cwd(), "product.csv"),
+      34      customerCsv: path.resolve(process.cwd(), "customer.csv"),
+      34 -    dataDir: path.resolve(process.cwd(), "scripts/migration/dat
+         -a"),                                                           
+      35 -    get ordersJson() {                                         
+      36 -      return path.join(config.paths.dataDir, "colorme-orders.js
+         -on");                                                          
+      37 -    },                                                         
+      38 -    get idMapJson() {                                          
+      39 -      return path.join(config.paths.dataDir, "id-map.json");   
+      40 -    },                                                         
+      41 -    get logFile() {                                            
+      42 -      return path.join(config.paths.dataDir, "migration.log"); 
+      43 -    },                                                         
+      35 +    dataDir,                                                   
+      36 +    ordersJson: path.join(dataDir, "colorme-orders.json"),     
+      37 +    idMapJson: path.join(dataDir, "id-map.json"),              
+      38 +    logFile: path.join(dataDir, "migration.log"),              
+      39    },
+      40  
+      41    shopifyApiInterval: 550,
+      42    colormeApiInterval: 500,
+      43    maxRetries: 3,
+      44    defaultVendor: "津留いちご園",
+      50 -} as const;                                                    
+      45 +};                                                             
+
+⏺ 全ファイルが作成されました。最終確認として、作成したファイル一覧を確認します。
+
+⏺ Searched for 1 pattern (ctrl+o to expand)
+
+⏺ 全18ファイルが作成されています。計画通りの構成です。
+
+  /upgrade コマンドについては、これはClaude Codeの組み込みCLIコマンドであり、ス
+  キルとして実行するものではありません。Claude
+  Codeのバージョンアップが必要な場合は、ターミナルで直接 /upgrade
+  を入力してください。
+
+  ---
+  実装が完了しました。作成・変更したファイルのサマリーです:
+
+  作成したファイル (18ファイル)
+  ファイル: scripts/migration/config.ts
+  役割: 環境変数・CLIフラグ管理
+  ────────────────────────────────────────
+  ファイル: scripts/migration/types.ts
+  役割: カラーミーCSV/API型 + Shopify API型定義
+  ────────────────────────────────────────
+  ファイル: scripts/migration/logger.ts
+  役割: コンソール+ファイルログ
+  ────────────────────────────────────────
+  ファイル: scripts/migration/helpers.ts
+  役割: 名前分割、E.164変換、郵便番号フォーマット、住所分割
+  ────────────────────────────────────────
+  ファイル: scripts/migration/csv-reader.ts
+  役割: CP932 CSVパーサー (iconv-lite + csv-parse)
+  ────────────────────────────────────────
+  ファイル: scripts/migration/id-map.ts
+  役割: カラーミーID→Shopify ID永続マッピング
+  ────────────────────────────────────────
+  ファイル: scripts/migration/colorme-client.ts
+  役割: カラーミーAPI RESTクライアント
+  ────────────────────────────────────────
+  ファイル: scripts/migration/colorme-auth.ts
+  役割: OAuth認可フロー (ローカルHTTPサーバー)
+  ────────────────────────────────────────
+  ファイル: scripts/migration/extract-orders.ts
+  役割: 全注文データ抽出 → JSON保存
+  ────────────────────────────────────────
+  ファイル: scripts/migration/shopify-client.ts
+  役割: Shopify REST API (レート制限/リトライ/dry-run)
+  ────────────────────────────────────────
+  ファイル: scripts/migration/transformers/product.ts
+  役割: 商品CSV → Shopify変換
+  ────────────────────────────────────────
+  ファイル: scripts/migration/transformers/customer.ts
+  役割: 顧客CSV → Shopify変換
+  ────────────────────────────────────────
+  ファイル: scripts/migration/transformers/order.ts
+  役割: 注文API JSON → Shopify変換
+  ────────────────────────────────────────
+  ファイル: scripts/migration/migrate-products.ts
+  役割: 商品移行エントリポイント
+  ────────────────────────────────────────
+  ファイル: scripts/migration/migrate-customers.ts
+  役割: 顧客移行エントリポイント
+  ────────────────────────────────────────
+  ファイル: scripts/migration/migrate-orders.ts
+  役割: 注文移行エントリポイント
+  ────────────────────────────────────────
+  ファイル: scripts/migration/migrate-all.ts
+  役割: 全体オーケストレーター
+  ────────────────────────────────────────
+  ファイル: scripts/migration/verify.ts
+  役割: 移行後検証
+  変更したファイル (3ファイル)
+  ┌──────────────┬────────────────────────────────────────────────────┐
+  │   ファイル   │                      変更内容                      │
+  ├──────────────┼────────────────────────────────────────────────────┤
+  │ package.json │ 7つのmigrate npm scripts追加 + devDependencies追加 │
+  ├──────────────┼────────────────────────────────────────────────────┤
+  │ .env.example │ COLORME_* 環境変数3つ追加                          │
+  ├──────────────┼────────────────────────────────────────────────────┤
+  │ .gitignore   │ scripts/migration/data/ 追加                       │
+  └──────────────┴────────────────────────────────────────────────────┘
+  実行手順
+
+  npm run migrate:auth        # 1. カラーミーOAuth認可
+  npm run migrate:extract     # 2. 全注文データ抽出
+  npm run migrate:products    # 3. 商品移行 (--dry-run で事前確認)
+  npm run migrate:customers   # 4. 顧客移行
+  npm run migrate:orders      # 5. 注文移行
+  npm run migrate:verify      # 6. 検証
+
+✻ Cogitated for 6m 18s
+
+❯ 動作確認を行いたいのですが、一部のデータのみ実施したいです。商品は全て、  
+  顧客、注文に関しては`津留`という名前がつくものだけ移行してください。      
+
+⏺ --filter フラグを追加して、顧客と注文をフィルタリングできるようにします。まず
+  現在のコードを確認します。
+
+⏺ Read 3 files (ctrl+o to expand)
+  ⎿  You've hit your limit · resets 3pm (Asia/Tokyo)
+     /upgrade to increase your usage limit.
+
+❯ /rate-limit-options 
+  ⎿  Login interrupted
+
+❯ /usage 
+  ⎿  Status dialog dismissed
+
+❯ /context 
+  ⎿  Context Usage
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛀ ⛀   claude-opus-4-5-20251101 · 53k/200k tokens (26%)
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ 
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛶   Estimated usage by category
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ System prompt: 2.8k tokens (1.4%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ System tools: 15.3k tokens (7.6%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Skills: 1.4k tokens (0.7%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Messages: 38.5k tokens (19.2%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛶ Free space: 109k (54.5%)
+     ⛶ ⛶ ⛶ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝   ⛝ Autocompact buffer: 33.0k tokens (16.5%)
+     ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ 
+
+     Skills · /skills
+
+     Plugin
+     └ xlsx: 117 tokens
+     └ doc-coauthoring: 115 tokens
+     └ frontend-design: 108 tokens
+     └ docx: 96 tokens
+     └ internal-comms: 90 tokens
+     └ algorithmic-art: 89 tokens
+     └ web-artifacts-builder: 82 tokens
+     └ canvas-design: 80 tokens
+     └ mcp-builder: 76 tokens
+     └ theme-factory: 73 tokens
+     └ pptx: 73 tokens
+     └ pdf: 68 tokens
+     └ brand-guidelines: 67 tokens
+     └ slack-gif-creator: 65 tokens
+     └ skill-creator: 64 tokens
+     └ webapp-testing: 59 tokens

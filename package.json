@@ -8,7 +8,14 @@
     "build": "npm run fetch-reviews && vite build && npm run prerender",
     "prerender": "tsx scripts/prerender.ts",
     "dev": "vite",
-    "fetch-reviews": "tsx scripts/fetch-reviews.ts"
+    "fetch-reviews": "tsx scripts/fetch-reviews.ts",
+    "migrate:auth": "tsx scripts/migration/colorme-auth.ts",
+    "migrate:extract": "tsx scripts/migration/extract-orders.ts",
+    "migrate:products": "tsx scripts/migration/migrate-products.ts",
+    "migrate:customers": "tsx scripts/migration/migrate-customers.ts",
+    "migrate:orders": "tsx scripts/migration/migrate-orders.ts",
+    "migrate:all": "tsx scripts/migration/migrate-all.ts",
+    "migrate:verify": "tsx scripts/migration/verify.ts"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -74,7 +81,9 @@
     "@types/react-dom": "^19.2.3",
     "@vercel/node": "^5.5.27",
     "@vitejs/plugin-react": "4.7.0",
+    "csv-parse": "^6.1.0",
     "dotenv": "^17.2.3",
+    "iconv-lite": "^0.7.2",
     "puppeteer": "^24.36.1",
     "tailwindcss": "4.1.12",
     "tsx": "^4.21.0",

@@ -17,3 +17,6 @@ dist
 
 # Prerendering generated files
 product-routes.json
+
+# Migration runtime data
+scripts/migration/data/
