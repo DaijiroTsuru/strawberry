@@ -14,6 +14,10 @@ import { StrawberriesPage } from '@/app/components/pages/StrawberriesPage';
 import { ProductByHandlePage } from '@/app/components/pages/ProductByHandlePage';
 import { FaqPage } from '@/app/components/pages/FaqPage';
 import { ContactPage } from '@/app/components/pages/ContactPage';
+import { PrivacyPolicyPage } from '@/app/components/pages/PrivacyPolicyPage';
+import { RefundPolicyPage } from '@/app/components/pages/RefundPolicyPage';
+import { TermsOfServicePage } from '@/app/components/pages/TermsOfServicePage';
+import { ShippingPolicyPage } from '@/app/components/pages/ShippingPolicyPage';
 
 // Root route
 const rootRoute = createRootRoute({
@@ -94,6 +98,34 @@ const contactRoute = createRoute({
   component: ContactPage,
 });
 
+// Privacy Policy page route
+const privacyPolicyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/privacy-policy',
+  component: PrivacyPolicyPage,
+});
+
+// Refund Policy page route
+const refundPolicyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/refund-policy',
+  component: RefundPolicyPage,
+});
+
+// Terms of Service page route
+const termsOfServiceRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/terms-of-service',
+  component: TermsOfServicePage,
+});
+
+// Shipping Policy page route
+const shippingPolicyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/shipping-policy',
+  component: ShippingPolicyPage,
+});
+
 // Create route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -103,6 +135,10 @@ const routeTree = rootRoute.addChildren([
   productDetailRoute,
   faqRoute,
   contactRoute,
+  privacyPolicyRoute,
+  refundPolicyRoute,
+  termsOfServiceRoute,
+  shippingPolicyRoute,
 ]);
 
 // Create router
