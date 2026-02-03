@@ -918,6 +918,79 @@ export function getMockProducts(): ShopifyProduct[] {
   ];
 }
 
+// ポリシー型定義
+export interface ShopPolicy {
+  title: string;
+  body: string;
+  handle: string;
+  url?: string;
+}
+
+export interface ShopPolicies {
+  privacyPolicy: ShopPolicy | null;
+  refundPolicy: ShopPolicy | null;
+  termsOfService: ShopPolicy | null;
+  shippingPolicy: ShopPolicy | null;
+}
+
+// ポリシー取得用のGraphQLクエリ
+const SHOP_POLICIES_QUERY = `
+  query GetShopPolicies {
+    shop {
+      privacyPolicy {
+        title
+        body
+        handle
+        url
+      }
+      refundPolicy {
+        title
+        body
+        handle
+        url
+      }
+      termsOfService {
+        title
+        body
+        handle
+        url
+      }
+      shippingPolicy {
+        title
+        body
+        handle
+        url
+      }
+    }
+  }
+`;
+
+// Shopifyから店舗のポリシーを取得
+export async function fetchShopPolicies(): Promise<ShopPolicies> {
+  try {
+    const { data } = await shopifyFetch({
+      query: SHOP_POLICIES_QUERY,
+      variables: {},
+    });
+
+    return {
+      privacyPolicy: data.shop.privacyPolicy,
+      refundPolicy: data.shop.refundPolicy,
+      termsOfService: data.shop.termsOfService,
+      shippingPolicy: data.shop.shippingPolicy,
+    };
+  } catch (error) {
+    console.error('Shopify Policies API Error:', error);
+    // エラー時は空のポリシーを返す
+    return {
+      privacyPolicy: null,
+      refundPolicy: null,
+      termsOfService: null,
+      shippingPolicy: null,
+    };
+  }
+}
+
 // 価格のフォーマット関数
 export function formatPrice(amount: string, currencyCode: string = 'JPY'): string {
   const price = parseFloat(amount);

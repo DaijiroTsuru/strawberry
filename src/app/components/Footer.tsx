@@ -13,9 +13,9 @@ export function Footer() {
       }}
     >
       <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-4 gap-12 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* 会社情報 */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-3 mb-6">
               <div 
                 className="w-12 h-12 rounded-2xl flex items-center justify-center"
@@ -97,6 +97,70 @@ export function Footer() {
                   </a>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          {/* ポリシー */}
+          <div>
+            <h3 
+              className="font-bold mb-6 text-white"
+              style={{ fontFamily: 'var(--font-serif)', letterSpacing: '0.03em' }}
+            >
+              ポリシー
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <a 
+                  href="/privacy-policy" 
+                  className="transition-colors duration-300 hover:text-[color:var(--color-strawberry-400)]"
+                  style={{ 
+                    color: 'var(--color-neutral-400)',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  プライバシーポリシー
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/terms-of-service" 
+                  className="transition-colors duration-300 hover:text-[color:var(--color-strawberry-400)]"
+                  style={{ 
+                    color: 'var(--color-neutral-400)',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  利用規約
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/refund-policy" 
+                  className="transition-colors duration-300 hover:text-[color:var(--color-strawberry-400)]"
+                  style={{ 
+                    color: 'var(--color-neutral-400)',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  返品・交換ポリシー
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/shipping-policy" 
+                  className="transition-colors duration-300 hover:text-[color:var(--color-strawberry-400)]"
+                  style={{ 
+                    color: 'var(--color-neutral-400)',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  配送ポリシー
+                </a>
+              </li>
             </ul>
           </div>
 
