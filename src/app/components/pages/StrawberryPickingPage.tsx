@@ -7,36 +7,13 @@ import {
   Phone,
   ArrowLeft,
   Sparkles,
-  Volume2,
-  VolumeX,
 } from "lucide-react";
 import { FARM_INFO, STRAWBERRY_PICKING } from "@/app/constants/farmInfo";
 import { Link } from "@tanstack/react-router";
 import { FaqSection } from "@/app/components/common/FaqSection";
 import { trackStrawberryPickingPhoneReservation, trackStrawberryPickingConversion } from "@/utils/analytics";
-import { useState, useRef } from "react";
 
 export function StrawberryPickingPage() {
-  const [isMuted, setIsMuted] = useState(true);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  const toggleMute = () => {
-    if (iframeRef.current) {
-      const command = isMuted ? "unMute" : "mute";
-      iframeRef.current.contentWindow?.postMessage(
-        JSON.stringify({ event: "command", func: command, args: "" }),
-        "https://www.youtube.com"
-      );
-      setIsMuted(!isMuted);
-    }
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      toggleMute();
-    }
-  };
   return (
     <div className="min-h-screen">
       {/* ヘッダースペース */}
@@ -420,8 +397,7 @@ export function StrawberryPickingPage() {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <div className="relative" style={{ aspectRatio: "16/9" }}>
                 <iframe
-                  ref={iframeRef}
-                  src="https://www.youtube.com/embed/I8I8PZ2jPuY?autoplay=1&mute=1&enablejsapi=1&rel=0"
+                  src="https://www.youtube.com/embed/I8I8PZ2jPuY?rel=0"
                   title="いちご狩りの様子"
                   width="100%"
                   height="100%"
@@ -429,25 +405,6 @@ export function StrawberryPickingPage() {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
-                
-                {/* 音声切り替えボタン */}
-                <button
-                  onClick={toggleMute}
-                  onKeyDown={handleKeyDown}
-                  className="absolute bottom-4 right-4 p-3 rounded-full transition-all duration-300 hover:scale-110 z-10"
-                  style={{
-                    background: "rgba(0, 0, 0, 0.7)",
-                    backdropFilter: "blur(8px)",
-                    border: "2px solid rgba(255, 255, 255, 0.3)",
-                  }}
-                  aria-label={isMuted ? "音声をオンにする" : "音声をオフにする"}
-                >
-                  {isMuted ? (
-                    <VolumeX className="w-6 h-6 text-white" />
-                  ) : (
-                    <Volume2 className="w-6 h-6 text-white" />
-                  )}
-                </button>
               </div>
             </div>
             
@@ -458,7 +415,7 @@ export function StrawberryPickingPage() {
                 color: "var(--color-neutral-500)",
               }}
             >
-              ※動画は自動再生されます。音声ボタンで音のオン・オフを切り替えられます
+              ※再生ボタンをクリックすると、音声付きで動画が再生されます
             </p>
           </motion.div>
         </div>
