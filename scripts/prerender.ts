@@ -123,6 +123,50 @@ function optimizeHTML(html: string): string {
   return optimized;
 }
 
+// sitemap.xmlを生成
+function generateSitemap(routes: string[], distPath: string): void {
+  const baseUrl = 'https://www.tsuru-strawberry-farm.com';
+  const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD形式
+  
+  // URLの優先度とchangefreqを設定
+  const getUrlPriority = (route: string): { priority: string; changefreq: string } => {
+    if (route === '/') {
+      return { priority: '1.0', changefreq: 'daily' };
+    }
+    if (['/strawberries', '/rice', '/strawberry-picking'].includes(route)) {
+      return { priority: '0.9', changefreq: 'weekly' };
+    }
+    if (['/faq', '/contact'].includes(route)) {
+      return { priority: '0.8', changefreq: 'monthly' };
+    }
+    if (route.startsWith('/product/')) {
+      return { priority: '0.7', changefreq: 'weekly' };
+    }
+    return { priority: '0.6', changefreq: 'monthly' };
+  };
+  
+  const urls = routes.map(route => {
+    const { priority, changefreq } = getUrlPriority(route);
+    return `  <url>
+    <loc>${baseUrl}${route}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`;
+  }).join('\n');
+  
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>
+`;
+  
+  const sitemapPath = resolve(distPath, 'sitemap.xml');
+  writeFileSync(sitemapPath, sitemap, 'utf-8');
+  console.log(`  ✓ Sitemap generated: ${sitemapPath}`);
+  console.log(`    Total URLs: ${routes.length}`);
+}
+
 // ルートをプリレンダリング
 async function prerenderRoute(
   page: puppeteer.Page,
@@ -219,6 +263,11 @@ async function main() {
 
     console.log('\n✅ Prerendering completed successfully!');
     console.log(`   Total pages rendered: ${allRoutes.length}\n`);
+    
+    // sitemap.xmlを生成
+    console.log('🗺️  Generating sitemap.xml...\n');
+    generateSitemap(allRoutes, distPath);
+    
   } catch (error) {
     console.error('\n❌ Prerendering failed:', error);
     
