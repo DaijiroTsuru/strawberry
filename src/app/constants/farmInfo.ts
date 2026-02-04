@@ -185,9 +185,11 @@ export const SHIPPING = {
 
 // ナビゲーションメニュー
 export const NAV_ITEMS = [
-  { label: 'ホーム', href: '/' },
-  { label: '商品', href: '/#products' },
+  { label: '厳選いちご', href: '/strawberries' },
+  { label: '無農薬栽培米', href: '/rice' },
+  { label: 'いちご狩り', href: '/strawberry-picking' },
   { label: '農園について', href: '/#about' },
   { label: 'アクセス', href: '/#access' },
   { label: 'よくあるご質問', href: '/faq' },
+  { label: 'お問い合わせ', href: '/contact' },
 ];

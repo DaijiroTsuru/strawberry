@@ -17,6 +17,10 @@ const staticRoutes = [
   '/strawberries',
   '/faq',
   '/contact',
+  '/privacy-policy',
+  '/terms-of-service',
+  '/refund-policy',
+  '/shipping-policy',
 ];
 
 // product-routes.jsonから動的ルートを読み込む
@@ -141,6 +145,9 @@ function generateSitemap(routes: string[], distPath: string): void {
     }
     if (route.startsWith('/product/')) {
       return { priority: '0.7', changefreq: 'weekly' };
+    }
+    if (['/privacy-policy', '/terms-of-service', '/refund-policy', '/shipping-policy'].includes(route)) {
+      return { priority: '0.3', changefreq: 'yearly' };
     }
     return { priority: '0.6', changefreq: 'monthly' };
   };

@@ -7,6 +7,7 @@ import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductsByCollectionId, ShopifyProduct, formatPrice } from '@/utils/shopify';
 import { SEO, createBreadcrumbSchema } from '@/app/components/SEO';
 import { FaqSection } from '@/app/components/common/FaqSection';
+import { RelatedLinks } from '@/app/components/common/RelatedLinks';
 
 // CollectionID: 486373589215 から商品を取得
 const STRAWBERRY_COLLECTION_ID = '486373589215';
@@ -306,6 +307,15 @@ export function StrawberriesPage() {
         title="いちご購入に関するよくあるご質問"
         description="いちごのご注文・購入に関してよくいただくご質問をまとめました"
         maxQuestions={10}
+      />
+
+      {/* 関連ページ */}
+      <RelatedLinks
+        links={[
+          { title: 'いちご狩り', description: '摘みたてのかおり野を心ゆくまでお楽しみください。完全予約制で12月〜5月の期間限定です。', href: '/strawberry-picking' },
+          { title: '無農薬栽培米', description: '12種類の有機質肥料で育てた、安心・安全なヒノヒカリをお届けします。', href: '/rice' },
+          { title: 'お問い合わせ', description: 'ご注文・ご質問はお気軽にどうぞ。お電話・メールにて承っております。', href: '/contact' },
+        ]}
       />
 
       {/* お問い合わせCTA */}

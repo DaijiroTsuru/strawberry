@@ -13,7 +13,7 @@ export function Footer() {
       }}
     >
       <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           {/* 会社情報 */}
           <div className="md:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-3 mb-6">
@@ -97,6 +97,57 @@ export function Footer() {
                   </a>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          {/* 商品カテゴリ */}
+          <div>
+            <h3
+              className="font-bold mb-6 text-white"
+              style={{ fontFamily: 'var(--font-serif)', letterSpacing: '0.03em' }}
+            >
+              商品カテゴリ
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <a
+                  href="/strawberries"
+                  className="transition-colors duration-300 hover:text-[color:var(--color-strawberry-400)]"
+                  style={{
+                    color: 'var(--color-neutral-400)',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  厳選いちご
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/rice"
+                  className="transition-colors duration-300 hover:text-[color:var(--color-strawberry-400)]"
+                  style={{
+                    color: 'var(--color-neutral-400)',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  無農薬栽培米
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/strawberry-picking"
+                  className="transition-colors duration-300 hover:text-[color:var(--color-strawberry-400)]"
+                  style={{
+                    color: 'var(--color-neutral-400)',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  いちご狩り
+                </a>
+              </li>
             </ul>
           </div>
 

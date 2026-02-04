@@ -4,6 +4,7 @@ import { Mail, ArrowLeft } from "lucide-react";
 import { SEO, createBreadcrumbSchema } from "@/app/components/SEO";
 import { ContactForm } from "@/app/components/ContactForm";
 import { ContactInfo } from "@/app/components/ContactInfo";
+import { RelatedLinks } from "@/app/components/common/RelatedLinks";
 
 export function ContactPage() {
   return (
@@ -154,6 +155,15 @@ export function ContactPage() {
           </div>
         </div>
       </section>
+
+      {/* 関連ページ */}
+      <RelatedLinks
+        links={[
+          { title: 'よくあるご質問', description: '商品、ご注文、配送、いちご狩りなどのよくあるご質問をまとめています。', href: '/faq' },
+          { title: '厳選いちご', description: '朝摘みのかおり野を産地直送でお届け。化粧箱入りギフトや家族用パック詰めなど。', href: '/strawberries' },
+          { title: '無農薬栽培米', description: '12種類の有機質肥料で育てた、安心・安全なヒノヒカリをお届けします。', href: '/rice' },
+        ]}
+      />
     </div>
   );
 }

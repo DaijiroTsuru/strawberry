@@ -11,6 +11,7 @@ import {
 import { FARM_INFO, STRAWBERRY_PICKING } from "@/app/constants/farmInfo";
 import { Link } from "@tanstack/react-router";
 import { FaqSection } from "@/app/components/common/FaqSection";
+import { RelatedLinks } from "@/app/components/common/RelatedLinks";
 import { SEO, createBreadcrumbSchema } from "@/app/components/SEO";
 import { trackStrawberryPickingPhoneReservation, trackStrawberryPickingConversion } from "@/utils/analytics";
 
@@ -433,6 +434,15 @@ export function StrawberryPickingPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* 関連ページ */}
+      <RelatedLinks
+        links={[
+          { title: '厳選いちご', description: '朝摘みのかおり野を産地直送でお届け。化粧箱入りギフトや家族用パック詰めなど。', href: '/strawberries' },
+          { title: '無農薬栽培米', description: '12種類の有機質肥料で育てた、安心・安全なヒノヒカリをお届けします。', href: '/rice' },
+          { title: 'お問い合わせ', description: 'ご予約・ご質問はお気軽にどうぞ。お電話・メールにて承っております。', href: '/contact' },
+        ]}
+      />
 
       {/* 予約CTA */}
       <section className="py-20 lg:py-32 px-4 bg-white">

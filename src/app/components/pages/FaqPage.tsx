@@ -2,7 +2,8 @@ import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { HelpCircle, ArrowLeft, Phone, Mail } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
-import { SEO, createBreadcrumbSchema } from '@/app/components/SEO';
+import { SEO, createBreadcrumbSchema, createFAQPageSchema } from '@/app/components/SEO';
+import { RelatedLinks } from '@/app/components/common/RelatedLinks';
 import {
   Accordion,
   AccordionContent,
@@ -11,18 +12,28 @@ import {
 } from '@/app/components/ui/accordion';
 import { faqCategories } from '@/app/constants/faqData';
 
+const allFaqItems = faqCategories.flatMap((cat) =>
+  cat.questions.map((q) => ({ question: q.question, answer: q.answer }))
+);
+
 export function FaqPage() {
   return (
     <div className="min-h-screen">
-      <SEO 
+      <SEO
         title="よくあるご質問"
         description="津留いちご園へのよくあるご質問をまとめました。商品、ご注文、配送、いちご狩りなどについてのご質問にお答えします。"
         keywords="FAQ,よくある質問,いちご,いちご狩り,配送,注文方法,津留いちご園"
         url="/faq"
-        structuredData={createBreadcrumbSchema([
-          { name: 'ホーム', url: '/' },
-          { name: 'よくあるご質問', url: '/faq' },
-        ])}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            createBreadcrumbSchema([
+              { name: 'ホーム', url: '/' },
+              { name: 'よくあるご質問', url: '/faq' },
+            ]),
+            createFAQPageSchema(allFaqItems),
+          ],
+        }}
       />
 
       {/* ヘッダースペース */}
@@ -131,6 +142,15 @@ export function FaqPage() {
           })}
         </div>
       </section>
+
+      {/* 関連ページ */}
+      <RelatedLinks
+        links={[
+          { title: '厳選いちご', description: '朝摘みのかおり野を産地直送でお届け。化粧箱入りギフトや家族用パック詰めなど。', href: '/strawberries' },
+          { title: '無農薬栽培米', description: '12種類の有機質肥料で育てた、安心・安全なヒノヒカリをお届けします。', href: '/rice' },
+          { title: 'お問い合わせ', description: 'ご質問はお気軽にどうぞ。お電話・メールにて承っております。', href: '/contact' },
+        ]}
+      />
 
       {/* お問い合わせCTA */}
       <section className="py-20 lg:py-32 px-4" style={{ background: 'var(--color-neutral-50)' }}>

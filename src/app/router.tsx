@@ -1,7 +1,7 @@
 import { createRouter, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
 import { Header } from '@/app/components/Header';
 import { Footer } from '@/app/components/Footer';
-import { SEO, createOrganizationSchema, createLocalBusinessSchema } from '@/app/components/SEO';
+import { SEO, createOrganizationSchema, createLocalBusinessSchema, createWebSiteSchema } from '@/app/components/SEO';
 import { HeroSection } from '@/app/components/HeroSection';
 import { FeaturedBannerSection } from '@/app/components/FeaturedBannerSection';
 import { ProductSection } from '@/app/components/ProductSection';
@@ -43,6 +43,7 @@ const indexRoute = createRoute({
           '@graph': [
             createOrganizationSchema(),
             createLocalBusinessSchema(),
+            createWebSiteSchema(),
           ],
         }}
       />

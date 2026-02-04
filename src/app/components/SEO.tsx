@@ -191,3 +191,33 @@ export const createBreadcrumbSchema = (items: Array<{ name: string; url: string 
     item: `${DEFAULT_SEO.siteUrl}${item.url}`,
   })),
 });
+
+export const createFAQPageSchema = (faqs: Array<{ question: string; answer: string }>) => ({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+});
+
+export const createWebSiteSchema = () => ({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: DEFAULT_SEO.siteName,
+  url: DEFAULT_SEO.siteUrl,
+  description: DEFAULT_SEO.defaultDescription,
+  publisher: {
+    '@type': 'Organization',
+    name: DEFAULT_SEO.siteName,
+    logo: {
+      '@type': 'ImageObject',
+      url: DEFAULT_SEO.defaultImage,
+    },
+  },
+  inLanguage: 'ja',
+});
