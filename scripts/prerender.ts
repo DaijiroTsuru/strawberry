@@ -113,6 +113,16 @@ async function startPreviewServer(): Promise<{ url: string; kill: () => Promise<
   });
 }
 
+// HTMLを最適化（不要なスクリプトの削除、メタタグの整理など）
+function optimizeHTML(html: string): string {
+  let optimized = html;
+  
+  // 不要な空白を削除
+  optimized = optimized.replace(/\n\s*\n/g, '\n');
+  
+  return optimized;
+}
+
 // ルートをプリレンダリング
 async function prerenderRoute(
   page: puppeteer.Page,
@@ -130,9 +140,13 @@ async function prerenderRoute(
     });
 
     // 追加の待機時間（JavaScriptの実行を待つ）
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // SEOコンポーネントがメタタグを更新するのを待つ
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
     const html = await page.content();
+    
+    // HTMLを最適化
+    const optimizedHtml = optimizeHTML(html);
 
     // ファイルパスを決定
     let filePath: string;
@@ -151,7 +165,7 @@ async function prerenderRoute(
     }
 
     // HTMLを保存
-    writeFileSync(filePath, html, 'utf-8');
+    writeFileSync(filePath, optimizedHtml, 'utf-8');
     console.log(`    ✓ Saved to: ${filePath}`);
   } catch (error) {
     console.error(`    ✗ Failed to render ${route}:`, error);

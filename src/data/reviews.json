@@ -1,17 +1,24 @@
 [
   {
+    "name": "たろう",
+    "rating": 5,
+    "comment": "電話で予約して行きましたが、当日はほぼ貸し切りで大きくジューシーで甘いいちごをたくさん食べることができました。家族も友人家族も大満足でした。是非また利用したいです。",
+    "date": "過去 1 週間以内",
+    "photoUrl": "https://lh3.googleusercontent.com/a-/ALV-UjV1qX8rhpFuye8KGYCjPmugKVmeYygm0mgVGVdQeuqKxzxaDqA=s128-c0x00000000-cc-rp-mo"
+  },
+  {
+    "name": "ETO",
+    "rating": 5,
+    "comment": "大人１人60分1,800円でした。\n持ち帰りは100g250円でした。\nひと粒ひと粒が大きくて甘くて大満足です。\nビニールハウス貸切で2歳とゆっくり楽しめました。\n簡易トイレあります。\n水道に石鹸はなかったです。",
+    "date": "10 か月前",
+    "photoUrl": "https://lh3.googleusercontent.com/a-/ALV-UjUA449kcuz_aF79bpcwwp_SRDYj_p-ObERvVdZd58osFZn3jbjN=s128-c0x00000000-cc-rp-mo"
+  },
+  {
     "name": "カヤックフィッシャー",
     "rating": 5,
     "comment": "とてもリーズナブルで、優しいスタッフさんでした。\n当日電話予約で行きました。\n摘みたてイチゴが甘くもの凄くジューシーで、市販で買った物とは全然違いました！",
-    "date": "8 か月前",
+    "date": "9 か月前",
     "photoUrl": "https://lh3.googleusercontent.com/a-/ALV-UjWxBCVaG6HglA4bSOhZyhs0DIjeE68FLWo7tDyGECTDUtdCwA5m=s128-c0x00000000-cc-rp-mo"
-  },
-  {
-    "name": "piko tan",
-    "rating": 5,
-    "comment": "電話予約のみ。ホームページがたまに更新されます。\n他のいちご狩りと違い品種も一つしかありませんが、リーズナブルな価格。\n更に外国人とかが居ないので落ち着いて楽しめます。",
-    "date": "11 か月前",
-    "photoUrl": "https://lh3.googleusercontent.com/a-/ALV-UjXJSkimMDgdpr_s_qKoU48iRygguxqgKtTFhfja7HkKPZJa0vUQ=s128-c0x00000000-cc-rp-mo-ba4"
   },
   {
     "name": "Nguyen La",
@@ -26,12 +33,5 @@
     "comment": "2/20に伺いました！\n従業員の方々もとても丁寧に出迎えてくださり、大変良い時間を過ごすことが出来ました。\nなんと言ってもいちごのサイズがでかい!!\nデカいだけじゃなく美味い!!\n子どもは大喜びで食べまくり、妻のも子どもそっちのけで食べまくりでした（笑）\n地面が少々ぬかるんでいることがあるので、雨が近かった日などは長靴を準備したほうがいいかと思います!\nまた近々、伺う予定です!",
     "date": "3 年前",
     "photoUrl": "https://lh3.googleusercontent.com/a-/ALV-UjX9DGYoOxsM38sZ1AgRDZSdvbc2sK5hDxzUf3Lm_6cKoIqy6xvA=s128-c0x00000000-cc-rp-mo-ba2"
-  },
-  {
-    "name": "2 yuu",
-    "rating": 4,
-    "comment": "祝日当日に予約なしでもいちご狩りができるところを探して電話したところ、快くいつでも来られてくださいと言っていただき美味しい苺たっぷり食べられました！\n駐車場が狭く10台ほどで満車のようでした\n雨が降って土がぬかるんでたので小さいお子さんは転ける可能性大です(^^;)着替えを持っていかれた方がいいと思います\nトイレは和式の簡易トイレ1つしかないようでした\nマイナス面を書いてしまいましたが、農園の方の対応も気持ちよく、3月中盤過ぎてましたが苺本当に美味しかったです！また来年も行きます♡",
-    "date": "6 年前",
-    "photoUrl": "https://lh3.googleusercontent.com/a/ACg8ocJgotgxaebhKXH4vxeQrsHmF1nNTU1qcF8d5kMZAKVjnCcVYg=s128-c0x00000000-cc-rp-mo-ba3"
   }
 ]

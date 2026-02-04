@@ -11,11 +11,24 @@ import {
 import { FARM_INFO, STRAWBERRY_PICKING } from "@/app/constants/farmInfo";
 import { Link } from "@tanstack/react-router";
 import { FaqSection } from "@/app/components/common/FaqSection";
+import { SEO, createBreadcrumbSchema } from "@/app/components/SEO";
 import { trackStrawberryPickingPhoneReservation, trackStrawberryPickingConversion } from "@/utils/analytics";
 
 export function StrawberryPickingPage() {
   return (
     <div className="min-h-screen">
+      <SEO 
+        title="いちご狩り"
+        description="津留いちご園でいちご狩り体験をお楽しみください。12月から5月までの期間限定で、新鮮で甘い「かおり野」を食べ放題でお楽しみいただけます。ご予約はお電話にて承ります。"
+        keywords="いちご狩り,かおり野,体験,予約,久留米,筑後,福岡,食べ放題,津留いちご園"
+        image="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/C575B8A9-AF31-4F3D-A4E0-A168B27A2911_1_105_c.jpg?v=1768511098"
+        url="/strawberry-picking"
+        structuredData={createBreadcrumbSchema([
+          { name: 'ホーム', url: '/' },
+          { name: 'いちご狩り', url: '/strawberry-picking' },
+        ])}
+      />
+
       {/* ヘッダースペース */}
       <div className="h-20 lg:h-24"></div>
 
