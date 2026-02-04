@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from '@tanstack/react-router';
+import { Link, useParams, useSearch } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { ShoppingCart, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
@@ -12,12 +12,15 @@ import type { FaqTag } from '@/app/constants/faqData';
 /**
  * 商品Handleから商品詳細ページを表示
  * URLパラメータ: /product/{handle}
+ * クエリパラメータ: ?variant={variantId}
  * 
  * 使用例:
  * /product/strawberry-500g
+ * /product/strawberry-500g?variant=48388477780191
  */
 export function ProductByHandlePage() {
   const { handle } = useParams({ from: '/product/$handle' });
+  const searchParams = useSearch({ from: '/product/$handle' }) as { variant?: string };
   const [product, setProduct] = useState<ShopifyProduct | null>(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -30,6 +33,17 @@ export function ProductByHandlePage() {
         if (handle) {
           const data = await fetchProductByHandle(handle);
           setProduct(data);
+          
+          // URLパラメータからvariantを取得して該当するバリアントを選択
+          const variantParam = searchParams?.variant as string | undefined;
+          if (variantParam && data) {
+            const variantIndex = data.variants.edges.findIndex(
+              (edge) => edge.node.id.includes(variantParam) || edge.node.id.endsWith(`/${variantParam}`)
+            );
+            if (variantIndex !== -1) {
+              setSelectedVariantIndex(variantIndex);
+            }
+          }
         }
       } catch (error) {
         console.error('Failed to load product:', error);
@@ -38,7 +52,7 @@ export function ProductByHandlePage() {
       }
     };
     loadProduct();
-  }, [handle]);
+  }, [handle, searchParams]);
 
   const handleAddToCart = async () => {
     if (!product) return;
