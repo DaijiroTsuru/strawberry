@@ -147,8 +147,10 @@ function generateSitemap(routes: string[], distPath: string): void {
   
   const urls = routes.map(route => {
     const { priority, changefreq } = getUrlPriority(route);
+    // URLの末尾に / を付加（既に / で終わっている場合は追加しない）
+    const url = route.endsWith('/') ? route : `${route}/`;
     return `  <url>
-    <loc>${baseUrl}${route}</loc>
+    <loc>${baseUrl}${url}</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
