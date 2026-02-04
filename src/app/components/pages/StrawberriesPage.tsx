@@ -44,9 +44,9 @@ export function StrawberriesPage() {
   return (
     <div className="min-h-screen">
       <SEO 
-        title="厳選いちご"
-        description="その日の朝に収穫した新鮮な「かおり野」を真心込めてお届けします。糖度が高く酸味が少ない、香り高い人気のいちごです。化粧箱入りやパック詰めなど、用途に合わせてお選びいただけます。"
-        keywords="いちご,かおり野,朝摘み,新鮮,化粧箱,パック,福岡,筑後,通信販売,ギフト"
+        title="スーパーのいちごには戻れない | 朝摘みかおり野お取り寄せ通販"
+        description="糖度１５度超えの完熟いちご「かおり野」をその日の朝に収穫して産地直送でお届け。酸味が少なく香り高い、至福の味わいをお取り寄せで。化粧箱入りギフトや家族用パック詰めなど、用途に合わせてお選びいただけます。"
+        keywords="いちご お取り寄せ,かおり野 通販,朝摘みいちご,産地直送,完熟いちご,新鮮いちご,いちご ギフト,高級いちご,糖度の高いいちご,香りが良いいちご,贈答用,化粧箱,パック詰め,オンライン販売"
         image="https://cdn.shopify.com/s/files/1/0791/6434/2495/files/C575B8A9-AF31-4F3D-A4E0-A168B27A2911_1_105_c.jpg?v=1768511098"
         url="/strawberries"
         structuredData={createBreadcrumbSchema([

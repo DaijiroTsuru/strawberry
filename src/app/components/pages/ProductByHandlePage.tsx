@@ -8,6 +8,7 @@ import { SEO, createProductSchema, createBreadcrumbSchema } from '@/app/componen
 import { trackAddToCart, trackBeginCheckout } from '@/utils/analytics';
 import { FaqSection } from '@/app/components/common/FaqSection';
 import type { FaqTag } from '@/app/constants/faqData';
+import productSeoData from '@/data/product-seo.json';
 
 /**
  * 商品Handleから商品詳細ページを表示
@@ -158,12 +159,19 @@ export function ProductByHandlePage() {
   const productImage = product.images.edges[0]?.node.url || '';
   const productPrice = selectedVariant?.priceV2.amount || '0';
 
+  // 商品ハンドル別のSEO設定を取得
+  const seoData = productSeoData[handle as keyof typeof productSeoData] || {
+    title: product.title,
+    description: product.description || `${product.title}の商品詳細ページです。津留いちご園の厳選商品をご覧ください。`,
+    keywords: `${product.title},${handle},通信販売,オンラインショップ,津留いちご園`
+  };
+
   return (
     <div className="min-h-screen">
       <SEO 
-        title={product.title}
-        description={product.description || `${product.title}の商品詳細ページです。津留いちご園の厳選商品をご覧ください。`}
-        keywords={`${product.title},${handle},通信販売,オンラインショップ,津留いちご園`}
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
         image={productImage}
         url={`/product/${handle}`}
         type="product"
