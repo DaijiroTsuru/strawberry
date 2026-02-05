@@ -5,8 +5,10 @@ import { ShoppingCart, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductByHandle, ShopifyProduct, formatPrice } from '@/utils/shopify';
 import { SEO, createProductSchema, createBreadcrumbSchema } from '@/app/components/SEO';
-import { trackAddToCart, trackBeginCheckout } from '@/utils/analytics';
+import { trackAddToCart } from '@/utils/analytics';
 import { FaqSection } from '@/app/components/common/FaqSection';
+import { StrawberryBEAFSection } from '@/app/components/product/StrawberryBEAFSection';
+import { PurchaseBox } from '@/app/components/product/PurchaseBox';
 import type { FaqTag } from '@/app/constants/faqData';
 import productSeoData from '@/data/product-seo.json';
 
@@ -446,13 +448,32 @@ export function ProductByHandlePage() {
         </div>
       </div>
 
+      {/* BEAF訴求セクション（いちご商品のみ） */}
+      {product && isStrawberryProduct(product) && (
+        <StrawberryBEAFSection product={product} />
+      )}
+
       {/* よくあるご質問セクション */}
       {product && (
-        <FaqSection 
+        <FaqSection
           tags={getProductTags(product)}
           title="商品購入に関するよくあるご質問"
           description="ご注文・購入に関してよくいただくご質問をまとめました"
           maxQuestions={12}
+        />
+      )}
+
+      {/* ページ下部の購入CTA */}
+      {product && (
+        <PurchaseBox
+          product={product}
+          selectedVariantIndex={selectedVariantIndex}
+          onVariantChange={setSelectedVariantIndex}
+          onAddToCart={handleAddToCart}
+          isAddingToCart={isAddingToCart}
+          cartError={cartError}
+          isStrawberry={backLink.to === '/strawberries'}
+          isBottomCTA
         />
       )}
     </div>
@@ -460,21 +481,47 @@ export function ProductByHandlePage() {
 }
 
 /**
+ * いちご商品かどうかを判定する
+ */
+function isStrawberryProduct(product: ShopifyProduct): boolean {
+  const strawberryCollectionId = 'gid://shopify/Collection/486373589215';
+
+  // コレクションIDで判定
+  if (product.collections?.edges.some((c) => c.node.id === strawberryCollectionId)) {
+    return true;
+  }
+
+  // コレクションハンドルでも判定
+  const collectionHandles = product.collections?.edges.map((c) => c.node.handle) || [];
+  if (collectionHandles.includes('strawberries') || collectionHandles.includes('ichigo')) {
+    return true;
+  }
+
+  // 商品タイトルからも判定
+  const title = product.title.toLowerCase();
+  if (title.includes('いちご') || title.includes('strawberry') || title.includes('かおり野')) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * 商品からFAQタグを判定する
  */
 function getProductTags(product: ShopifyProduct): FaqTag[] {
   const tags: FaqTag[] = ['購入'];
-  
+
   // 商品タイトルや説明文から判定
   const content = `${product.title}`.toLowerCase();
-  
+
   if (content.includes('いちご') || content.includes('strawberry') || content.includes('かおり野')) {
     tags.push('いちご');
   }
-  
+
   if (content.includes('米') || content.includes('お米') || content.includes('rice') || content.includes('ヒノヒカリ')) {
     tags.push('米');
   }
-  
+
   return tags;
 }
