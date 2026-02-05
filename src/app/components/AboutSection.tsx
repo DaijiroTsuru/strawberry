@@ -263,7 +263,7 @@ export function AboutSection() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {FARM_INFO.awards && FARM_INFO.awards.map((award, index) => (
+            {FARM_INFO.awards.map((award, index) => (
               <motion.div
                 key={award.id}
                 initial={{ opacity: 0, y: 30 }}
