@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Leaf, Award, Sprout, Sun, Heart, Sparkles } from 'lucide-react';
+import { Leaf, Award, Sprout, Sun, Heart, Sparkles, Trophy } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
 
 export function AboutSection() {
@@ -230,6 +230,97 @@ export function AboutSection() {
             </p>
           </motion.div>
         </div>
+
+        {/* Section 3.5: グランプリ参加 */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mb-32"
+        >
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 mb-6">
+              <Trophy className="w-6 h-6" style={{ color: 'var(--color-strawberry-600)' }} />
+              <span className="text-sm font-semibold tracking-wider"
+                style={{ color: 'var(--color-strawberry-600)', fontFamily: 'var(--font-sans)' }}
+              >
+                AWARDS & COMPETITIONS
+              </span>
+            </div>
+            
+            <h3 className="text-3xl lg:text-4xl font-bold mb-6"
+              style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}
+            >
+              グランプリへの挑戦
+            </h3>
+            
+            <p className="text-lg max-w-3xl mx-auto"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}
+            >
+              品質向上への取り組みの証として、全国レベルのいちごコンテストに参加しています
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {FARM_INFO.awards && FARM_INFO.awards.map((award, index) => (
+              <motion.div
+                key={award.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                className="relative p-8 rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-300"
+                style={{ 
+                  background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-leaf-50) 100%)',
+                  border: '2px solid var(--color-strawberry-200)'
+                }}
+              >
+                {/* 装飾要素 */}
+                <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"
+                  style={{ background: 'var(--color-strawberry-400)' }}
+                ></div>
+
+                <div className="relative z-10">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="p-3 rounded-full" 
+                      style={{ background: 'var(--color-strawberry-100)' }}
+                    >
+                      <Trophy className="w-6 h-6" style={{ color: 'var(--color-strawberry-600)' }} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className="text-xl lg:text-2xl font-bold"
+                          style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}
+                        >
+                          {award.name}
+                        </h4>
+                      </div>
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-3"
+                        style={{ 
+                          background: 'var(--color-strawberry-100)', 
+                          border: '1px solid var(--color-strawberry-300)'
+                        }}
+                      >
+                        <span className="text-sm font-semibold"
+                          style={{ color: 'var(--color-strawberry-700)', fontFamily: 'var(--font-sans)' }}
+                        >
+                          {award.year}年 {award.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className="text-base leading-relaxed"
+                    style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.8' }}
+                  >
+                    {award.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
         {/* Section 4: 早朝手摘み */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-32">
