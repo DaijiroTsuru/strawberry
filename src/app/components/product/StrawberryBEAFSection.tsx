@@ -52,7 +52,7 @@ function BenefitSection() {
     {
       icon: Heart,
       title: '「美味しい」の歓声',
-      description: '糖度15度超えの甘さに思わず笑顔がこぼれる',
+      description: '糖度13〜15度の甘さに思わず笑顔がこぼれる',
       image: BEAF_IMAGES.benefit.smile,
     },
     {
@@ -190,9 +190,9 @@ function BenefitSection() {
 function EvidenceSection() {
   const stats = [
     {
-      value: '15度超',
+      value: '13〜15度',
       label: '糖度',
-      description: '一般的ないちごの約1.5倍の甘さ',
+      description: '一般的ないちごより高い甘さ',
     },
     {
       value: '12種類',
