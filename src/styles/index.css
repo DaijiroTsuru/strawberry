@@ -120,3 +120,8 @@
   border-top: 1px solid var(--color-neutral-300);
   margin: 2em 0;
 }
+
+/* reCAPTCHA v3 バッジを非表示（代替テキストはContactFormに表示） */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
