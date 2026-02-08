@@ -276,6 +276,16 @@ async function main() {
     // sitemap.xmlを生成
     console.log('🗺️  Generating sitemap.xml...\n');
     generateSitemap(allRoutes, distPath);
+
+    // 404.htmlを生成（index.htmlをコピー）
+    // GitHub Pagesは存在しないURLで404.htmlを返すため、
+    // Reactアプリが起動してTanStack RouterがNotFoundPageを表示できるようにする
+    console.log('📄 Generating 404.html...');
+    const indexHtmlPath = resolve(distPath, 'index.html');
+    const notFoundHtmlPath = resolve(distPath, '404.html');
+    const indexHtml = readFileSync(indexHtmlPath, 'utf-8');
+    writeFileSync(notFoundHtmlPath, indexHtml, 'utf-8');
+    console.log('  ✓ 404.html generated (copy of index.html)');
     
   } catch (error) {
     console.error('\n❌ Prerendering failed:', error);

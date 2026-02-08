@@ -18,6 +18,7 @@ import { PrivacyPolicyPage } from '@/app/components/pages/PrivacyPolicyPage';
 import { RefundPolicyPage } from '@/app/components/pages/RefundPolicyPage';
 import { TermsOfServicePage } from '@/app/components/pages/TermsOfServicePage';
 import { ShippingPolicyPage } from '@/app/components/pages/ShippingPolicyPage';
+import { NotFoundPage } from '@/app/components/pages/NotFoundPage';
 
 // Root route
 const rootRoute = createRootRoute({
@@ -143,7 +144,10 @@ const routeTree = rootRoute.addChildren([
 ]);
 
 // Create router
-export const router = createRouter({ routeTree });
+export const router = createRouter({
+  routeTree,
+  defaultNotFoundComponent: NotFoundPage,
+});
 
 // Type declaration for TypeScript
 declare module '@tanstack/react-router' {
