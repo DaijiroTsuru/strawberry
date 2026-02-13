@@ -8,6 +8,7 @@ export interface SEOProps {
   url?: string;
   type?: 'website' | 'article' | 'product';
   structuredData?: object;
+  noindex?: boolean;
 }
 
 const DEFAULT_SEO = {
@@ -27,6 +28,7 @@ export function SEO({
   url,
   type = 'website',
   structuredData,
+  noindex = false,
 }: SEOProps) {
   const pageTitle = title 
     ? `${title} | ${DEFAULT_SEO.siteName}` 
@@ -53,6 +55,14 @@ export function SEO({
       
       element.setAttribute('content', content);
     };
+
+    // robots メタタグ
+    if (noindex) {
+      updateMetaTag('robots', 'noindex, nofollow');
+    } else {
+      const existing = document.querySelector('meta[name="robots"]');
+      if (existing) existing.remove();
+    }
 
     // 基本メタタグ
     updateMetaTag('description', description);
@@ -95,7 +105,7 @@ export function SEO({
     }
     canonical.setAttribute('href', pageUrl);
 
-  }, [pageTitle, description, keywords, image, pageUrl, type, structuredData]);
+  }, [pageTitle, description, keywords, image, pageUrl, type, structuredData, noindex]);
 
   return null;
 }

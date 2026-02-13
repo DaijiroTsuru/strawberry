@@ -11,6 +11,8 @@ import {
   Calendar,
   Package,
   Sparkles,
+  Dna,
+  Wind,
 } from 'lucide-react';
 import type { ShopifyProduct } from '@/utils/shopify';
 import { BEAF_IMAGES } from '@/app/constants/beafImages';
@@ -32,6 +34,7 @@ export function StrawberryBEAFSection({ product }: StrawberryBEAFSectionProps) {
     <div className="mt-16">
       <BenefitSection />
       <EvidenceSection />
+      <VarietySection />
       <AdvantageSection />
       <FeatureSection product={product} />
     </div>
@@ -348,6 +351,286 @@ function EvidenceSection() {
             </ul>
           </div>
         </motion.div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Variety（品種来歴）セクション
+ * かおり野の開発経緯・香り成分・次世代品種への貢献
+ */
+function VarietySection() {
+  const ancestors = [
+    '女峰', 'アイベリー', 'とよのか', '宝交早生',
+    '章姫', 'あかしゃのみつこ', 'とちおとめ', 'サンチーゴ',
+  ];
+
+  return (
+    <section
+      className="py-16 lg:py-24 px-4"
+      style={{
+        background: 'linear-gradient(180deg, var(--color-neutral-50) 0%, white 100%)',
+      }}
+    >
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12"
+        >
+          <div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+            style={{
+              background: 'var(--color-strawberry-100)',
+              color: 'var(--color-strawberry-700)',
+            }}
+          >
+            <Dna className="w-4 h-4" />
+            <span
+              className="text-sm font-semibold"
+              style={{ fontFamily: 'var(--font-sans)' }}
+            >
+              品種のルーツ
+            </span>
+          </div>
+          <h2
+            className="text-2xl lg:text-4xl font-bold mb-4"
+            style={{
+              fontFamily: 'var(--font-serif)',
+              color: 'var(--color-neutral-900)',
+              lineHeight: '1.4',
+            }}
+          >
+            8品種の長所を受け継いだ、
+            <br className="hidden sm:block" />
+            20年以上の結晶
+          </h2>
+          <p
+            className="text-lg max-w-3xl mx-auto"
+            style={{
+              fontFamily: 'var(--font-sans)',
+              color: 'var(--color-neutral-600)',
+              lineHeight: '1.8',
+            }}
+          >
+            三重県が1990年から育成を開始し、10年以上かけて親の組み合わせを完成。2010年に品種登録された「かおり野」は、日本を代表する主要品種の遺伝子を受け継いでいます。
+          </p>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* 品種系譜 */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="rounded-2xl p-6 lg:p-8 shadow-lg"
+            style={{ background: 'white', border: '1px solid var(--color-neutral-200)' }}
+          >
+            <h3
+              className="text-xl font-bold mb-4"
+              style={{
+                fontFamily: 'var(--font-serif)',
+                color: 'var(--color-neutral-900)',
+              }}
+            >
+              かおり野のルーツとなった8品種
+            </h3>
+            <p
+              className="text-sm mb-6"
+              style={{
+                fontFamily: 'var(--font-sans)',
+                color: 'var(--color-neutral-600)',
+                lineHeight: '1.8',
+              }}
+            >
+              「女峰」の実績、「とよのか」の食味、「章姫」の大きさ、「とちおとめ」の甘さ。日本を代表するいちご品種の長所を交配によって掛け合わせ、選び抜かれたのがかおり野です。
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {ancestors.map((name) => (
+                <span
+                  key={name}
+                  className="px-3 py-1.5 rounded-full text-sm font-medium"
+                  style={{
+                    background: 'var(--color-strawberry-50)',
+                    color: 'var(--color-strawberry-700)',
+                    border: '1px solid var(--color-strawberry-200)',
+                    fontFamily: 'var(--font-sans)',
+                  }}
+                >
+                  {name}
+                </span>
+              ))}
+            </div>
+            <div
+              className="mt-6 pt-6 space-y-3"
+              style={{ borderTop: '1px solid var(--color-neutral-200)' }}
+            >
+              <p
+                className="text-sm font-medium"
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  color: 'var(--color-neutral-500)',
+                }}
+              >
+                次世代品種への貢献
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div
+                  className="p-3 rounded-xl"
+                  style={{
+                    background: 'var(--color-neutral-50)',
+                    border: '1px solid var(--color-neutral-200)',
+                  }}
+                >
+                  <p
+                    className="text-sm font-semibold"
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      color: 'var(--color-neutral-800)',
+                    }}
+                  >
+                    ゆうべに
+                  </p>
+                  <p
+                    className="text-xs mt-1"
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      color: 'var(--color-neutral-500)',
+                    }}
+                  >
+                    熊本県（2017年登録）
+                  </p>
+                </div>
+                <div
+                  className="p-3 rounded-xl"
+                  style={{
+                    background: 'var(--color-neutral-50)',
+                    border: '1px solid var(--color-neutral-200)',
+                  }}
+                >
+                  <p
+                    className="text-sm font-semibold"
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      color: 'var(--color-neutral-800)',
+                    }}
+                  >
+                    よつぼし
+                  </p>
+                  <p
+                    className="text-xs mt-1"
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      color: 'var(--color-neutral-500)',
+                    }}
+                  >
+                    三重県・香川県等（2017年登録）
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* 香り成分 + 外観の特徴 */}
+          <div className="space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="rounded-2xl p-6 lg:p-8 shadow-lg"
+              style={{
+                background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)',
+                border: '1px solid var(--color-strawberry-200)',
+              }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <Wind
+                  className="w-6 h-6"
+                  style={{ color: 'var(--color-strawberry-600)' }}
+                />
+                <h3
+                  className="text-lg font-bold"
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    color: 'var(--color-strawberry-800)',
+                  }}
+                >
+                  香りの秘密「リナロール」
+                </h3>
+              </div>
+              <p
+                className="text-base"
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  color: 'var(--color-neutral-700)',
+                  lineHeight: '1.9',
+                }}
+              >
+                かおり野の名前の由来でもある優れた香り。その正体は「リナロール」というフレッシュな甘い香気成分です。ラベンダーやベルガモットにも含まれるこの成分を多く含んでおり、いちごの甘味との相乗効果で、口に入れた瞬間に広がる芳醇な風味を生み出しています。
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="rounded-2xl p-6 lg:p-8 shadow-lg"
+              style={{
+                background: 'white',
+                border: '1px solid var(--color-neutral-200)',
+              }}
+            >
+              <h3
+                className="text-lg font-bold mb-4"
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  color: 'var(--color-neutral-900)',
+                }}
+              >
+                見た目も美しい品種
+              </h3>
+              <ul className="space-y-3">
+                {[
+                  { label: '果形', desc: '大きな円錐形で見栄えが良い' },
+                  { label: '果皮', desc: '橙色に近い美しい赤色' },
+                  { label: '果肉', desc: '中心部まで真っ白。カットすると赤と白のコントラストが映える' },
+                  { label: '食感', desc: 'かための果肉で崩れにくく、甘味が強く酸味はおだやか' },
+                ].map((item) => (
+                  <li
+                    key={item.label}
+                    className="flex items-start gap-3"
+                  >
+                    <span
+                      className="flex-shrink-0 inline-block w-12 text-sm font-bold mt-0.5"
+                      style={{
+                        fontFamily: 'var(--font-sans)',
+                        color: 'var(--color-strawberry-600)',
+                      }}
+                    >
+                      {item.label}
+                    </span>
+                    <span
+                      className="text-sm"
+                      style={{
+                        fontFamily: 'var(--font-sans)',
+                        color: 'var(--color-neutral-700)',
+                        lineHeight: '1.7',
+                      }}
+                    >
+                      {item.desc}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );

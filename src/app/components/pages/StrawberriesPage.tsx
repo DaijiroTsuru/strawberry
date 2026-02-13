@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
-import { Sparkles, Package, ShoppingCart, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Sparkles, Package, ShoppingCart, ArrowLeft, AlertCircle, Flower2, Wind, Dna } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductsByCollectionId, ShopifyProduct, formatPrice } from '@/utils/shopify';
@@ -124,23 +124,167 @@ export function StrawberriesPage() {
               <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}>
                 「{FARM_INFO.features.strawberryVariety}」の魅力
               </h2>
-              <p className="text-lg mb-6" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
-                上品な香りとあっさりとしたみずみずしい甘さがある人気のブランドいちご。大粒なのに糖度が高く酸味が少ないのが特徴です。
+              <p className="text-lg mb-5" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
+                三重県が開発し、2010年（平成22年）に品種登録された「かおり野」。果実は大きな円錐形で、果皮は橙色に近い美しい赤色。果肉は中心部まで真っ白で、カットするとフチの赤と果肉の白のコントラストが映える品種です。
+              </p>
+              <p className="text-lg mb-5" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
+                果肉はかためで甘味が強く、酸味はおだやか。そして最大の特徴は、その名の通り優れた香りです。「リナロール」というフレッシュな甘い香気成分を多く含んでおり、甘味との相乗効果でより風味豊かに感じられます。
               </p>
               <p className="text-lg mb-6" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
                 朝の光を浴びて赤く輝くいちごを一粒ずつ丁寧に手摘みし、その日のうちにお客様へお届けしています。
               </p>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-3">
                 <div className="p-4 rounded-2xl" style={{ background: 'var(--color-strawberry-50)', border: '1px solid var(--color-strawberry-200)' }}>
-                  <Package className="w-6 h-6 mb-2" style={{ color: 'var(--color-strawberry-600)' }} />
-                  <p className="font-medium" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-800)' }}>朝摘み新鮮</p>
+                  <Wind className="w-6 h-6 mb-2" style={{ color: 'var(--color-strawberry-600)' }} />
+                  <p className="font-medium text-sm" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-800)' }}>豊かな香り</p>
                 </div>
                 <div className="p-4 rounded-2xl" style={{ background: 'var(--color-strawberry-50)', border: '1px solid var(--color-strawberry-200)' }}>
                   <Sparkles className="w-6 h-6 mb-2" style={{ color: 'var(--color-strawberry-600)' }} />
-                  <p className="font-medium" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-800)' }}>糖度が高い</p>
+                  <p className="font-medium text-sm" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-800)' }}>高糖度・低酸味</p>
+                </div>
+                <div className="p-4 rounded-2xl" style={{ background: 'var(--color-strawberry-50)', border: '1px solid var(--color-strawberry-200)' }}>
+                  <Package className="w-6 h-6 mb-2" style={{ color: 'var(--color-strawberry-600)' }} />
+                  <p className="font-medium text-sm" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-800)' }}>朝摘み新鮮</p>
                 </div>
               </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* かおり野の品種来歴 */}
+      <section className="py-20 lg:py-32 px-4" style={{ background: 'linear-gradient(180deg, var(--color-neutral-50) 0%, white 100%)' }}>
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6" style={{ background: 'var(--color-strawberry-100)', color: 'var(--color-strawberry-700)' }}>
+              <Dna className="w-4 h-4" />
+              <span className="text-sm font-semibold" style={{ fontFamily: 'var(--font-sans)' }}>品種の歴史</span>
+            </div>
+            <h2 className="text-3xl lg:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}>
+              20年以上の歳月が生んだ、
+              <br className="hidden sm:block" />
+              香りのいちご
+            </h2>
+            <p className="text-lg max-w-3xl mx-auto" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)', lineHeight: '1.9' }}>
+              かおり野は、8品種の長所を受け継いで誕生した特別ないちごです
+            </p>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            {/* 育成の歴史 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="rounded-2xl p-8 lg:p-10"
+              style={{ background: 'white', border: '1px solid var(--color-neutral-200)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, var(--color-strawberry-500) 0%, var(--color-strawberry-600) 100%)' }}>
+                  <Flower2 className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}>
+                  品種の誕生
+                </h3>
+              </div>
+              <p className="mb-5" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
+                かおり野の親の組み合わせは「0028401」×「0023001」。数字なのでわかりづらいですが、これらは<strong>「女峰」「アイベリー」「とよのか」「宝交早生」「章姫」「あかしゃのみつこ」「とちおとめ」「サンチーゴ」</strong>という主要な8品種をもとに交配を繰り返して、育成・選抜された品種です。
+              </p>
+              <p className="mb-6" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
+                1990年から育成を開始し、最終的な親の組み合わせができるまでに10年以上。さらに選抜を行い、2008年に品種登録を出願。2010年に品種登録されるまで、実に<strong>20年以上の歳月</strong>をかけて誕生しました。
+              </p>
+
+              {/* タイムライン */}
+              <div className="space-y-4 pt-4" style={{ borderTop: '1px solid var(--color-neutral-200)' }}>
+                {[
+                  { year: '1990年', event: '三重県で育成開始' },
+                  { year: '2000年代', event: '8品種の交配を重ね、最終的な親の組み合わせが完成' },
+                  { year: '2008年', event: '品種登録出願' },
+                  { year: '2010年', event: '品種登録（平成22年）' },
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-4">
+                    <span className="flex-shrink-0 w-20 text-sm font-bold" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-600)' }}>
+                      {item.year}
+                    </span>
+                    <span className="text-sm" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
+                      {item.event}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* 品種の影響力と特徴 */}
+            <div className="space-y-8">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="rounded-2xl p-8 lg:p-10"
+                style={{ background: 'white', border: '1px solid var(--color-neutral-200)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)' }}
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, var(--color-strawberry-500) 0%, var(--color-strawberry-600) 100%)' }}>
+                    <Dna className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-neutral-900)' }}>
+                    次世代品種の「親」としても活躍
+                  </h3>
+                </div>
+                <p className="mb-4" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
+                  かおり野は、その優れた食味と特性から、新しい品種の育成にも使われています。
+                </p>
+                <div className="space-y-4">
+                  <div className="p-4 rounded-xl" style={{ background: 'var(--color-strawberry-50)', border: '1px solid var(--color-strawberry-200)' }}>
+                    <p className="font-semibold mb-1" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-800)', fontSize: '0.95rem' }}>
+                      ゆうべに（熊本VS03）
+                    </p>
+                    <p className="text-sm" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)', lineHeight: '1.7' }}>
+                      熊本県のオリジナル品種。かおり野を親品種として開発され、2017年に品種登録。
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl" style={{ background: 'var(--color-strawberry-50)', border: '1px solid var(--color-strawberry-200)' }}>
+                    <p className="font-semibold mb-1" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-800)', fontSize: '0.95rem' }}>
+                      よつぼし
+                    </p>
+                    <p className="text-sm" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)', lineHeight: '1.7' }}>
+                      三重県や香川県などが共同開発。かおり野の育成にも使われ、2017年に品種登録。どちらも食味のよいいちごです。
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* 香り成分カード */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="rounded-2xl p-8 lg:p-10"
+                style={{
+                  background: 'linear-gradient(135deg, var(--color-strawberry-50) 0%, var(--color-strawberry-100) 100%)',
+                  border: '1px solid var(--color-strawberry-200)',
+                }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <Wind className="w-6 h-6" style={{ color: 'var(--color-strawberry-600)' }} />
+                  <h3 className="text-lg font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-800)' }}>
+                    香りの秘密「リナロール」
+                  </h3>
+                </div>
+                <p className="text-sm" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)', lineHeight: '1.9' }}>
+                  かおり野には「リナロール」というフレッシュな甘い香気成分が多く含まれています。この成分はラベンダーやベルガモットなどにも含まれる上品な香りの正体。いちごの甘味との相乗効果で、口に入れた瞬間に広がる芳醇な風味を生み出しています。
+                </p>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>

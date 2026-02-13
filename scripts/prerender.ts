@@ -21,6 +21,7 @@ const staticRoutes = [
   '/terms-of-service',
   '/refund-policy',
   '/shipping-policy',
+  '/login',
 ];
 
 // product-routes.jsonから動的ルートを読み込む

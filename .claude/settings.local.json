@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(tree:*)",
-      "Bash(npx vite build:*)"
+      "Bash(npx vite build:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nreCAPTCHAバッジを非表示に設定\n\nお問い合わせフォームに代替テキストが表示されているため、\nGoogleの規約に準拠した形でバッジを非表示にする。\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:shopify.dev)",
+      "WebSearch",
+      "WebFetch(domain:www.buildwithmatija.com)"
     ]
   }
 }
