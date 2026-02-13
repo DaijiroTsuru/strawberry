@@ -2,7 +2,7 @@
 
 // Shopify Customer Account API (OAuth 2.0 + PKCE)
 
-const SHOPIFY_DOMAIN = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
+const SHOPIFY_SHOP_ID = import.meta.env.VITE_SHOPIFY_SHOP_ID;
 const CLIENT_ID = import.meta.env.VITE_SHOPIFY_CLIENT_ID;
 
 // --- 型定義 ---
@@ -138,8 +138,8 @@ export function generateNonce(): string {
 // --- OAuth フロー ---
 
 function getShopId(): string {
-  if (!SHOPIFY_DOMAIN) throw new Error('VITE_SHOPIFY_STORE_DOMAIN is not set');
-  return SHOPIFY_DOMAIN.replace('.myshopify.com', '');
+  if (!SHOPIFY_SHOP_ID) throw new Error('VITE_SHOPIFY_SHOP_ID is not set');
+  return SHOPIFY_SHOP_ID;
 }
 
 function getAuthorizationEndpoint(): string {
