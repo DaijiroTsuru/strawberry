@@ -18,9 +18,6 @@ import { PrivacyPolicyPage } from '@/app/components/pages/PrivacyPolicyPage';
 import { RefundPolicyPage } from '@/app/components/pages/RefundPolicyPage';
 import { TermsOfServicePage } from '@/app/components/pages/TermsOfServicePage';
 import { ShippingPolicyPage } from '@/app/components/pages/ShippingPolicyPage';
-import { LoginPage } from '@/app/components/pages/LoginPage';
-import { MyPage } from '@/app/components/pages/MyPage';
-import { AuthCallbackPage } from '@/app/components/pages/AuthCallbackPage';
 import { NotFoundPage } from '@/app/components/pages/NotFoundPage';
 
 // Root route
@@ -131,30 +128,6 @@ const shippingPolicyRoute = createRoute({
   component: ShippingPolicyPage,
 });
 
-// Login page route
-const loginRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/login',
-  component: LoginPage,
-});
-
-// Auth callback route
-const authCallbackRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/auth/callback',
-  component: AuthCallbackPage,
-});
-
-// My page route
-const myPageRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/mypage',
-  component: MyPage,
-  validateSearch: (search: Record<string, unknown>) => ({
-    tab: (search.tab as string) || undefined,
-  }),
-});
-
 // Create route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -168,9 +141,6 @@ const routeTree = rootRoute.addChildren([
   refundPolicyRoute,
   termsOfServiceRoute,
   shippingPolicyRoute,
-  loginRoute,
-  authCallbackRoute,
-  myPageRoute,
 ]);
 
 // Create router
