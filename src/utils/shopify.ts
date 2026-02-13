@@ -42,7 +42,6 @@ export interface ShopifyProduct {
           currencyCode: string;
         };
         availableForSale: boolean;
-        quantityAvailable?: number;
       };
     }>;
   };
@@ -170,7 +169,6 @@ const PRODUCTS_QUERY = `
                   currencyCode
                 }
                 availableForSale
-                quantityAvailable
               }
             }
           }
@@ -229,7 +227,6 @@ export async function fetchProductById(productId: string): Promise<ShopifyProduc
                 currencyCode
               }
               availableForSale
-              quantityAvailable
             }
           }
         }
@@ -286,7 +283,6 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
                 currencyCode
               }
               availableForSale
-              quantityAvailable
             }
           }
         }
@@ -359,7 +355,6 @@ export async function fetchProductsByCollectionId(
                       currencyCode
                     }
                     availableForSale
-                    quantityAvailable
                   }
                 }
               }
@@ -795,7 +790,6 @@ export function getMockProducts(): ShopifyProduct[] {
                 currencyCode: 'JPY',
               },
               availableForSale: true,
-              quantityAvailable: 10,
             },
           },
         ],
@@ -833,7 +827,6 @@ export function getMockProducts(): ShopifyProduct[] {
                 currencyCode: 'JPY',
               },
               availableForSale: true,
-              quantityAvailable: 15,
             },
           },
         ],
@@ -871,7 +864,6 @@ export function getMockProducts(): ShopifyProduct[] {
                 currencyCode: 'JPY',
               },
               availableForSale: true,
-              quantityAvailable: 20,
             },
           },
         ],
@@ -909,7 +901,6 @@ export function getMockProducts(): ShopifyProduct[] {
                 currencyCode: 'JPY',
               },
               availableForSale: true,
-              quantityAvailable: 30,
             },
           },
         ],
