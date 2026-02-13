@@ -178,7 +178,7 @@ export function Header() {
                 {item.label}
               </a>
             ))}
-            <Link
+            {/* <Link
               to={isAuthenticated ? '/mypage' : '/login'}
               className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-300"
               style={{
@@ -191,7 +191,7 @@ export function Header() {
             >
               <User className="w-5 h-5" />
               {isAuthenticated ? 'マイページ' : 'ログイン'}
-            </Link>
+            </Link> */}
             {cartItemCount > 0 && (
               <button
                 onClick={() => {
