@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { RouterProvider } from '@tanstack/react-router';
 import { CartProvider } from '@/app/contexts/CartContext';
+import { AuthProvider } from '@/app/contexts/AuthContext';
 import { router } from '@/app/router';
 
 export default function App() {
@@ -13,8 +14,10 @@ export default function App() {
   }, []);
 
   return (
-    <CartProvider>
-      <RouterProvider router={router} />
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </AuthProvider>
   );
 }

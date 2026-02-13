@@ -31,18 +31,28 @@ TanStack Routerを使用（`src/app/router.tsx`）。全ルートはRootRoute配
 動的ルートは `/product/$handle` のみ（商品詳細ページ）。URLクエリパラメータ`variant`でバリアント選択を制御。
 
 ### 状態管理
-React Context API（`src/app/contexts/CartContext.tsx`）でカート状態を管理。カートIDは`localStorage`に永続化。
+- React Context API（`src/app/contexts/CartContext.tsx`）でカート状態を管理。カートIDは`localStorage`に永続化。
+- `src/app/contexts/AuthContext.tsx` で顧客認証状態を管理。Shopify Customer Account API（OAuth 2.0 + PKCE）を使用。
 
 ### Shopify統合
 `src/utils/shopify.ts` にStorefront API（GraphQL、APIバージョン `2026-01`）の全操作を集約。
 環境変数が未設定の場合はモックデータにフォールバック。
 カート操作（作成・追加・更新・削除）、商品取得（ハンドル・ID・コレクション別）をサポート。
 
+### マイページ・認証
+- `src/utils/shopify-customer.ts`: Shopify Customer Account API（OAuth 2.0 + PKCE）のユーティリティ。PKCE生成、トークン交換、顧客情報取得・更新、住所CRUD、注文履歴取得。
+- `src/app/components/pages/LoginPage.tsx`: ログインページ（Shopifyへリダイレクト）
+- `src/app/components/pages/AuthCallbackPage.tsx`: OAuth コールバック処理
+- `src/app/components/pages/MyPage.tsx`: マイページ（注文履歴・プロフィール・住所管理の3タブ）
+- `src/app/components/mypage/`: マイページ内タブコンポーネント（OrderHistory, ProfileEdit, AddressManagement）
+- 環境変数: `VITE_SHOPIFY_CLIENT_ID`（Customer Account API クライアントID）
+
 ### UIコンポーネント
 - `src/app/components/ui/`: shadcn/ui（Radix UIベース）の共通コンポーネント群
 - `src/app/components/pages/`: ページ単位のコンポーネント
 - `src/app/components/common/`: 共通UIコンポーネント
-- スタイリング: Tailwind CSS v4 + CSS変数によるテーミング
+- `src/app/components/product/`: 商品関連コンポーネント（StrawberryBEAFSection, PurchaseBoxなど）
+- スタイリング: Tailwind CSS v4 + CSS変数によるテーミング（`src/styles/theme.css`）
 - アニメーション: Motion (Framer Motion)
 
 ### SEO・アナリティクス

@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Link } from '@tanstack/react-router';
 import { motion } from 'motion/react';
-import { ShoppingCart, Menu, X } from 'lucide-react';
+import { ShoppingCart, Menu, X, User } from 'lucide-react';
 import { FARM_INFO, NAV_ITEMS } from '@/app/constants/farmInfo';
 import { CartDrawer } from './CartDrawer';
 import { useCart } from '@/app/contexts/CartContext';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart, isCartOpen, openCart, closeCart } = useCart();
+  const { isAuthenticated } = useAuth();
 
   const cartItemCount = cart?.lines.edges.reduce((total, { node }) => total + node.quantity, 0) || 0;
 
@@ -95,8 +97,22 @@ export function Header() {
             ))}
           </nav>
 
-          {/* カートボタン（商品がある場合のみ表示） */}
+          {/* カート・ログインボタン */}
           <div className="flex items-center gap-4">
+            <Link
+              to={isAuthenticated ? '/mypage' : '/login'}
+              className="hidden md:flex items-center gap-1.5 transition-colors duration-300 hover:text-[color:var(--color-strawberry-600)]"
+              style={{
+                color: 'var(--color-neutral-700)',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 500,
+                fontSize: '0.95rem',
+              }}
+            >
+              <User className="w-5 h-5" />
+              <span>{isAuthenticated ? 'マイページ' : 'ログイン'}</span>
+            </Link>
+
             {cartItemCount > 0 && (
               <button
                 onClick={() => openCart()}
@@ -162,6 +178,20 @@ export function Header() {
                 {item.label}
               </a>
             ))}
+            <Link
+              to={isAuthenticated ? '/mypage' : '/login'}
+              className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-300"
+              style={{
+                color: 'var(--color-neutral-700)',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 500,
+                fontSize: '0.95rem',
+              }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <User className="w-5 h-5" />
+              {isAuthenticated ? 'マイページ' : 'ログイン'}
+            </Link>
             {cartItemCount > 0 && (
               <button
                 onClick={() => {
