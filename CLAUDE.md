@@ -20,7 +20,7 @@ npm run prerender    # プリレンダリングのみ実行
 1. `prebuild`: `tsx scripts/get-product-handles.ts` → Shopifyから商品ハンドルを取得し `product-routes.json` を生成
 2. `fetch-reviews`: Google Places APIからレビューを取得し `src/data/reviews.json` に保存
 3. `vite build`: 本番バンドル生成（`dist/`）
-4. `prerender`: Puppeteerで各ルートの静的HTMLを生成（GitHub Pages用SPA対応）
+4. `prerender`: Puppeteerで各ルートの静的HTMLを生成、`sitemap.xml` と `404.html` も生成
 
 テストフレームワークは導入されていない。リンターも設定されていない。
 
@@ -29,6 +29,7 @@ npm run prerender    # プリレンダリングのみ実行
 ### ルーティング
 TanStack Routerを使用（`src/app/router.tsx`）。全ルートはRootRoute配下で`Header`と`Footer`を共有する。
 動的ルートは `/product/$handle` のみ（商品詳細ページ）。URLクエリパラメータ`variant`でバリアント選択を制御。
+存在しないルートは `NotFoundPage` コンポーネントで処理（`defaultNotFoundComponent`）。
 
 ### 状態管理
 React Context API（`src/app/contexts/CartContext.tsx`）でカート状態を管理。カートIDは`localStorage`に永続化。
@@ -41,8 +42,9 @@ React Context API（`src/app/contexts/CartContext.tsx`）でカート状態を�
 ### UIコンポーネント
 - `src/app/components/ui/`: shadcn/ui（Radix UIベース）の共通コンポーネント群
 - `src/app/components/pages/`: ページ単位のコンポーネント
-- `src/app/components/common/`: 共通UIコンポーネント
-- スタイリング: Tailwind CSS v4 + CSS変数によるテーミング
+- `src/app/components/common/`: 共通UIコンポーネント（FaqSection, RelatedLinksなど）
+- `src/app/components/product/`: 商品関連コンポーネント（StrawberryBEAFSection, PurchaseBoxなど）
+- スタイリング: Tailwind CSS v4 + CSS変数によるテーミング（`src/styles/theme.css`）
 - アニメーション: Motion (Framer Motion)
 
 ### SEO・アナリティクス
@@ -51,11 +53,23 @@ React Context API（`src/app/contexts/CartContext.tsx`）でカート状態を�
 - `src/utils/analytics.ts`: GA4イベント送信、Google Ads コンバージョントラッキング
 - `index.html`: GA4・Google Ads のベーストラッキングコード
 
-### プリレンダリング
-`scripts/prerender.ts` がPuppeteerで静的HTML生成。`product-routes.json`（ビルド時自動生成）から動的ルートも含めてプリレンダリング。GitHub PagesのSPAルーティングは`404.html`リダイレクトで対応。
+### プリレンダリングと404処理
+`scripts/prerender.ts` がPuppeteerで静的HTML生成。`product-routes.json`（ビルド時自動生成）から動的ルートも含めてプリレンダリング。
+ビルド時に`index.html`を`404.html`にコピーし、GitHub Pagesで存在しないURLにアクセスした場合もReactアプリが起動してNotFoundPageを表示。
+
+### 旧URLリダイレクト
+`public/sp/` 配下に旧サイトURL用のリダイレクトHTMLを配置。meta refreshとJavaScriptで新URLにリダイレクト。
+
+### マイページ・顧客認証
+Shopify Customer Account API（OAuth 2.0 + PKCE）で認証。`src/utils/shopify-customer.ts` に全操作を集約。
+`src/app/contexts/AuthContext.tsx` で認証状態を管理。トークン（access/refresh/id）は`localStorage`に保存。
+PKCE パラメータは `sessionStorage` に一時保存し、コールバック処理後に削除。
+ログインは Shopify ホスト型ログイン画面にリダイレクト → `/auth/callback` でコールバック処理 → `/mypage` にリダイレクト。
+マイページは注文履歴・プロフィール編集・配送先住所管理の3タブ構成。
+環境変数: `VITE_SHOPIFY_CLIENT_ID`（Customer Account API クライアント ID）。
 
 ### お問い合わせ
-EmailJS + reCAPTCHA v3 + react-hook-form で実装（`ContactPage.tsx`）。
+EmailJS + reCAPTCHA v3 + react-hook-form で実装（`ContactForm.tsx`）。reCAPTCHAバッジはCSS非表示（代替テキスト表示）。
 
 ## 環境変数
 
@@ -74,4 +88,6 @@ Node.js 20、`npm ci` → `npm run build` → GitHub Pages。
 
 ## 定数データ
 
-`src/app/constants/farmInfo.ts`: 農園情報（住所・連絡先・商品データ・いちご狩り料金など）の集約ファイル。商品情報の変更はここを起点に確認する。
+- `src/app/constants/farmInfo.ts`: 農園情報（住所・連絡先・商品データ・いちご狩り料金など）
+- `src/app/constants/beafImages.ts`: BEAFセクション用画像URL
+- `src/app/constants/faqData.ts`: よくある質問データ
