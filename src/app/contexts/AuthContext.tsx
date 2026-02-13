@@ -158,7 +158,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const customerData = await fetchCustomerAccount(stored.access_token);
         setCustomer(customerData);
       } catch (err) {
-        if (err instanceof Error && err.message === 'UNAUTHORIZED') {
+        if (err instanceof Error && err.message.startsWith('UNAUTHORIZED')) {
           try {
             const newTokens = await refreshAccessToken({ refreshToken: stored.refresh_token });
             const updated: StoredTokens = {

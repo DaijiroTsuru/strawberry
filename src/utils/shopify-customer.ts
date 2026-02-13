@@ -219,7 +219,17 @@ export async function exchangeCodeForTokens({
     throw new Error(`Token exchange failed: ${response.status} ${errorBody}`);
   }
 
-  return response.json();
+  const tokens = await response.json();
+
+  if (tokens.error) {
+    throw new Error(`Token error: ${tokens.error} - ${tokens.error_description || ''}`);
+  }
+
+  if (!tokens.access_token) {
+    throw new Error('Token exchange response missing access_token');
+  }
+
+  return tokens;
 }
 
 export async function refreshAccessToken({
@@ -280,10 +290,11 @@ async function customerAccountFetch<T = any>({
   });
 
   if (!response.ok) {
+    const errorBody = await response.text().catch(() => '');
     if (response.status === 401) {
-      throw new Error('UNAUTHORIZED');
+      throw new Error(`UNAUTHORIZED: ${errorBody}`);
     }
-    throw new Error(`Customer Account API error: ${response.status} ${response.statusText}`);
+    throw new Error(`Customer Account API error: ${response.status} ${errorBody}`);
   }
 
   const json = await response.json();
