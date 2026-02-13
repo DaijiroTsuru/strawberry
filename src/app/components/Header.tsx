@@ -99,7 +99,7 @@ export function Header() {
 
           {/* カート・ログインボタン */}
           <div className="flex items-center gap-4">
-            <Link
+            {/* <Link
               to={isAuthenticated ? '/mypage' : '/login'}
               className="hidden md:flex items-center gap-1.5 transition-colors duration-300 hover:text-[color:var(--color-strawberry-600)]"
               style={{
@@ -111,7 +111,7 @@ export function Header() {
             >
               <User className="w-5 h-5" />
               <span>{isAuthenticated ? 'マイページ' : 'ログイン'}</span>
-            </Link>
+            </Link> */}
 
             {cartItemCount > 0 && (
               <button
