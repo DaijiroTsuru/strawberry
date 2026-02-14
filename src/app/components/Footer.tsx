@@ -112,7 +112,7 @@ export function Footer() {
                 <FacebookIcon className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-300" />
               </a>
               <a
-                href="https://x.com/tOMrHofXGD58584"
+                href="https://x.com/tsuruichigoen"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="X (Twitter)"
