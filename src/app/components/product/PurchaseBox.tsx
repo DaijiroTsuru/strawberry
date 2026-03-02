@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { ShoppingCart, AlertCircle } from 'lucide-react';
 import type { ShopifyProduct } from '@/utils/shopify';
-import { formatPrice } from '@/utils/shopify';
+import { formatPrice, hasDiscount, calcDiscountPercent } from '@/utils/shopify';
 
 interface PurchaseBoxProps {
   product: ShopifyProduct;
@@ -138,7 +138,25 @@ function PurchaseBoxContent({
           border: '1px solid var(--color-strawberry-200)',
         }}
       >
+        {selectedVariant && hasDiscount(selectedVariant) && (
+          <div className="mb-2">
+            <span
+              className="inline-block px-3 py-1 text-sm font-bold rounded-full text-white"
+              style={{ backgroundColor: 'var(--color-strawberry-500)' }}
+            >
+              {calcDiscountPercent(selectedVariant.compareAtPrice!.amount, selectedVariant.priceV2.amount)}%OFF
+            </span>
+          </div>
+        )}
         <div className="flex items-baseline gap-3 mb-4">
+          {selectedVariant && hasDiscount(selectedVariant) && (
+            <span
+              className="text-xl line-through"
+              style={{ color: 'var(--color-neutral-400)' }}
+            >
+              {formatPrice(selectedVariant.compareAtPrice!.amount, selectedVariant.compareAtPrice!.currencyCode)}
+            </span>
+          )}
           <span
             className="text-4xl lg:text-5xl font-bold"
             style={{
