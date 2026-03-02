@@ -187,6 +187,10 @@ const PRODUCTS_QUERY = `
                   amount
                   currencyCode
                 }
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
                 availableForSale
               }
             }
@@ -245,6 +249,10 @@ export async function fetchProductById(productId: string): Promise<ShopifyProduc
                 amount
                 currencyCode
               }
+              compareAtPrice {
+                amount
+                currencyCode
+              }
               availableForSale
             }
           }
@@ -298,6 +306,10 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
               id
               title
               priceV2 {
+                amount
+                currencyCode
+              }
+              compareAtPrice {
                 amount
                 currencyCode
               }
@@ -370,6 +382,10 @@ export async function fetchProductsByCollectionId(
                     id
                     title
                     priceV2 {
+                      amount
+                      currencyCode
+                    }
+                    compareAtPrice {
                       amount
                       currencyCode
                     }
@@ -808,6 +824,7 @@ export function getMockProducts(): ShopifyProduct[] {
                 amount: '3800',
                 currencyCode: 'JPY',
               },
+              compareAtPrice: null,
               availableForSale: true,
             },
           },
@@ -845,6 +862,7 @@ export function getMockProducts(): ShopifyProduct[] {
                 amount: '2800',
                 currencyCode: 'JPY',
               },
+              compareAtPrice: null,
               availableForSale: true,
             },
           },
@@ -882,6 +900,7 @@ export function getMockProducts(): ShopifyProduct[] {
                 amount: '2200',
                 currencyCode: 'JPY',
               },
+              compareAtPrice: null,
               availableForSale: true,
             },
           },
@@ -919,6 +938,7 @@ export function getMockProducts(): ShopifyProduct[] {
                 amount: '1200',
                 currencyCode: 'JPY',
               },
+              compareAtPrice: null,
               availableForSale: true,
             },
           },
