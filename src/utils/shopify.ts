@@ -438,7 +438,30 @@ export async function createCart(note?: string) {
               node {
                 id
                 quantity
+                discountAllocations {
+                  discountedAmount {
+                    amount
+                    currencyCode
+                  }
+                  ... on CartAutomaticDiscountAllocation {
+                    title
+                  }
+                }
               }
+            }
+          }
+          cost {
+            totalAmount {
+              amount
+              currencyCode
+            }
+            subtotalAmount {
+              amount
+              currencyCode
+            }
+            totalDiscountAmount {
+              amount
+              currencyCode
             }
           }
         }
@@ -488,9 +511,22 @@ export async function addToCart(
                       amount
                       currencyCode
                     }
+                    compareAtPrice {
+                      amount
+                      currencyCode
+                    }
                     product {
                       title
                     }
+                  }
+                }
+                discountAllocations {
+                  discountedAmount {
+                    amount
+                    currencyCode
+                  }
+                  ... on CartAutomaticDiscountAllocation {
+                    title
                   }
                 }
               }
@@ -498,6 +534,14 @@ export async function addToCart(
           }
           cost {
             totalAmount {
+              amount
+              currencyCode
+            }
+            subtotalAmount {
+              amount
+              currencyCode
+            }
+            totalDiscountAmount {
               amount
               currencyCode
             }
@@ -547,7 +591,30 @@ export async function updateCartLine(
               node {
                 id
                 quantity
+                discountAllocations {
+                  discountedAmount {
+                    amount
+                    currencyCode
+                  }
+                  ... on CartAutomaticDiscountAllocation {
+                    title
+                  }
+                }
               }
+            }
+          }
+          cost {
+            totalAmount {
+              amount
+              currencyCode
+            }
+            subtotalAmount {
+              amount
+              currencyCode
+            }
+            totalDiscountAmount {
+              amount
+              currencyCode
             }
           }
         }
@@ -600,6 +667,10 @@ export async function removeFromCart(cartId: string, lineIds: string[]) {
                       amount
                       currencyCode
                     }
+                    compareAtPrice {
+                      amount
+                      currencyCode
+                    }
                     product {
                       title
                       images(first: 1) {
@@ -613,6 +684,15 @@ export async function removeFromCart(cartId: string, lineIds: string[]) {
                     }
                   }
                 }
+                discountAllocations {
+                  discountedAmount {
+                    amount
+                    currencyCode
+                  }
+                  ... on CartAutomaticDiscountAllocation {
+                    title
+                  }
+                }
               }
             }
           }
@@ -622,6 +702,10 @@ export async function removeFromCart(cartId: string, lineIds: string[]) {
               currencyCode
             }
             subtotalAmount {
+              amount
+              currencyCode
+            }
+            totalDiscountAmount {
               amount
               currencyCode
             }
@@ -673,6 +757,10 @@ export async function getCart(cartId: string) {
                     amount
                     currencyCode
                   }
+                  compareAtPrice {
+                    amount
+                    currencyCode
+                  }
                   product {
                     title
                     images(first: 1) {
@@ -686,6 +774,15 @@ export async function getCart(cartId: string) {
                   }
                 }
               }
+              discountAllocations {
+                discountedAmount {
+                  amount
+                  currencyCode
+                }
+                ... on CartAutomaticDiscountAllocation {
+                  title
+                }
+              }
             }
           }
         }
@@ -695,6 +792,10 @@ export async function getCart(cartId: string) {
             currencyCode
           }
           subtotalAmount {
+            amount
+            currencyCode
+          }
+          totalDiscountAmount {
             amount
             currencyCode
           }
@@ -738,6 +839,10 @@ export async function updateCartNote(cartId: string, note: string) {
                       amount
                       currencyCode
                     }
+                    compareAtPrice {
+                      amount
+                      currencyCode
+                    }
                     product {
                       title
                       images(first: 1) {
@@ -751,6 +856,15 @@ export async function updateCartNote(cartId: string, note: string) {
                     }
                   }
                 }
+                discountAllocations {
+                  discountedAmount {
+                    amount
+                    currencyCode
+                  }
+                  ... on CartAutomaticDiscountAllocation {
+                    title
+                  }
+                }
               }
             }
           }
@@ -760,6 +874,10 @@ export async function updateCartNote(cartId: string, note: string) {
               currencyCode
             }
             subtotalAmount {
+              amount
+              currencyCode
+            }
+            totalDiscountAmount {
               amount
               currencyCode
             }
