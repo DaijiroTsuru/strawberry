@@ -124,12 +124,28 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             <span className="text-sm" style={{ color: 'var(--color-neutral-600)' }}>
                               数量: {item.quantity}
                             </span>
-                            <span className="font-bold" style={{ color: 'var(--color-strawberry-600)' }}>
-                              {formatPrice(
-                                item.merchandise.priceV2.amount,
-                                item.merchandise.priceV2.currencyCode
+                            <div className="flex flex-col items-end gap-1">
+                              {item.merchandise.compareAtPrice && parseFloat(item.merchandise.compareAtPrice.amount) > parseFloat(item.merchandise.priceV2.amount) && (
+                                <span className="text-sm line-through" style={{ color: 'var(--color-neutral-400)' }}>
+                                  {formatPrice(item.merchandise.compareAtPrice.amount, item.merchandise.compareAtPrice.currencyCode)}
+                                </span>
                               )}
-                            </span>
+                              <span className="font-bold" style={{ color: 'var(--color-strawberry-600)' }}>
+                                {formatPrice(
+                                  item.merchandise.priceV2.amount,
+                                  item.merchandise.priceV2.currencyCode
+                                )}
+                              </span>
+                              {item.discountAllocations && item.discountAllocations.length > 0 && (
+                                <div className="flex flex-col gap-0.5">
+                                  {item.discountAllocations.map((alloc: any, idx: number) => (
+                                    <span key={idx} className="text-xs font-medium" style={{ color: 'var(--color-strawberry-500)' }}>
+                                      {alloc.title ? `${alloc.title}適用` : `割引 -${formatPrice(alloc.discountedAmount.amount, alloc.discountedAmount.currencyCode)}`}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
 
@@ -152,6 +168,14 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             {/* Footer */}
             {cartItems.length > 0 && totalAmount && (
               <div className="border-t p-6 space-y-4">
+                {cart.cost.totalDiscountAmount && parseFloat(cart.cost.totalDiscountAmount.amount) > 0 && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span style={{ color: 'var(--color-strawberry-600)' }}>割引合計</span>
+                    <span className="font-bold" style={{ color: 'var(--color-strawberry-600)' }}>
+                      -{formatPrice(cart.cost.totalDiscountAmount.amount, cart.cost.totalDiscountAmount.currencyCode)}
+                    </span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between text-lg">
                   <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
                     合計
