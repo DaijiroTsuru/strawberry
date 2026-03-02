@@ -3,7 +3,7 @@ import { Link, useParams, useSearch } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { ShoppingCart, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
-import { fetchProductByHandle, ShopifyProduct, formatPrice } from '@/utils/shopify';
+import { fetchProductByHandle, ShopifyProduct, formatPrice, hasDiscount, calcDiscountPercent } from '@/utils/shopify';
 import { SEO, createProductSchema, createBreadcrumbSchema } from '@/app/components/SEO';
 import { trackAddToCart } from '@/utils/analytics';
 import { FaqSection } from '@/app/components/common/FaqSection';
@@ -278,15 +278,30 @@ export function ProductByHandlePage() {
                 border: '1px solid var(--color-strawberry-200)'
               }}
             >
+              {selectedVariant && hasDiscount(selectedVariant) && (
+                <div className="mb-2">
+                  <span
+                    className="inline-block px-3 py-1 text-sm font-bold rounded-full text-white"
+                    style={{ backgroundColor: 'var(--color-strawberry-500)' }}
+                  >
+                    {calcDiscountPercent(selectedVariant.compareAtPrice!.amount, selectedVariant.priceV2.amount)}%OFF
+                  </span>
+                </div>
+              )}
               <div className="flex items-baseline gap-3 mb-4">
-                <span 
+                {selectedVariant && hasDiscount(selectedVariant) && (
+                  <span
+                    className="text-2xl line-through"
+                    style={{ color: 'var(--color-neutral-400)' }}
+                  >
+                    {formatPrice(selectedVariant.compareAtPrice!.amount, selectedVariant.compareAtPrice!.currencyCode)}
+                  </span>
+                )}
+                <span
                   className="text-5xl font-bold"
                   style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}
                 >
-                  {selectedVariant && formatPrice(
-                    selectedVariant.priceV2.amount,
-                    selectedVariant.priceV2.currencyCode
-                  )}
+                  {selectedVariant && formatPrice(selectedVariant.priceV2.amount, selectedVariant.priceV2.currencyCode)}
                 </span>
                 <span className="text-lg" style={{ color: 'var(--color-neutral-500)' }}>
                   （税込）
