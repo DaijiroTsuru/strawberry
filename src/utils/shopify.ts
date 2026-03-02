@@ -41,6 +41,10 @@ export interface ShopifyProduct {
           amount: string;
           currencyCode: string;
         };
+        compareAtPrice: {
+          amount: string;
+          currencyCode: string;
+        } | null;
         availableForSale: boolean;
       };
     }>;
@@ -72,6 +76,10 @@ export interface ShopifyCart {
             amount: string;
             currencyCode: string;
           };
+          compareAtPrice: {
+            amount: string;
+            currencyCode: string;
+          } | null;
           product: {
             title: string;
             images?: {
@@ -84,6 +92,13 @@ export interface ShopifyCart {
             };
           };
         };
+        discountAllocations: Array<{
+          discountedAmount: {
+            amount: string;
+            currencyCode: string;
+          };
+          title?: string;
+        }>;
       };
     }>;
   };
@@ -93,6 +108,10 @@ export interface ShopifyCart {
       currencyCode: string;
     };
     subtotalAmount: {
+      amount: string;
+      currencyCode: string;
+    };
+    totalDiscountAmount: {
       amount: string;
       currencyCode: string;
     };
@@ -989,4 +1008,18 @@ export function formatPrice(amount: string, currencyCode: string = 'JPY'): strin
     return `¥${price.toLocaleString('ja-JP')}`;
   }
   return `${price.toLocaleString()} ${currencyCode}`;
+}
+
+/** compareAtPriceとpriceから割引率を計算（整数%） */
+export function calcDiscountPercent(compareAtPrice: string, price: string): number {
+  const original = parseFloat(compareAtPrice);
+  const current = parseFloat(price);
+  if (original <= 0 || current >= original) return 0;
+  return Math.round(((original - current) / original) * 100);
+}
+
+/** バリアントに有効な割引があるか判定 */
+export function hasDiscount(variant: { priceV2: { amount: string }; compareAtPrice: { amount: string } | null }): boolean {
+  if (!variant.compareAtPrice) return false;
+  return parseFloat(variant.compareAtPrice.amount) > parseFloat(variant.priceV2.amount);
 }
