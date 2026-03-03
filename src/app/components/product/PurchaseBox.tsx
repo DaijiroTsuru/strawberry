@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { ShoppingCart, AlertCircle } from 'lucide-react';
-import type { ShopifyProduct } from '@/utils/shopify';
-import { formatPrice, hasDiscount, calcDiscountPercent } from '@/utils/shopify';
+import type { ShopifyProduct, CartDiscountInfo } from '@/utils/shopify';
+import { formatPrice, hasDiscount, calcDiscountPercent, getEffectivePricing } from '@/utils/shopify';
 
 interface PurchaseBoxProps {
   product: ShopifyProduct;
@@ -13,6 +13,7 @@ interface PurchaseBoxProps {
   isStrawberry: boolean;
   /** ページ下部のCTAとして表示する場合 */
   isBottomCTA?: boolean;
+  discountMap?: Map<string, CartDiscountInfo>;
 }
 
 /**
@@ -28,6 +29,7 @@ export function PurchaseBox({
   cartError,
   isStrawberry,
   isBottomCTA = false,
+  discountMap,
 }: PurchaseBoxProps) {
   const selectedVariant = product.variants.edges[selectedVariantIndex]?.node;
 
@@ -85,6 +87,7 @@ export function PurchaseBox({
               isAddingToCart={isAddingToCart}
               cartError={cartError}
               isStrawberry={isStrawberry}
+              discountMap={discountMap}
             />
           </motion.div>
         </div>
@@ -102,6 +105,7 @@ export function PurchaseBox({
       isAddingToCart={isAddingToCart}
       cartError={cartError}
       isStrawberry={isStrawberry}
+      discountMap={discountMap}
     />
   );
 }
@@ -115,6 +119,7 @@ interface PurchaseBoxContentProps {
   isAddingToCart: boolean;
   cartError: string | null;
   isStrawberry: boolean;
+  discountMap?: Map<string, CartDiscountInfo>;
 }
 
 function PurchaseBoxContent({
@@ -126,6 +131,7 @@ function PurchaseBoxContent({
   isAddingToCart,
   cartError,
   isStrawberry,
+  discountMap,
 }: PurchaseBoxContentProps) {
   return (
     <>
@@ -138,45 +144,49 @@ function PurchaseBoxContent({
           border: '1px solid var(--color-strawberry-200)',
         }}
       >
-        {selectedVariant && hasDiscount(selectedVariant) && (
-          <div className="mb-2">
-            <span
-              className="inline-block px-3 py-1 text-sm font-bold rounded-full text-white"
-              style={{ backgroundColor: 'var(--color-strawberry-500)' }}
-            >
-              {calcDiscountPercent(selectedVariant.compareAtPrice!.amount, selectedVariant.priceV2.amount)}%OFF
-            </span>
-          </div>
-        )}
-        <div className="flex items-baseline gap-3 mb-4">
-          {selectedVariant && hasDiscount(selectedVariant) && (
-            <span
-              className="text-xl line-through"
-              style={{ color: 'var(--color-neutral-400)' }}
-            >
-              {formatPrice(selectedVariant.compareAtPrice!.amount, selectedVariant.compareAtPrice!.currencyCode)}
-            </span>
-          )}
-          <span
-            className="text-4xl lg:text-5xl font-bold"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              color: 'var(--color-strawberry-600)',
-            }}
-          >
-            {selectedVariant &&
-              formatPrice(
-                selectedVariant.priceV2.amount,
-                selectedVariant.priceV2.currencyCode
+        {(() => {
+          if (!selectedVariant) return null;
+          const pricing = getEffectivePricing(selectedVariant, discountMap?.get(selectedVariant.id));
+          return (
+            <>
+              {pricing.originalPrice && (
+                <div className="mb-2">
+                  <span
+                    className="inline-block px-3 py-1 text-sm font-bold rounded-full text-white"
+                    style={{ backgroundColor: 'var(--color-strawberry-500)' }}
+                  >
+                    {pricing.discountPercent}%OFF
+                  </span>
+                </div>
               )}
-          </span>
-          <span
-            className="text-lg"
-            style={{ color: 'var(--color-neutral-500)' }}
-          >
-            （税込）
-          </span>
-        </div>
+              <div className="flex items-baseline gap-3 mb-4">
+                {pricing.originalPrice && (
+                  <span
+                    className="text-xl line-through"
+                    style={{ color: 'var(--color-neutral-400)' }}
+                  >
+                    {formatPrice(pricing.originalPrice.amount, pricing.originalPrice.currencyCode)}
+                  </span>
+                )}
+                <span
+                  className="text-4xl lg:text-5xl font-bold"
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    color: 'var(--color-strawberry-600)',
+                  }}
+                >
+                  {formatPrice(pricing.currentPrice.amount, pricing.currentPrice.currencyCode)}
+                </span>
+                <span
+                  className="text-lg"
+                  style={{ color: 'var(--color-neutral-500)' }}
+                >
+                  （税込）
+                </span>
+              </div>
+            </>
+          );
+        })()}
 
         {/* 配送料情報 */}
         <div

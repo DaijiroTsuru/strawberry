@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { Leaf, Sprout, Shield, Award, ShoppingCart, ArrowLeft, Package } from 'lucide-react';
 import { FARM_INFO } from '@/app/constants/farmInfo';
 import { useCart } from '@/app/contexts/CartContext';
-import { fetchProductsByCollectionId, ShopifyProduct, formatPrice, hasDiscount, calcDiscountPercent } from '@/utils/shopify';
+import { fetchProductsByCollectionId, ShopifyProduct, formatPrice, hasDiscount, calcDiscountPercent, fetchVariantDiscounts, getEffectivePricing, CartDiscountInfo } from '@/utils/shopify';
 import { SEO, createBreadcrumbSchema } from '@/app/components/SEO';
 import { FaqSection } from '@/app/components/common/FaqSection';
 import { RelatedLinks } from '@/app/components/common/RelatedLinks';
@@ -14,6 +14,7 @@ const RICE_COLLECTION_ID = '486421135583';
 export function RicePage() {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [discountMap, setDiscountMap] = useState<Map<string, CartDiscountInfo>>(new Map());
   const { addToCart, openCart, isLoading: isAddingToCart } = useCart();
 
   useEffect(() => {
@@ -30,6 +31,13 @@ export function RicePage() {
     };
     loadProducts();
   }, []);
+
+  useEffect(() => {
+    if (products.length > 0) {
+      const variantIds = products.flatMap(p => p.variants.edges.map(e => e.node.id));
+      fetchVariantDiscounts(variantIds).then(setDiscountMap);
+    }
+  }, [products]);
 
   const handleAddToCart = async (variantId: string) => {
     try {
@@ -433,30 +441,35 @@ export function RicePage() {
                       {/* 価格表示 */}
                       <div className="mb-6 p-6 rounded-2xl" style={{ background: 'linear-gradient(135deg, var(--color-harvest-50) 0%, var(--color-harvest-100) 100%)', border: '1px solid var(--color-harvest-200)' }}>
                         <div className="flex flex-col gap-2">
-                          <div className="flex items-baseline justify-between">
-                            <span className="text-sm font-medium" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)' }}>
-                              価格
-                              {hasDiscount(variant) && (
-                                <span
-                                  className="ml-2 inline-block px-2 py-0.5 text-xs font-bold rounded-full text-white"
-                                  style={{ backgroundColor: 'var(--color-harvest-500)' }}
-                                >
-                                  {calcDiscountPercent(variant.compareAtPrice!.amount, variant.priceV2.amount)}%OFF
+                          {(() => {
+                            const pricing = getEffectivePricing(variant, discountMap.get(variant.id));
+                            return (
+                              <div className="flex items-baseline justify-between">
+                                <span className="text-sm font-medium" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-600)' }}>
+                                  価格
+                                  {pricing.originalPrice && (
+                                    <span
+                                      className="ml-2 inline-block px-2 py-0.5 text-xs font-bold rounded-full text-white"
+                                      style={{ backgroundColor: 'var(--color-harvest-500)' }}
+                                    >
+                                      {pricing.discountPercent}%OFF
+                                    </span>
+                                  )}
                                 </span>
-                              )}
-                            </span>
-                            <div className="flex items-baseline gap-2">
-                              {hasDiscount(variant) && (
-                                <span className="text-lg line-through" style={{ color: 'var(--color-neutral-400)' }}>
-                                  {formatPrice(variant.compareAtPrice!.amount, variant.compareAtPrice!.currencyCode)}
-                                </span>
-                              )}
-                              <span className="text-4xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-harvest-600)' }}>
-                                {formatPrice(variant.priceV2.amount, variant.priceV2.currencyCode)}
-                              </span>
-                              <span className="text-sm" style={{ color: 'var(--color-neutral-500)' }}>（税込）</span>
-                            </div>
-                          </div>
+                                <div className="flex items-baseline gap-2">
+                                  {pricing.originalPrice && (
+                                    <span className="text-lg line-through" style={{ color: 'var(--color-neutral-400)' }}>
+                                      {formatPrice(pricing.originalPrice.amount, pricing.originalPrice.currencyCode)}
+                                    </span>
+                                  )}
+                                  <span className="text-4xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-harvest-600)' }}>
+                                    {formatPrice(pricing.currentPrice.amount, pricing.currentPrice.currencyCode)}
+                                  </span>
+                                  <span className="text-sm" style={{ color: 'var(--color-neutral-500)' }}>（税込）</span>
+                                </div>
+                              </div>
+                            );
+                          })()}
                           {variant.title !== 'Default Title' && (
                             <div className="text-sm font-medium pt-2 border-t border-leaf-200" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-harvest-700)' }}>
                               {variant.title}

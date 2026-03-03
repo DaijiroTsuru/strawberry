@@ -1161,3 +1161,142 @@ export function hasDiscount(variant: { priceV2: { amount: string }; compareAtPri
   if (!variant.compareAtPrice) return false;
   return parseFloat(variant.compareAtPrice.amount) > parseFloat(variant.priceV2.amount);
 }
+
+/** カートシミュレーションで取得した割引情報 */
+export interface CartDiscountInfo {
+  discountedPrice: { amount: string; currencyCode: string };
+  discountPercent: number;
+  discountTitle?: string;
+}
+
+/** 統合された価格表示情報 */
+export interface EffectivePricing {
+  currentPrice: { amount: string; currencyCode: string };
+  originalPrice: { amount: string; currencyCode: string } | null;
+  discountPercent: number;
+  discountTitle?: string;
+}
+
+/**
+ * カートシミュレーションでバリアントの割引情報を取得
+ * 一時カートを作成して自動ディスカウントの適用状況を確認する
+ */
+export async function fetchVariantDiscounts(variantIds: string[]): Promise<Map<string, CartDiscountInfo>> {
+  if (variantIds.length === 0 || !SHOPIFY_DOMAIN || !STOREFRONT_ACCESS_TOKEN) {
+    return new Map();
+  }
+
+  const lines = variantIds.map(id => ({ merchandiseId: id, quantity: 1 }));
+
+  const query = `
+    mutation CreateTempCart($input: CartInput!) {
+      cartCreate(input: $input) {
+        cart {
+          id
+          lines(first: ${Math.min(variantIds.length, 250)}) {
+            edges {
+              node {
+                merchandise {
+                  ... on ProductVariant {
+                    id
+                    priceV2 {
+                      amount
+                      currencyCode
+                    }
+                  }
+                }
+                discountAllocations {
+                  discountedAmount {
+                    amount
+                    currencyCode
+                  }
+                  ... on CartAutomaticDiscountAllocation {
+                    title
+                  }
+                }
+              }
+            }
+          }
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const { data } = await shopifyFetch({
+      query,
+      variables: { input: { lines } },
+    });
+
+    const result = new Map<string, CartDiscountInfo>();
+
+    if (data.cartCreate.cart) {
+      for (const edge of data.cartCreate.cart.lines.edges) {
+        const node = edge.node;
+        const variantId = node.merchandise.id;
+        const allocations = node.discountAllocations || [];
+
+        if (allocations.length > 0) {
+          const totalDiscount = allocations.reduce(
+            (sum: number, a: any) => sum + parseFloat(a.discountedAmount.amount),
+            0
+          );
+          const originalPrice = parseFloat(node.merchandise.priceV2.amount);
+          const discountedPrice = originalPrice - totalDiscount;
+
+          result.set(variantId, {
+            discountedPrice: {
+              amount: String(discountedPrice),
+              currencyCode: node.merchandise.priceV2.currencyCode,
+            },
+            discountPercent: Math.round((totalDiscount / originalPrice) * 100),
+            discountTitle: allocations[0]?.title,
+          });
+        }
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Fetch variant discounts error:', error);
+    return new Map();
+  }
+}
+
+/**
+ * バリアントの実効価格を取得（カート割引 > compareAtPrice > 通常価格の優先順位）
+ */
+export function getEffectivePricing(
+  variant: { priceV2: { amount: string; currencyCode: string }; compareAtPrice: { amount: string; currencyCode: string } | null },
+  cartDiscount?: CartDiscountInfo
+): EffectivePricing {
+  // カートベースの割引が最優先
+  if (cartDiscount) {
+    return {
+      currentPrice: cartDiscount.discountedPrice,
+      originalPrice: variant.priceV2,
+      discountPercent: cartDiscount.discountPercent,
+      discountTitle: cartDiscount.discountTitle,
+    };
+  }
+
+  // compareAtPrice（手動設定の割引）
+  if (variant.compareAtPrice && parseFloat(variant.compareAtPrice.amount) > parseFloat(variant.priceV2.amount)) {
+    return {
+      currentPrice: variant.priceV2,
+      originalPrice: variant.compareAtPrice,
+      discountPercent: calcDiscountPercent(variant.compareAtPrice.amount, variant.priceV2.amount),
+    };
+  }
+
+  // 割引なし
+  return {
+    currentPrice: variant.priceV2,
+    originalPrice: null,
+    discountPercent: 0,
+  };
+}
