@@ -188,7 +188,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     </span>
                   </div>
                 )}
-                {cartItems.some(item => item.discountAllocations && item.discountAllocations.length > 0) && (
+                {cartItems.some(({ node }) => node.discountAllocations && node.discountAllocations.length > 0) && (
                   <p className="text-xs leading-relaxed" style={{ color: 'var(--color-neutral-500)' }}>
                     ※ 割引は併用できないため、割引対象商品は別々にご注文いただくとそれぞれの割引が適用されます。
                   </p>
