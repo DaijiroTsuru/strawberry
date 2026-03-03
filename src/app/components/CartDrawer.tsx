@@ -168,11 +168,14 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             {/* Footer */}
             {cartItems.length > 0 && totalAmount && (
               <div className="border-t p-6 space-y-4">
-                {cart.cost.totalDiscountAmount && parseFloat(cart.cost.totalDiscountAmount.amount) > 0 && (
+                {cart.cost.subtotalAmount && totalAmount && parseFloat(cart.cost.subtotalAmount.amount) > parseFloat(totalAmount.amount) && (
                   <div className="flex items-center justify-between text-sm">
                     <span style={{ color: 'var(--color-strawberry-600)' }}>割引合計</span>
                     <span className="font-bold" style={{ color: 'var(--color-strawberry-600)' }}>
-                      -{formatPrice(cart.cost.totalDiscountAmount.amount, cart.cost.totalDiscountAmount.currencyCode)}
+                      -{formatPrice(
+                        String(parseFloat(cart.cost.subtotalAmount.amount) - parseFloat(totalAmount.amount)),
+                        totalAmount.currencyCode
+                      )}
                     </span>
                   </div>
                 )}

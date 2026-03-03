@@ -111,10 +111,6 @@ export interface ShopifyCart {
       amount: string;
       currencyCode: string;
     };
-    totalDiscountAmount: {
-      amount: string;
-      currencyCode: string;
-    };
   };
 }
 
@@ -459,10 +455,6 @@ export async function createCart(note?: string) {
               amount
               currencyCode
             }
-            totalDiscountAmount {
-              amount
-              currencyCode
-            }
           }
         }
         userErrors {
@@ -541,10 +533,6 @@ export async function addToCart(
               amount
               currencyCode
             }
-            totalDiscountAmount {
-              amount
-              currencyCode
-            }
           }
         }
         userErrors {
@@ -609,10 +597,6 @@ export async function updateCartLine(
               currencyCode
             }
             subtotalAmount {
-              amount
-              currencyCode
-            }
-            totalDiscountAmount {
               amount
               currencyCode
             }
@@ -705,10 +689,6 @@ export async function removeFromCart(cartId: string, lineIds: string[]) {
               amount
               currencyCode
             }
-            totalDiscountAmount {
-              amount
-              currencyCode
-            }
           }
         }
         userErrors {
@@ -795,10 +775,6 @@ export async function getCart(cartId: string) {
             amount
             currencyCode
           }
-          totalDiscountAmount {
-            amount
-            currencyCode
-          }
         }
       }
     }
@@ -874,10 +850,6 @@ export async function updateCartNote(cartId: string, note: string) {
               currencyCode
             }
             subtotalAmount {
-              amount
-              currencyCode
-            }
-            totalDiscountAmount {
               amount
               currencyCode
             }
