@@ -190,7 +190,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 )}
                 {cartItems.some(({ node }) => node.discountAllocations && node.discountAllocations.length > 0) && (
                   <p className="text-xs leading-relaxed" style={{ color: 'var(--color-neutral-500)' }}>
-                    ※ 割引は併用できないため、割引対象商品は別々にご注文いただくとそれぞれの割引が適用されます。
+                    ※ 割引は併用できないため、カート内で一部の割引のみが適用されます。チェックアウト時に最もお得な割引が自動で適用されます。
                   </p>
                 )}
                 <div className="flex items-center justify-between text-lg">
