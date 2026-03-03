@@ -35,8 +35,8 @@ export function StrawberriesPage() {
 
   useEffect(() => {
     if (products.length > 0) {
-      const variantIds = products.flatMap(p => p.variants.edges.map(e => e.node.id));
-      fetchVariantDiscounts(variantIds).then(setDiscountMap);
+      const variantGroups = products.map(p => p.variants.edges.map(e => e.node.id));
+      fetchVariantDiscounts([], variantGroups).then(setDiscountMap);
     }
   }, [products]);
 

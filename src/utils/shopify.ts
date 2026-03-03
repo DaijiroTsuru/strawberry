@@ -1150,14 +1150,9 @@ export interface EffectivePricing {
 }
 
 /**
- * カートシミュレーションでバリアントの割引情報を取得
- * 一時カートを作成して自動ディスカウントの適用状況を確認する
+ * 単一カートでバリアントの割引情報を取得（内部用）
  */
-export async function fetchVariantDiscounts(variantIds: string[]): Promise<Map<string, CartDiscountInfo>> {
-  if (variantIds.length === 0 || !SHOPIFY_DOMAIN || !STOREFRONT_ACCESS_TOKEN) {
-    return new Map();
-  }
-
+async function fetchDiscountsForSingleCart(variantIds: string[]): Promise<Map<string, CartDiscountInfo>> {
   const lines = variantIds.map(id => ({ merchandiseId: id, quantity: 1 }));
 
   const query = `
@@ -1198,41 +1193,76 @@ export async function fetchVariantDiscounts(variantIds: string[]): Promise<Map<s
     }
   `;
 
-  try {
-    const { data } = await shopifyFetch({
-      query,
-      variables: { input: { lines } },
-    });
+  const { data } = await shopifyFetch({
+    query,
+    variables: { input: { lines } },
+  });
 
-    const result = new Map<string, CartDiscountInfo>();
+  const result = new Map<string, CartDiscountInfo>();
 
-    if (data.cartCreate.cart) {
-      for (const edge of data.cartCreate.cart.lines.edges) {
-        const node = edge.node;
-        const variantId = node.merchandise.id;
-        const allocations = node.discountAllocations || [];
+  if (data.cartCreate.cart) {
+    for (const edge of data.cartCreate.cart.lines.edges) {
+      const node = edge.node;
+      const variantId = node.merchandise.id;
+      const allocations = node.discountAllocations || [];
 
-        if (allocations.length > 0) {
-          const totalDiscount = allocations.reduce(
-            (sum: number, a: any) => sum + parseFloat(a.discountedAmount.amount),
-            0
-          );
-          const originalPrice = parseFloat(node.merchandise.priceV2.amount);
-          const discountedPrice = originalPrice - totalDiscount;
+      if (allocations.length > 0) {
+        const totalDiscount = allocations.reduce(
+          (sum: number, a: any) => sum + parseFloat(a.discountedAmount.amount),
+          0
+        );
+        const originalPrice = parseFloat(node.merchandise.priceV2.amount);
+        const discountedPrice = originalPrice - totalDiscount;
 
-          result.set(variantId, {
-            discountedPrice: {
-              amount: String(discountedPrice),
-              currencyCode: node.merchandise.priceV2.currencyCode,
-            },
-            discountPercent: Math.round((totalDiscount / originalPrice) * 100),
-            discountTitle: allocations[0]?.title,
-          });
-        }
+        result.set(variantId, {
+          discountedPrice: {
+            amount: String(discountedPrice),
+            currencyCode: node.merchandise.priceV2.currencyCode,
+          },
+          discountPercent: Math.round((totalDiscount / originalPrice) * 100),
+          discountTitle: allocations[0]?.title,
+        });
       }
     }
+  }
 
-    return result;
+  return result;
+}
+
+/**
+ * カートシミュレーションでバリアントの割引情報を取得
+ * 非併用ディスカウント対応のため、商品ごとに個別カートを作成する
+ *
+ * @param variantIds - バリアントIDの配列（単一商品の場合）
+ * @param variantGroups - 商品ごとにグループ化されたバリアントID配列（複数商品の場合）
+ */
+export async function fetchVariantDiscounts(
+  variantIds: string[],
+  variantGroups?: string[][]
+): Promise<Map<string, CartDiscountInfo>> {
+  if (!SHOPIFY_DOMAIN || !STOREFRONT_ACCESS_TOKEN) {
+    return new Map();
+  }
+
+  try {
+    // 商品グループが指定されている場合は商品ごとに個別カートを作成
+    if (variantGroups && variantGroups.length > 0) {
+      const results = await Promise.all(
+        variantGroups
+          .filter(group => group.length > 0)
+          .map(group => fetchDiscountsForSingleCart(group))
+      );
+      // 全結果をマージ
+      const merged = new Map<string, CartDiscountInfo>();
+      for (const map of results) {
+        map.forEach((v, k) => merged.set(k, v));
+      }
+      return merged;
+    }
+
+    // 単一商品の場合はそのまま1つのカートで確認
+    if (variantIds.length === 0) return new Map();
+    return fetchDiscountsForSingleCart(variantIds);
   } catch (error) {
     console.error('Fetch variant discounts error:', error);
     return new Map();
