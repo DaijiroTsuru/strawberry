@@ -188,6 +188,11 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     </span>
                   </div>
                 )}
+                {cart.cost.subtotalAmount && totalAmount && parseFloat(cart.cost.subtotalAmount.amount) > parseFloat(totalAmount.amount) && (
+                  <p className="text-xs leading-relaxed" style={{ color: 'var(--color-neutral-500)' }}>
+                    ※ 割引は一部の商品にのみ適用される場合があります。複数の割引を同時にご利用いただけないことがあります。
+                  </p>
+                )}
                 <div className="flex items-center justify-between text-lg">
                   <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
                     合計
