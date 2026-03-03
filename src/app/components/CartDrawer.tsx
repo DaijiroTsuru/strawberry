@@ -124,28 +124,37 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             <span className="text-sm" style={{ color: 'var(--color-neutral-600)' }}>
                               数量: {item.quantity}
                             </span>
-                            <div className="flex flex-col items-end gap-1">
-                              {item.merchandise.compareAtPrice && parseFloat(item.merchandise.compareAtPrice.amount) > parseFloat(item.merchandise.priceV2.amount) && (
-                                <span className="text-sm line-through" style={{ color: 'var(--color-neutral-400)' }}>
-                                  {formatPrice(item.merchandise.compareAtPrice.amount, item.merchandise.compareAtPrice.currencyCode)}
-                                </span>
-                              )}
-                              <span className="font-bold" style={{ color: 'var(--color-strawberry-600)' }}>
-                                {formatPrice(
-                                  item.merchandise.priceV2.amount,
-                                  item.merchandise.priceV2.currencyCode
-                                )}
-                              </span>
-                              {item.discountAllocations && item.discountAllocations.length > 0 && (
-                                <div className="flex flex-col gap-0.5">
-                                  {item.discountAllocations.map((alloc: any, idx: number) => (
-                                    <span key={idx} className="text-xs font-medium" style={{ color: 'var(--color-strawberry-500)' }}>
-                                      {alloc.title ? `${alloc.title}適用` : `割引 -${formatPrice(alloc.discountedAmount.amount, alloc.discountedAmount.currencyCode)}`}
+                            {(() => {
+                              const allocations = item.discountAllocations || [];
+                              const hasCartDiscount = allocations.length > 0;
+                              const totalDiscount = hasCartDiscount
+                                ? allocations.reduce((sum: number, a: any) => sum + parseFloat(a.discountedAmount.amount), 0)
+                                : 0;
+                              const originalPrice = parseFloat(item.merchandise.priceV2.amount);
+                              const effectivePrice = hasCartDiscount ? originalPrice - totalDiscount : originalPrice;
+
+                              return (
+                                <div className="flex flex-col items-end gap-1">
+                                  {hasCartDiscount && (
+                                    <span className="text-sm line-through" style={{ color: 'var(--color-neutral-400)' }}>
+                                      {formatPrice(item.merchandise.priceV2.amount, item.merchandise.priceV2.currencyCode)}
                                     </span>
-                                  ))}
+                                  )}
+                                  <span className="font-bold" style={{ color: 'var(--color-strawberry-600)' }}>
+                                    {formatPrice(String(effectivePrice), item.merchandise.priceV2.currencyCode)}
+                                  </span>
+                                  {hasCartDiscount && (
+                                    <div className="flex flex-col gap-0.5">
+                                      {allocations.map((alloc: any, idx: number) => (
+                                        <span key={idx} className="text-xs font-medium" style={{ color: 'var(--color-strawberry-500)' }}>
+                                          {alloc.title ? `${alloc.title}適用` : `割引 -${formatPrice(alloc.discountedAmount.amount, alloc.discountedAmount.currencyCode)}`}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                            </div>
+                              );
+                            })()}
                           </div>
                         </div>
 
