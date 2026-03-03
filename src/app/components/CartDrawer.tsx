@@ -190,7 +190,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 )}
                 {cart.cost.subtotalAmount && totalAmount && parseFloat(cart.cost.subtotalAmount.amount) > parseFloat(totalAmount.amount) && (
                   <p className="text-xs leading-relaxed" style={{ color: 'var(--color-neutral-500)' }}>
-                    ※ 割引は一部の商品にのみ適用される場合があります。複数の割引を同時にご利用いただけないことがあります。
+                    ※ 割引は併用できないため、割引対象商品は別々にご注文いただくとそれぞれの割引が適用されます。
                   </p>
                 )}
                 <div className="flex items-center justify-between text-lg">
