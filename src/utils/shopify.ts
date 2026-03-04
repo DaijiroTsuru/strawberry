@@ -509,7 +509,21 @@ export async function addToCart(
                     }
                     product {
                       title
+                      images(first: 1) {
+                        edges {
+                          node {
+                            url
+                            altText
+                          }
+                        }
+                      }
                     }
+                  }
+                }
+                cost {
+                  totalAmount {
+                    amount
+                    currencyCode
                   }
                 }
                 discountAllocations {
@@ -574,11 +588,44 @@ export async function updateCartLine(
       cartLinesUpdate(cartId: $cartId, lines: $lines) {
         cart {
           id
+          checkoutUrl
+          note
           lines(first: 10) {
             edges {
               node {
                 id
                 quantity
+                merchandise {
+                  ... on ProductVariant {
+                    id
+                    title
+                    priceV2 {
+                      amount
+                      currencyCode
+                    }
+                    compareAtPrice {
+                      amount
+                      currencyCode
+                    }
+                    product {
+                      title
+                      images(first: 1) {
+                        edges {
+                          node {
+                            url
+                            altText
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                cost {
+                  totalAmount {
+                    amount
+                    currencyCode
+                  }
+                }
                 discountAllocations {
                   discountedAmount {
                     amount
@@ -668,6 +715,12 @@ export async function removeFromCart(cartId: string, lineIds: string[]) {
                     }
                   }
                 }
+                cost {
+                  totalAmount {
+                    amount
+                    currencyCode
+                  }
+                }
                 discountAllocations {
                   discountedAmount {
                     amount
@@ -752,6 +805,12 @@ export async function getCart(cartId: string) {
                       }
                     }
                   }
+                }
+              }
+              cost {
+                totalAmount {
+                  amount
+                  currencyCode
                 }
               }
               discountAllocations {

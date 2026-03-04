@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ShoppingCart, Trash2, ExternalLink } from 'lucide-react';
+import { X, ShoppingCart, Trash2, ExternalLink, Minus, Plus } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { formatPrice } from '@/utils/shopify';
 import { useState, useEffect } from 'react';
@@ -11,7 +11,7 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const { cart, removeItem, updateCartNote, isLoading } = useCart();
+  const { cart, removeItem, updateQuantity, updateCartNote, isLoading } = useCart();
   const [note, setNote] = useState('');
   const maxNoteLength = 500;
 
@@ -90,83 +90,114 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   {cartItems.map(({ node: item }) => {
                     const product = item.merchandise.product;
                     const imageUrl = product.images?.edges[0]?.node.url;
+                    const allocations = item.discountAllocations || [];
+                    const hasCartDiscount = allocations.length > 0;
+                    const lineTotalAmount = item.cost?.totalAmount;
+                    const unitPrice = parseFloat(item.merchandise.priceV2.amount);
+                    const lineTotal = lineTotalAmount
+                      ? parseFloat(lineTotalAmount.amount)
+                      : unitPrice * item.quantity;
+                    const currencyCode = item.merchandise.priceV2.currencyCode;
 
                     return (
                       <div
                         key={item.id}
-                        className="flex gap-4 p-4 rounded-2xl border"
+                        className="p-4 rounded-2xl border"
                         style={{ borderColor: 'var(--color-neutral-200)' }}
                       >
-                        {/* Product Image */}
-                        {imageUrl && (
-                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                            <img
-                              src={imageUrl}
-                              alt={product.title}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        )}
-
-                        <div className="flex-1 min-w-0">
-                          <h3
-                            className="font-semibold mb-1"
-                            style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-900)' }}
-                          >
-                            {product.title}
-                          </h3>
-                          {item.merchandise.title !== 'Default Title' && (
-                            <p className="text-sm mb-2" style={{ color: 'var(--color-neutral-600)' }}>
-                              {item.merchandise.title}
-                            </p>
+                        {/* 上段: 画像 + 商品名 + 削除ボタン */}
+                        <div className="flex gap-3 mb-3">
+                          {imageUrl && (
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden flex-shrink-0">
+                              <img
+                                src={imageUrl}
+                                alt={product.title}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
                           )}
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm" style={{ color: 'var(--color-neutral-600)' }}>
-                              数量: {item.quantity}
-                            </span>
-                            {(() => {
-                              const allocations = item.discountAllocations || [];
-                              const hasCartDiscount = allocations.length > 0;
-                              const totalDiscount = hasCartDiscount
-                                ? allocations.reduce((sum: number, a: any) => sum + parseFloat(a.discountedAmount.amount), 0)
-                                : 0;
-                              const originalPrice = parseFloat(item.merchandise.priceV2.amount);
-                              const effectivePrice = hasCartDiscount ? originalPrice - totalDiscount : originalPrice;
-
-                              return (
-                                <div className="flex flex-col items-end gap-1">
-                                  {hasCartDiscount && (
-                                    <span className="text-sm line-through" style={{ color: 'var(--color-neutral-400)' }}>
-                                      {formatPrice(item.merchandise.priceV2.amount, item.merchandise.priceV2.currencyCode)}
-                                    </span>
-                                  )}
-                                  <span className="font-bold" style={{ color: 'var(--color-strawberry-600)' }}>
-                                    {formatPrice(String(effectivePrice), item.merchandise.priceV2.currencyCode)}
-                                  </span>
-                                  {hasCartDiscount && (
-                                    <div className="flex flex-col gap-0.5">
-                                      {allocations.map((alloc: any, idx: number) => (
-                                        <span key={idx} className="text-xs font-medium" style={{ color: 'var(--color-strawberry-500)' }}>
-                                          {alloc.title ? `${alloc.title}適用` : `割引 -${formatPrice(alloc.discountedAmount.amount, alloc.discountedAmount.currencyCode)}`}
-                                        </span>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })()}
+                          <div className="flex-1 min-w-0">
+                            <h3
+                              className="font-semibold text-sm sm:text-base leading-tight"
+                              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-900)' }}
+                            >
+                              {product.title}
+                            </h3>
+                            {item.merchandise.title !== 'Default Title' && (
+                              <p className="text-xs sm:text-sm mt-0.5" style={{ color: 'var(--color-neutral-600)' }}>
+                                {item.merchandise.title}
+                              </p>
+                            )}
+                            {item.quantity > 1 && (
+                              <p className="text-xs mt-0.5" style={{ color: 'var(--color-neutral-500)' }}>
+                                単価: {formatPrice(String(unitPrice), currencyCode)}
+                              </p>
+                            )}
                           </div>
+                          <button
+                            onClick={() => removeItem(item.id)}
+                            disabled={isLoading}
+                            className="p-1.5 rounded-lg hover:bg-red-50 transition-colors self-start flex-shrink-0"
+                            aria-label="削除"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-500" />
+                          </button>
                         </div>
 
-                        {/* Remove Button */}
-                        <button
-                          onClick={() => removeItem(item.id)}
-                          disabled={isLoading}
-                          className="p-2 rounded-lg hover:bg-red-50 transition-colors self-start"
-                          aria-label="削除"
-                        >
-                          <Trash2 className="w-5 h-5 text-red-500" />
-                        </button>
+                        {/* 下段: 数量セレクター + 小計 */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => {
+                                if (item.quantity <= 1) {
+                                  removeItem(item.id);
+                                } else {
+                                  updateQuantity(item.id, item.quantity - 1);
+                                }
+                              }}
+                              disabled={isLoading}
+                              className="w-8 h-8 flex items-center justify-center rounded-full border transition-colors hover:bg-gray-100 disabled:opacity-50"
+                              style={{ borderColor: 'var(--color-neutral-300)' }}
+                              aria-label="数量を減らす"
+                            >
+                              <Minus className="w-3.5 h-3.5" style={{ color: 'var(--color-neutral-600)' }} />
+                            </button>
+                            <span
+                              className="w-8 text-center text-sm font-semibold"
+                              style={{ color: 'var(--color-neutral-900)' }}
+                            >
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              disabled={isLoading}
+                              className="w-8 h-8 flex items-center justify-center rounded-full border transition-colors hover:bg-gray-100 disabled:opacity-50"
+                              style={{ borderColor: 'var(--color-neutral-300)' }}
+                              aria-label="数量を増やす"
+                            >
+                              <Plus className="w-3.5 h-3.5" style={{ color: 'var(--color-neutral-600)' }} />
+                            </button>
+                          </div>
+                          <div className="flex flex-col items-end gap-0.5">
+                            {hasCartDiscount && (
+                              <span className="text-xs line-through" style={{ color: 'var(--color-neutral-400)' }}>
+                                {formatPrice(String(unitPrice * item.quantity), currencyCode)}
+                              </span>
+                            )}
+                            <span className="font-bold text-sm sm:text-base" style={{ color: 'var(--color-strawberry-600)' }}>
+                              {formatPrice(String(lineTotal), currencyCode)}
+                            </span>
+                            {hasCartDiscount && (
+                              <div className="flex flex-col gap-0.5">
+                                {allocations.map((alloc: any, idx: number) => (
+                                  <span key={idx} className="text-xs font-medium" style={{ color: 'var(--color-strawberry-500)' }}>
+                                    {alloc.title ? `${alloc.title}適用` : `割引 -${formatPrice(alloc.discountedAmount.amount, alloc.discountedAmount.currencyCode)}`}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     );
                   })}
