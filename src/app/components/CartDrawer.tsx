@@ -204,12 +204,24 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 </div>
               )}
 
-              {/* 合計・梱包数・備考欄（スクロール可能エリア内） */}
+              {/* 明細・梱包数・備考欄（スクロール可能エリア内） */}
               {cartItems.length > 0 && totalAmount && (
-                <div className="mt-6 space-y-4">
-                  {cart?.cost.subtotalAmount && totalAmount && parseFloat(cart.cost.subtotalAmount.amount) > parseFloat(totalAmount.amount) && (
+                <div className="mt-6 space-y-3 border-t pt-4" style={{ borderColor: 'var(--color-neutral-200)' }}>
+                  {/* 商品小計 */}
+                  <div className="flex items-center justify-between text-sm">
+                    <span style={{ color: 'var(--color-neutral-600)' }}>商品小計</span>
+                    <span style={{ color: 'var(--color-neutral-900)' }}>
+                      {formatPrice(
+                        cart?.cost.subtotalAmount?.amount || totalAmount.amount,
+                        totalAmount.currencyCode
+                      )}
+                    </span>
+                  </div>
+
+                  {/* 割引 */}
+                  {cart?.cost.subtotalAmount && parseFloat(cart.cost.subtotalAmount.amount) > parseFloat(totalAmount.amount) && (
                     <div className="flex items-center justify-between text-sm">
-                      <span style={{ color: 'var(--color-strawberry-600)' }}>割引合計</span>
+                      <span style={{ color: 'var(--color-strawberry-600)' }}>割引</span>
                       <span className="font-bold" style={{ color: 'var(--color-strawberry-600)' }}>
                         -{formatPrice(
                           String(parseFloat(cart.cost.subtotalAmount.amount) - parseFloat(totalAmount.amount)),
@@ -223,14 +235,25 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       ※ 割引は併用できないため、カート内で一部の割引のみが適用されます。チェックアウト時に最もお得な割引が自動で適用されます。
                     </p>
                   )}
-                  <div className="flex items-center justify-between text-lg">
+
+                  {/* 送料 */}
+                  <div className="flex items-center justify-between text-sm">
+                    <span style={{ color: 'var(--color-neutral-600)' }}>送料</span>
+                    <span className="text-xs" style={{ color: 'var(--color-neutral-500)' }}>チェックアウト時に計算</span>
+                  </div>
+
+                  {/* 合計 */}
+                  <div className="flex items-center justify-between text-lg pt-2 border-t" style={{ borderColor: 'var(--color-neutral-200)' }}>
                     <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
-                      合計
+                      合計（税込）
                     </span>
                     <span className="text-2xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
                       {formatPrice(totalAmount.amount, totalAmount.currencyCode)}
                     </span>
                   </div>
+                  <p className="text-xs" style={{ color: 'var(--color-neutral-500)' }}>
+                    ※ 送料はチェックアウト時にお届け先に応じて計算されます
+                  </p>
 
                   {(() => {
                     const packageCount = cartItems.reduce((sum, { node }) => sum + node.quantity, 0);
