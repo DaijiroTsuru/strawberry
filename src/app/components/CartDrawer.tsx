@@ -203,89 +203,94 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   })}
                 </div>
               )}
-            </div>
 
-            {/* Footer */}
-            {cartItems.length > 0 && totalAmount && (
-              <div className="border-t p-6 space-y-4">
-                {cart.cost.subtotalAmount && totalAmount && parseFloat(cart.cost.subtotalAmount.amount) > parseFloat(totalAmount.amount) && (
-                  <div className="flex items-center justify-between text-sm">
-                    <span style={{ color: 'var(--color-strawberry-600)' }}>割引合計</span>
-                    <span className="font-bold" style={{ color: 'var(--color-strawberry-600)' }}>
-                      -{formatPrice(
-                        String(parseFloat(cart.cost.subtotalAmount.amount) - parseFloat(totalAmount.amount)),
-                        totalAmount.currencyCode
-                      )}
+              {/* 合計・梱包数・備考欄（スクロール可能エリア内） */}
+              {cartItems.length > 0 && totalAmount && (
+                <div className="mt-6 space-y-4">
+                  {cart?.cost.subtotalAmount && totalAmount && parseFloat(cart.cost.subtotalAmount.amount) > parseFloat(totalAmount.amount) && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span style={{ color: 'var(--color-strawberry-600)' }}>割引合計</span>
+                      <span className="font-bold" style={{ color: 'var(--color-strawberry-600)' }}>
+                        -{formatPrice(
+                          String(parseFloat(cart.cost.subtotalAmount.amount) - parseFloat(totalAmount.amount)),
+                          totalAmount.currencyCode
+                        )}
+                      </span>
+                    </div>
+                  )}
+                  {cartItems.some(({ node }) => node.discountAllocations && node.discountAllocations.length > 0) && (
+                    <p className="text-xs leading-relaxed" style={{ color: 'var(--color-neutral-500)' }}>
+                      ※ 割引は併用できないため、カート内で一部の割引のみが適用されます。チェックアウト時に最もお得な割引が自動で適用されます。
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between text-lg">
+                    <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
+                      合計
+                    </span>
+                    <span className="text-2xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
+                      {formatPrice(totalAmount.amount, totalAmount.currencyCode)}
                     </span>
                   </div>
-                )}
-                {cartItems.some(({ node }) => node.discountAllocations && node.discountAllocations.length > 0) && (
-                  <p className="text-xs leading-relaxed" style={{ color: 'var(--color-neutral-500)' }}>
-                    ※ 割引は併用できないため、カート内で一部の割引のみが適用されます。チェックアウト時に最もお得な割引が自動で適用されます。
-                  </p>
-                )}
-                <div className="flex items-center justify-between text-lg">
-                  <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
-                    合計
-                  </span>
-                  <span className="text-2xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
-                    {formatPrice(totalAmount.amount, totalAmount.currencyCode)}
-                  </span>
-                </div>
 
-                {(() => {
-                  const packageCount = cartItems.reduce((sum, { node }) => sum + node.quantity, 0);
-                  if (packageCount < 2) return null;
-                  return (
-                    <div
-                      className="flex items-start gap-2 p-3 rounded-lg text-sm"
-                      style={{ backgroundColor: 'var(--color-neutral-100)', color: 'var(--color-neutral-700)' }}
-                    >
-                      <span className="flex-shrink-0 mt-0.5">📦</span>
-                      <div>
-                        <p className="font-semibold">{packageCount}梱包での配送になります</p>
-                        <p className="mt-1 text-xs" style={{ color: 'var(--color-neutral-500)' }}>
-                          ※送料は梱包数分かかります。正確な送料はチェックアウト時に確定します。
-                        </p>
+                  {(() => {
+                    const packageCount = cartItems.reduce((sum, { node }) => sum + node.quantity, 0);
+                    if (packageCount < 2) return null;
+                    return (
+                      <div
+                        className="flex items-start gap-2 p-3 rounded-lg text-sm"
+                        style={{ backgroundColor: 'var(--color-neutral-100)', color: 'var(--color-neutral-700)' }}
+                      >
+                        <span className="flex-shrink-0 mt-0.5">📦</span>
+                        <div>
+                          <p className="font-semibold">{packageCount}梱包での配送になります</p>
+                          <p className="mt-1 text-xs" style={{ color: 'var(--color-neutral-500)' }}>
+                            ※送料は梱包数分かかります。正確な送料はチェックアウト時に確定します。
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })()}
+                    );
+                  })()}
 
-                {/* 備考欄 */}
-                <div className="space-y-2">
-                  <label 
-                    htmlFor="cart-note" 
-                    className="block text-sm font-semibold"
-                    style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}
-                  >
-                    ご要望・熨斗など
-                  </label>
-                  <textarea
-                    id="cart-note"
-                    value={note}
-                    onChange={(e) => setNote(e.target.value.slice(0, maxNoteLength))}
-                    maxLength={maxNoteLength}
-                    placeholder="熨斗のご希望や配送に関するご要望などをご記入ください（500文字まで）"
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-lg border resize-none focus:outline-none focus:ring-2"
-                    style={{
-                      borderColor: 'var(--color-neutral-300)',
-                      fontFamily: 'var(--font-sans)',
-                      color: 'var(--color-neutral-900)',
-                      '--tw-ring-color': 'var(--color-strawberry-400)',
-                    } as React.CSSProperties}
-                  />
-                  <div className="flex justify-end text-xs" style={{ color: 'var(--color-neutral-500)' }}>
-                    {note.length} / {maxNoteLength}文字
+                  {/* 備考欄 */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="cart-note"
+                      className="block text-sm font-semibold"
+                      style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}
+                    >
+                      ご要望・熨斗など
+                    </label>
+                    <textarea
+                      id="cart-note"
+                      value={note}
+                      onChange={(e) => setNote(e.target.value.slice(0, maxNoteLength))}
+                      maxLength={maxNoteLength}
+                      placeholder="熨斗のご希望や配送に関するご要望などをご記入ください（500文字まで）"
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-lg border resize-none focus:outline-none focus:ring-2"
+                      style={{
+                        borderColor: 'var(--color-neutral-300)',
+                        fontFamily: 'var(--font-sans)',
+                        color: 'var(--color-neutral-900)',
+                        '--tw-ring-color': 'var(--color-strawberry-400)',
+                      } as React.CSSProperties}
+                    />
+                    <div className="flex justify-end text-xs" style={{ color: 'var(--color-neutral-500)' }}>
+                      {note.length} / {maxNoteLength}文字
+                    </div>
                   </div>
                 </div>
+              )}
+            </div>
 
+            {/* Footer - 購入ボタンのみ固定 */}
+            {cartItems.length > 0 && totalAmount && (
+              <div className="border-t px-6 py-3">
                 <a
                   href={cart.checkoutUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full transition-all duration-300"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-full transition-all duration-300"
                   style={{
                     background: 'linear-gradient(135deg, var(--color-strawberry-600) 0%, var(--color-strawberry-700) 100%)',
                     fontFamily: 'var(--font-sans)',
@@ -296,10 +301,6 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   <span>購入手続きへ</span>
                   <ExternalLink className="w-5 h-5" />
                 </a>
-
-                <p className="text-xs text-center" style={{ color: 'var(--color-neutral-500)' }}>
-                  Shopifyのチェックアウトページに移動します
-                </p>
               </div>
             )}
           </motion.div>
