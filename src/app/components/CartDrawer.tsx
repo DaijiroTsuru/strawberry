@@ -259,7 +259,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         {/* 合計 */}
                         <div className="flex items-center justify-between text-lg pt-2 border-t" style={{ borderColor: 'var(--color-neutral-200)' }}>
                           <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
-                            合計（税込・送料込）
+                            {shipping > 0 ? '合計（税込・送料込）' : '合計（税込・送料除く）'}
                           </span>
                           <span className="text-2xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
                             {formatPrice(totalAmount.amount, currency)}
