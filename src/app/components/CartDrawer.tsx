@@ -202,6 +202,25 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   </span>
                 </div>
 
+                {(() => {
+                  const packageCount = cartItems.reduce((sum, { node }) => sum + node.quantity, 0);
+                  if (packageCount < 2) return null;
+                  return (
+                    <div
+                      className="flex items-start gap-2 p-3 rounded-lg text-sm"
+                      style={{ backgroundColor: 'var(--color-neutral-100)', color: 'var(--color-neutral-700)' }}
+                    >
+                      <span className="flex-shrink-0 mt-0.5">📦</span>
+                      <div>
+                        <p className="font-semibold">{packageCount}梱包での配送になります</p>
+                        <p className="mt-1 text-xs" style={{ color: 'var(--color-neutral-500)' }}>
+                          ※送料は梱包数分かかります。正確な送料はチェックアウト時に確定します。
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })()}
+
                 {/* 備考欄 */}
                 <div className="space-y-2">
                   <label 
