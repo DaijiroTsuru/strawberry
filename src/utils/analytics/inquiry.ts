@@ -19,9 +19,9 @@ export type InquiryType =
 const RULES: Array<[InquiryType, string[]]> = [
   ['strawberry_picking', ['いちご狩り', 'イチゴ狩り', '苺狩り', 'いちごがり']],
   ['wholesale', ['卸', '業務用', '仕入', '法人', '取引']],
-  ['ec_rice', ['お米', '玄米', '白米', 'ヒノヒカリ', '精米', '分づき']],
+  ['ec_rice', ['お米', '玄米', '白米', 'ヒノヒカリ', '精米', '分づき', 'もち米', 'ブレンド米', '小もち', '中米', '米']],
   ['ec_strawberry', ['いちごの購入', '購入', '注文', '通販', '発送', '配送', '在庫']],
-  ['access', ['アクセス', '営業時間', '駐車', '場所', '道順']],
+  ['access', ['アクセス', '営業時間', '駐車', '場所', '道順', '定休日', '営業日', '行き方', '住所', '地図']],
 ];
 
 export function classifyInquiry(subject: string, message: string): InquiryType {

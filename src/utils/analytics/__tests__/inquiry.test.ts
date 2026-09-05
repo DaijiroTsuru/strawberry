@@ -11,7 +11,11 @@ describe('classifyInquiry', () => {
   });
 
   it('classifies a rice enquiry even when it uses purchase wording', () => {
-    expect(classifyInquiry('その他', '玄米30キロ買いに行きたいのですが')).toBe('ec_rice');
+    expect(classifyInquiry('その他', '玄米を購入したいのですが')).toBe('ec_rice');
+  });
+
+  it('classifies farm-specific rice product names, not just generic rice words', () => {
+    expect(classifyInquiry('その他', 'ブレンド米を購入したいです')).toBe('ec_rice');
   });
 
   it('classifies the strawberry purchase dropdown value', () => {
