@@ -71,24 +71,11 @@ export function trackContactFormSubmission(formData: {
 /**
  * Shopifyカート追加イベント
  */
-export function trackAddToCart(item: {
-  productName: string;
-  variantName?: string;
-  price?: number;
-}) {
+export function trackAddToCart(item: GaItem) {
   sendGAEvent('add_to_cart', {
-    event_category: 'ecommerce',
-    event_label: item.productName,
-    value: item.price || 0,
     currency: 'JPY',
-    items: [
-      {
-        item_name: item.productName,
-        item_variant: item.variantName,
-        price: item.price,
-        quantity: 1,
-      },
-    ],
+    value: (item.price ?? 0) * item.quantity,
+    items: [item],
   });
 }
 

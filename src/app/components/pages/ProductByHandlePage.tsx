@@ -81,11 +81,7 @@ export function ProductByHandlePage() {
     try {
       // Google Analytics: カート追加イベント（エラーが発生しても継続）
       try {
-        trackAddToCart({
-          productName: product.title,
-          variantName: selectedVariant.title,
-          price: selectedVariant.priceV2?.amount ? parseFloat(selectedVariant.priceV2.amount) : undefined,
-        });
+        trackAddToCart(toGaItem(product, selectedVariant, { category: categoryOf(product) }));
       } catch (gaError) {
         console.warn('GA tracking error (add_to_cart):', gaError);
       }

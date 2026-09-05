@@ -35,6 +35,27 @@ export function toGaItem(
   return item;
 }
 
+type WithVariants = {
+  title: string;
+  handle?: string;
+  variants: { edges: Array<{ node: VariantLike }> };
+};
+
+/**
+ * 一覧ページの handleAddToCart は variantId しか受け取らないため、
+ * 商品側から逆引きする。
+ */
+export function findVariant<P extends WithVariants>(
+  products: P[],
+  variantId: string
+): { product: P; variant: VariantLike } | undefined {
+  for (const product of products) {
+    const variant = product.variants.edges.find((e) => e.node.id === variantId)?.node;
+    if (variant) return { product, variant };
+  }
+  return undefined;
+}
+
 /** ShopifyのコレクションID。StrawberriesPage.tsx / RicePage.tsx と同じ値。 */
 export const STRAWBERRY_COLLECTION_ID = '486373589215';
 export const RICE_COLLECTION_ID = '486421135583';

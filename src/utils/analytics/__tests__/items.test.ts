@@ -60,3 +60,22 @@ describe('categoryOf', () => {
     expect(categoryOf({})).toBeUndefined();
   });
 });
+
+import { findVariant } from '@/utils/analytics/items';
+
+describe('findVariant', () => {
+  const products = [
+    { title: 'いちご', variants: { edges: [{ node: { id: 'v1', title: '500g' } }] } },
+    { title: 'お米', variants: { edges: [{ node: { id: 'v2', title: '5kg' } }] } },
+  ];
+
+  it('finds the product that owns a variant id', () => {
+    const found = findVariant(products, 'v2');
+    expect(found?.product.title).toBe('お米');
+    expect(found?.variant.title).toBe('5kg');
+  });
+
+  it('returns undefined for an unknown variant id', () => {
+    expect(findVariant(products, 'nope')).toBeUndefined();
+  });
+});
