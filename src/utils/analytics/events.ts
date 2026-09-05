@@ -86,35 +86,30 @@ export function trackAddToCart(item: GaItem) {
 }
 
 /**
- * 外部リンククリックイベント
+ * 外部リンククリック。
+ * 電話・メールとイベント名を分けている理由:
+ * event_category / event_label は未登録のカスタムパラメータであり
+ * GA4レポートで分解できないため（設計書 §6.3 項目7）。
  */
 export function trackExternalLinkClick(url: string, linkText?: string) {
-  sendGAEvent('click', {
-    event_category: 'external_link',
-    event_label: linkText || url,
-    value: url,
+  sendGAEvent('outbound_click', {
+    link_url: url,
+    link_text: linkText || url,
   });
 }
 
 /**
- * 電話番号クリックイベント
+ * 電話番号クリック。いちご狩り予約の主要導線。
  */
 export function trackPhoneClick(phoneNumber: string) {
-  sendGAEvent('click', {
-    event_category: 'contact',
-    event_label: 'phone_click',
-    value: phoneNumber,
+  sendGAEvent('phone_click', {
+    phone_number: phoneNumber,
   });
 }
 
-/**
- * メールクリックイベント
- */
 export function trackEmailClick(email: string) {
-  sendGAEvent('click', {
-    event_category: 'contact',
-    event_label: 'email_click',
-    value: email,
+  sendGAEvent('email_click', {
+    email_domain: email.split('@')[1] ?? '',
   });
 }
 
