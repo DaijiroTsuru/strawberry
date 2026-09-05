@@ -8,6 +8,8 @@ import { fetchProductsByCollectionId, ShopifyProduct, formatPrice, hasDiscount, 
 import { SEO, createBreadcrumbSchema } from '@/app/components/SEO';
 import { FaqSection } from '@/app/components/common/FaqSection';
 import { RelatedLinks } from '@/app/components/common/RelatedLinks';
+import { trackViewItemList } from '@/utils/analytics';
+import { toGaItem } from '@/utils/analytics/items';
 
 // CollectionID: 486373589215 から商品を取得
 const STRAWBERRY_COLLECTION_ID = '486373589215';
@@ -38,6 +40,14 @@ export function StrawberriesPage() {
       const variantGroups = products.map(p => p.variants.edges.map(e => e.node.id));
       fetchVariantDiscounts([], variantGroups).then(setDiscountMap);
     }
+  }, [products]);
+
+  useEffect(() => {
+    if (products.length === 0) return;
+    trackViewItemList(
+      products.map((p) => toGaItem(p, p.variants.edges[0]?.node, { category: 'strawberry' })),
+      'strawberries'
+    );
   }, [products]);
 
   const handleAddToCart = async (variantId: string) => {

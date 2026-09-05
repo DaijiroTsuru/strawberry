@@ -5,7 +5,8 @@ import { ShoppingCart, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductByHandle, ShopifyProduct, formatPrice, hasDiscount, calcDiscountPercent, fetchVariantDiscounts, getEffectivePricing, CartDiscountInfo } from '@/utils/shopify';
 import { SEO, createProductSchema, createBreadcrumbSchema } from '@/app/components/SEO';
-import { trackAddToCart } from '@/utils/analytics';
+import { trackAddToCart, trackViewItem } from '@/utils/analytics';
+import { toGaItem, categoryOf } from '@/utils/analytics/items';
 import { FaqSection } from '@/app/components/common/FaqSection';
 import { StrawberryBEAFSection } from '@/app/components/product/StrawberryBEAFSection';
 import { PurchaseBox } from '@/app/components/product/PurchaseBox';
@@ -64,6 +65,12 @@ export function ProductByHandlePage() {
       fetchVariantDiscounts(variantIds).then(setDiscountMap);
     }
   }, [product]);
+
+  useEffect(() => {
+    if (!product) return;
+    const variant = product.variants.edges[selectedVariantIndex]?.node;
+    trackViewItem(toGaItem(product, variant, { category: categoryOf(product) }));
+  }, [product, selectedVariantIndex]);
 
   const handleAddToCart = async () => {
     if (!product) return;

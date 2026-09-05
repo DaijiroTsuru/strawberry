@@ -8,6 +8,7 @@
  */
 
 import { normalizePath } from './paths';
+import type { GaItem } from './items';
 
 declare global {
   interface Window {
@@ -170,5 +171,26 @@ export function trackPageView(pathname: string, title?: string) {
     page_path: path,
     page_location: `${window.location.origin}${path}${window.location.search}`,
     page_title: title ?? document.title,
+  });
+}
+
+/**
+ * 商品詳細の表示。view_item がないと商品ページ→カートの転換率が測れない。
+ */
+export function trackViewItem(item: GaItem) {
+  sendGAEvent('view_item', {
+    currency: 'JPY',
+    value: item.price ?? 0,
+    items: [item],
+  });
+}
+
+/**
+ * 商品一覧の表示。
+ */
+export function trackViewItemList(items: GaItem[], listName: string) {
+  sendGAEvent('view_item_list', {
+    item_list_name: listName,
+    items,
   });
 }
