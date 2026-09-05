@@ -170,8 +170,22 @@ Shopifyの Google & YouTube チャネル連携がチェックアウトドメイ�
 - `analytics.ts` の `trackBeginCheckout()` / `trackShopifyPurchase()` は
   「未使用だから無害」ではなく「**呼び出してはならない関数**」である。
   将来の実装者が誤って接続する罠となるため削除する。
-- `begin_checkout`(339) > `add_to_cart`(304) という逆転は、buyNowがカートを経由せず
-  Shopify側のみが記録しているために発生している。項目5で解消する。
+- `begin_checkout`(339) > `add_to_cart`(304) という逆転の原因は、**`addToCart` の
+  呼び出し4箇所のうち3箇所で `trackAddToCart` が呼ばれていない**こと（コード実測）。
+
+  | 呼び出し箇所 | `trackAddToCart` |
+  |---|---|
+  | `ProductByHandlePage.tsx:86` | あり |
+  | `StrawberriesPage.tsx:45` | **なし** |
+  | `RicePage.tsx:44` | **なし** |
+  | `OrderHistory.tsx:65`（マイページからの再注文） | **なし** |
+
+  漏れているのは一覧ページという主要な購入経路であり（ランディング実測で `/rice` から
+  14件、`/strawberries` から6件）、さらに `OrderHistory` の再注文は**リピート購入導線
+  そのもの**であるため、LTV分析の中核が計測できていない。
+
+- `CartContext` の `buyNow` は定義・exportされているが**どこからも呼ばれていない
+  デッドコード**である。計測欠落の原因ではない。
 
 ### 6.3 修正項目
 
@@ -181,7 +195,7 @@ Shopifyの Google & YouTube チャネル連携がチェックアウトドメイ�
 | 2 | URLパス正規化 | 実装 | `/strawberries`(1,095PV) と `/strawberries/`(1,295PV) が別ページとして二重計上されている |
 | 3 | `view_item` / `view_item_list` の追加 | 実装 | 現在0件。商品ページ→カートの転換率が測定不能 |
 | 4 | 問い合わせ種別をGA4へ送信 | 実装 | `ContactForm.tsx:150` に判定ロジックが既存。パラメータ追加のみ |
-| 5 | buyNow経路のイベント欠落を解消 | 実装 | 6.2 の帰結 |
+| 5 | `add_to_cart` の計測漏れ3箇所を解消 | 実装 | `StrawberriesPage` / `RicePage` / `OrderHistory` で未計測。**主要な購入経路とリピート購入導線が丸ごと欠落している**（6.2参照） |
 | 6 | ファネル別キーイベントの定義 | GA4設定 | 4.1 の3分割をGA4上で定義 |
 | 7 | `click` イベントの分解可能化 | 実装 | `event_category`/`event_label` は未登録カスタムパラメータのためレポートで分解不能。**いちご狩りの主要導線である電話予約が計測できていない** |
 
