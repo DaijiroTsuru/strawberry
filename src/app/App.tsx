@@ -12,16 +12,23 @@ export default function App() {
     // ここで別途初回分を送信すると page_view が2重に計上される。
     // このイベント購読だけで初回表示・ルート遷移の両方をカバーする。
     //
-    // 'onResolved' はハッシュリンク（例: /#about）のクリックでも発火するが、
-    // パス自体は変わっていないため、直前に送信したパスと同じ場合は送信しない。
-    let lastTrackedPath: string | null = null;
+    // 'onResolved' はハッシュリンク（例: /#about）のクリックや、パスは同じで
+    // クエリだけが変わるナビゲーション（例: /mypage?tab=profile への
+    // タブ切り替え）でも発火する。ガードはパス単体ではなく「パス+検索文字列」
+    // をキーにする: ハッシュのみの変化は抑止しつつ、クエリのみの変化は
+    // 新しいページビューとして正しく計上するため。
+    let lastTrackedKey: string | null = null;
 
     const unsubscribe = router.subscribe('onResolved', () => {
       window.scrollTo(0, 0);
 
+      // ここで正規化したパスをガードのキー生成とtrackPageView呼び出しの
+      // 両方に使う。trackPageView内部でも同じパスを再度正規化するが、
+      // normalizePathは冪等なので二重呼び出しは無害（意図的な設計）。
       const currentPath = normalizePath(window.location.pathname);
-      if (currentPath === lastTrackedPath) return;
-      lastTrackedPath = currentPath;
+      const currentKey = currentPath + window.location.search;
+      if (currentKey === lastTrackedKey) return;
+      lastTrackedKey = currentKey;
       trackPageView(currentPath);
     });
 
