@@ -144,6 +144,7 @@ export function ContactForm() {
         trackContactFormSubmission({
           subject: formData.subject,
           email: formData.email,
+          message: formData.message,
         });
         
         // いちご狩り関連の問い合わせの場合、Google広告コンバージョンも送信

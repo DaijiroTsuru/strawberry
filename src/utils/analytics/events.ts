@@ -9,6 +9,7 @@
 
 import { normalizePath } from './paths';
 import type { GaItem } from './items';
+import { classifyInquiry } from './inquiry';
 
 declare global {
   interface Window {
@@ -55,16 +56,21 @@ export function sendGAEvent(
 export function trackContactFormSubmission(formData: {
   subject?: string;
   email?: string;
+  message?: string;
 }) {
+  const inquiryType = classifyInquiry(formData.subject ?? '', formData.message ?? '');
+
   sendGAEvent('contact_form_submit', {
     event_category: 'engagement',
     event_label: formData.subject || 'お問い合わせ',
+    inquiry_type: inquiryType,
     value: 1,
   });
 
   sendGAEvent('generate_lead', {
     currency: 'JPY',
     value: 0,
+    inquiry_type: inquiryType,
   });
 }
 
