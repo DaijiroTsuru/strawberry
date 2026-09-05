@@ -42,14 +42,18 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   useEffect(() => {
     if (!isOpen || !cart) return;
-    const items: GaItem[] = cart.lines.edges.map(({ node }) => ({
-      item_id: node.merchandise.id,
-      item_name: node.merchandise.product.title,
-      item_variant: node.merchandise.title,
-      price: parseFloat(node.merchandise.priceV2.amount),
-      quantity: node.quantity,
-    }));
-    trackViewCart(items, parseFloat(cart.cost.totalAmount.amount));
+    try {
+      const items: GaItem[] = cart.lines.edges.map(({ node }) => ({
+        item_id: node.merchandise.id,
+        item_name: node.merchandise.product.title,
+        item_variant: node.merchandise.title,
+        price: parseFloat(node.merchandise.priceV2.amount),
+        quantity: node.quantity,
+      }));
+      trackViewCart(items, parseFloat(cart.cost.totalAmount.amount));
+    } catch (gaError) {
+      console.warn('GA tracking error (view_cart):', gaError);
+    }
   }, [isOpen, cart]);
 
   const drawerContent = (
@@ -103,6 +107,11 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 <div className="space-y-4">
                   {cartItems.map(({ node: item }) => {
                     const product = item.merchandise.product;
+                    const imageUrl = product.images?.edges[0]?.node.url;
+                    const allocations = item.discountAllocations || [];
+                    const hasCartDiscount = allocations.length > 0;
+                    const lineTotalAmount = item.cost?.totalAmount;
+                    const unitPrice = parseFloat(item.merchandise.priceV2.amount);
                     const gaItem = (): GaItem => ({
                       item_id: item.merchandise.id,
                       item_name: product.title,
@@ -110,11 +119,6 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       price: unitPrice,
                       quantity: item.quantity,
                     });
-                    const imageUrl = product.images?.edges[0]?.node.url;
-                    const allocations = item.discountAllocations || [];
-                    const hasCartDiscount = allocations.length > 0;
-                    const lineTotalAmount = item.cost?.totalAmount;
-                    const unitPrice = parseFloat(item.merchandise.priceV2.amount);
                     const lineTotal = lineTotalAmount
                       ? parseFloat(lineTotalAmount.amount)
                       : unitPrice * item.quantity;
@@ -157,7 +161,11 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           </div>
                           <button
                             onClick={() => {
-                              trackRemoveFromCart(gaItem());
+                              try {
+                                trackRemoveFromCart(gaItem());
+                              } catch (gaError) {
+                                console.warn('GA tracking error (remove_from_cart):', gaError);
+                              }
                               removeItem(item.id);
                             }}
                             disabled={isLoading}
@@ -174,7 +182,11 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             <button
                               onClick={() => {
                                 if (item.quantity <= 1) {
-                                  trackRemoveFromCart(gaItem());
+                                  try {
+                                    trackRemoveFromCart(gaItem());
+                                  } catch (gaError) {
+                                    console.warn('GA tracking error (remove_from_cart):', gaError);
+                                  }
                                   removeItem(item.id);
                                 } else {
                                   updateQuantity(item.id, item.quantity - 1);
