@@ -1,5 +1,10 @@
 /**
  * Google Analytics イベント送信ユーティリティ
+ *
+ * イベント所有権ポリシー（docs/plans/2026-09-05-improvement-loop-design.md §6.2）:
+ * begin_checkout / add_shipping_info / add_payment_info / purchase は
+ * Shopify の Google & YouTube チャネル連携が送信する。
+ * これらを自社サイトから送信してはならない（二重計上になる）。
  */
 
 declare global {
@@ -10,12 +15,29 @@ declare global {
 }
 
 /**
+ * 自動操作ブラウザ（プリレンダリングのPuppeteer等）からの送信を抑止する。
+ * これがないと scripts/prerender.ts の実行が全ルートの page_view を偽造する。
+ */
+export function shouldSuppressTracking(
+  nav: { webdriver?: boolean } | undefined
+): boolean {
+  return nav?.webdriver === true;
+}
+
+export function isTrackingSuppressed(): boolean {
+  if (typeof navigator === 'undefined') return true;
+  return shouldSuppressTracking(navigator);
+}
+
+/**
  * カスタムイベントを送信
  */
 export function sendGAEvent(
   eventName: string,
-  eventParams?: Record<string, any>
+  eventParams?: Record<string, unknown>
 ) {
+  if (isTrackingSuppressed()) return;
+
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', eventName, eventParams);
     console.log('GA Event sent:', eventName, eventParams);
@@ -36,27 +58,10 @@ export function trackContactFormSubmission(formData: {
     event_label: formData.subject || 'お問い合わせ',
     value: 1,
   });
-  
-  // コンバージョンイベント（GA4のコンバージョンに設定可能）
+
   sendGAEvent('generate_lead', {
     currency: 'JPY',
     value: 0,
-  });
-}
-
-/**
- * Shopify購入完了イベント
- */
-export function trackShopifyPurchase(orderData?: {
-  orderId?: string;
-  revenue?: number;
-  items?: Array<{ name: string; price: number; quantity: number }>;
-}) {
-  sendGAEvent('purchase', {
-    transaction_id: orderData?.orderId || 'unknown',
-    value: orderData?.revenue || 0,
-    currency: 'JPY',
-    items: orderData?.items || [],
   });
 }
 
@@ -81,16 +86,6 @@ export function trackAddToCart(item: {
         quantity: 1,
       },
     ],
-  });
-}
-
-/**
- * Shopifyチェックアウト開始イベント
- */
-export function trackBeginCheckout(items?: Array<any>) {
-  sendGAEvent('begin_checkout', {
-    event_category: 'ecommerce',
-    items: items || [],
   });
 }
 
@@ -137,7 +132,7 @@ export function trackStrawberryPickingConversion(url?: string) {
     }
   };
 
-  if (typeof window !== 'undefined' && window.gtag) {
+  if (typeof window !== 'undefined' && window.gtag && !isTrackingSuppressed()) {
     window.gtag('event', 'conversion', {
       'send_to': 'AW-17913747934/_9PYCI30zO4bEN6z-N1C',
       'value': 2000.0,
@@ -148,7 +143,6 @@ export function trackStrawberryPickingConversion(url?: string) {
     console.log('Google Ads Conversion tracked: Strawberry Picking');
   } else {
     console.warn('Google Ads tracking is not loaded');
-    // gtagが読み込まれていなくてもコールバックは実行
     callback();
   }
 
@@ -159,9 +153,6 @@ export function trackStrawberryPickingConversion(url?: string) {
  * いちご狩り電話予約トラッキング（電話リンククリック時）
  */
 export function trackStrawberryPickingPhoneReservation(phoneNumber: string) {
-  // Google Analyticsイベント
   trackPhoneClick(phoneNumber);
-  
-  // Google広告コンバージョン
   trackStrawberryPickingConversion();
 }
