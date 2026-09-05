@@ -4,6 +4,8 @@ import { X, ShoppingCart, Trash2, ExternalLink, Minus, Plus } from 'lucide-react
 import { useCart } from '@/app/contexts/CartContext';
 import { formatPrice } from '@/utils/shopify';
 import { useState, useEffect } from 'react';
+import { trackViewCart, trackRemoveFromCart } from '@/utils/analytics';
+import type { GaItem } from '@/utils/analytics/items';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -37,6 +39,18 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   const cartItems = cart?.lines.edges || [];
   const totalAmount = cart?.cost.totalAmount;
+
+  useEffect(() => {
+    if (!isOpen || !cart) return;
+    const items: GaItem[] = cart.lines.edges.map(({ node }) => ({
+      item_id: node.merchandise.id,
+      item_name: node.merchandise.product.title,
+      item_variant: node.merchandise.title,
+      price: parseFloat(node.merchandise.priceV2.amount),
+      quantity: node.quantity,
+    }));
+    trackViewCart(items, parseFloat(cart.cost.totalAmount.amount));
+  }, [isOpen, cart]);
 
   const drawerContent = (
     <AnimatePresence>
@@ -89,6 +103,13 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 <div className="space-y-4">
                   {cartItems.map(({ node: item }) => {
                     const product = item.merchandise.product;
+                    const gaItem = (): GaItem => ({
+                      item_id: item.merchandise.id,
+                      item_name: product.title,
+                      item_variant: item.merchandise.title,
+                      price: unitPrice,
+                      quantity: item.quantity,
+                    });
                     const imageUrl = product.images?.edges[0]?.node.url;
                     const allocations = item.discountAllocations || [];
                     const hasCartDiscount = allocations.length > 0;
@@ -135,7 +156,10 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             )}
                           </div>
                           <button
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => {
+                              trackRemoveFromCart(gaItem());
+                              removeItem(item.id);
+                            }}
                             disabled={isLoading}
                             className="p-1.5 rounded-lg hover:bg-red-50 transition-colors self-start flex-shrink-0"
                             aria-label="削除"
@@ -150,6 +174,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             <button
                               onClick={() => {
                                 if (item.quantity <= 1) {
+                                  trackRemoveFromCart(gaItem());
                                   removeItem(item.id);
                                 } else {
                                   updateQuantity(item.id, item.quantity - 1);

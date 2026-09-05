@@ -181,3 +181,23 @@ export function trackViewItemList(items: GaItem[], listName: string) {
     items,
   });
 }
+
+/**
+ * カートドロワーの表示。
+ * begin_checkout は Shopify が所有するため、ここでは送信しない（設計書 §6.2）。
+ */
+export function trackViewCart(items: GaItem[], value: number) {
+  sendGAEvent('view_cart', {
+    currency: 'JPY',
+    value,
+    items,
+  });
+}
+
+export function trackRemoveFromCart(item: GaItem) {
+  sendGAEvent('remove_from_cart', {
+    currency: 'JPY',
+    value: (item.price ?? 0) * item.quantity,
+    items: [item],
+  });
+}
