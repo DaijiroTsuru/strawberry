@@ -313,7 +313,7 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
             }
           }
         }
-        collections(first: 5) {
+        collections(first: 20) {
           edges {
             node {
               id

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, ShoppingCart, Trash2, ExternalLink, Minus, Plus } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { formatPrice } from '@/utils/shopify';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { trackViewCart, trackRemoveFromCart } from '@/utils/analytics';
 import type { GaItem } from '@/utils/analytics/items';
 
@@ -40,8 +40,17 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const cartItems = cart?.lines.edges || [];
   const totalAmount = cart?.cost.totalAmount;
 
+  // ドロワーが「閉→開」に変わった瞬間だけview_cartを送信する。
+  // isOpenだけでなくcartも依存配列に入れると、開いている間の数量変更や
+  // 備考欄のデバウンス保存（setCart）のたびにcartの参照が変わり、
+  // そのたびにview_cartが再送されてイベント数が水増しされてしまうため、
+  // 前回のisOpenをrefで保持し遷移エッジのみで発火させる。
+  const wasOpenRef = useRef(false);
   useEffect(() => {
-    if (!isOpen || !cart) return;
+    const wasOpen = wasOpenRef.current;
+    wasOpenRef.current = isOpen;
+    if (!isOpen || wasOpen) return;
+    if (!cart || cart.lines.edges.length === 0) return;
     try {
       const items: GaItem[] = cart.lines.edges.map(({ node }) => ({
         item_id: node.merchandise.id,

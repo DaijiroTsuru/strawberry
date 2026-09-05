@@ -143,7 +143,6 @@ export function ContactForm() {
       try {
         trackContactFormSubmission({
           subject: formData.subject,
-          email: formData.email,
           message: formData.message,
         });
         

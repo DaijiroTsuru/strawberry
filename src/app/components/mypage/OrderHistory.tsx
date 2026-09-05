@@ -64,6 +64,11 @@ export function OrderHistory() {
     let addedCount = 0;
     for (const { variantId, quantity, line } of variantIds) {
       try {
+        await addToCart(variantId, quantity);
+        addedCount++;
+        // 追加に成功した商品だけを計上する。廃盤バリアント等でのスキップは
+        // 再購入では想定内のケースであり、失敗分までadd_to_cartに含めると
+        // イベント数が実態より水増しされてしまうため、await成功後に送信する。
         try {
           trackAddToCart({
             item_id: variantId,
@@ -77,8 +82,6 @@ export function OrderHistory() {
         } catch (gaError) {
           console.warn('GA tracking error (add_to_cart):', gaError);
         }
-        await addToCart(variantId, quantity);
-        addedCount++;
       } catch {
         // バリアントが存在しない場合はスキップ
       }

@@ -55,7 +55,6 @@ export function sendGAEvent(
  */
 export function trackContactFormSubmission(formData: {
   subject?: string;
-  email?: string;
   message?: string;
 }) {
   const inquiryType = classifyInquiry(formData.subject ?? '', formData.message ?? '');

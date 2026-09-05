@@ -69,7 +69,11 @@ export function ProductByHandlePage() {
   useEffect(() => {
     if (!product) return;
     const variant = product.variants.edges[selectedVariantIndex]?.node;
-    trackViewItem(toGaItem(product, variant, { category: categoryOf(product) }));
+    try {
+      trackViewItem(toGaItem(product, variant, { category: categoryOf(product) }));
+    } catch (gaError) {
+      console.warn('GA tracking error (view_item):', gaError);
+    }
   }, [product, selectedVariantIndex]);
 
   const handleAddToCart = async () => {

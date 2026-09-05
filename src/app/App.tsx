@@ -29,6 +29,11 @@ export default function App() {
       const currentKey = currentPath + window.location.search;
       if (currentKey === lastTrackedKey) return;
       lastTrackedKey = currentKey;
+      // ここではtry/catchで囲まない: @tanstack/router-coreのRouter#emitは
+      // 購読者ごとにtry/catchで包んで呼び出すため、このリスナー内で例外が
+      // 発生してもemit自体はもみ消し、他の購読者やアプリ全体には伝播しない。
+      // ルーターの内部実装への依存であり将来のバージョンアップで変わり得るため、
+      // 変更時はここも再確認すること。
       trackPageView(currentPath);
     });
 

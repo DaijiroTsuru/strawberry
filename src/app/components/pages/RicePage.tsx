@@ -43,10 +43,14 @@ export function RicePage() {
 
   useEffect(() => {
     if (products.length === 0) return;
-    trackViewItemList(
-      products.map((p) => toGaItem(p, p.variants.edges[0]?.node, { category: 'rice' })),
-      'rice'
-    );
+    try {
+      trackViewItemList(
+        products.map((p) => toGaItem(p, p.variants.edges[0]?.node, { category: 'rice' })),
+        'rice'
+      );
+    } catch (gaError) {
+      console.warn('GA tracking error (view_item_list):', gaError);
+    }
   }, [products]);
 
   const handleAddToCart = async (variantId: string) => {
