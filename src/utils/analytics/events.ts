@@ -7,6 +7,8 @@
  * これらを自社サイトから送信してはならない（二重計上になる）。
  */
 
+import { normalizePath } from './paths';
+
 declare global {
   interface Window {
     gtag?: (...args: any[]) => void;
@@ -155,4 +157,18 @@ export function trackStrawberryPickingConversion(url?: string) {
 export function trackStrawberryPickingPhoneReservation(phoneNumber: string) {
   trackPhoneClick(phoneNumber);
   trackStrawberryPickingConversion();
+}
+
+/**
+ * ページビューを送信する。
+ * index.html で send_page_view: false としているため、初回表示・ルート遷移とも
+ * このアプリ側から送信する。
+ */
+export function trackPageView(pathname: string, title?: string) {
+  const path = normalizePath(pathname);
+  sendGAEvent('page_view', {
+    page_path: path,
+    page_location: `${window.location.origin}${path}${window.location.search}`,
+    page_title: title ?? document.title,
+  });
 }
