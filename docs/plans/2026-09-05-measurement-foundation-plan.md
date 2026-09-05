@@ -28,17 +28,17 @@
 
 **Files:**
 - Create: `vitest.config.ts`
-- Modify: `package.json`（`scripts` に `test` / `test:watch` を追加）
+- Modify: `package.json`（`typescript@^5` を追加し、`scripts` に `test` / `test:watch` / `typecheck` を追加）
 - Test: `src/utils/__tests__/smoke.test.ts`
 
 **Interfaces:**
 - Consumes: なし
-- Produces: `npm test` コマンド。以降の全タスクがこれを使う。
+- Produces: `npm test` と `npm run typecheck`。以降の全タスクがこの2つを使う。
 
 - [ ] **Step 1: Vitest をインストール**
 
 ```bash
-npm install -D vitest
+npm install -D vitest typescript@^5
 ```
 
 - [ ] **Step 2: `vitest.config.ts` を作成**
@@ -66,7 +66,8 @@ export default defineConfig({
 
 ```json
 "test": "vitest run",
-"test:watch": "vitest"
+"test:watch": "vitest",
+"typecheck": "tsc --noEmit"
 ```
 
 - [ ] **Step 4: 失敗するスモークテストを書く**
@@ -351,7 +352,7 @@ git rm src/utils/analytics.ts
 Run: `npm test`
 Expected: PASS — 4 passed（smoke 1件 + events 3件）
 
-Run: `npx tsc --noEmit`
+Run: `npm run typecheck`
 Expected: エラーなし。既存の6ファイルからの `from '@/utils/analytics'` importが
 ディレクトリの `index.ts` に解決されることの確認。
 
@@ -641,7 +642,28 @@ describe('toGaItem', () => {
     expect(item.price).toBeUndefined();
   });
 });
+
+describe('categoryOf', () => {
+  const withCollection = (id: string) => ({
+    collections: { edges: [{ node: { id: `gid://shopify/Collection/${id}` } }] },
+  });
+
+  it('detects the strawberry collection', () => {
+    expect(categoryOf(withCollection('486373589215'))).toBe('strawberry');
+  });
+
+  it('detects the rice collection', () => {
+    expect(categoryOf(withCollection('486421135583'))).toBe('rice');
+  });
+
+  it('returns undefined when the product has no known collection', () => {
+    expect(categoryOf(withCollection('999'))).toBeUndefined();
+    expect(categoryOf({})).toBeUndefined();
+  });
+});
 ```
+
+`import` 行も `import { toGaItem, categoryOf } from '@/utils/analytics/items';` にすること。
 
 - [ ] **Step 2: 失敗を確認する**
 
@@ -687,12 +709,36 @@ export function toGaItem(
 
   return item;
 }
+
+/** ShopifyのコレクションID。StrawberriesPage.tsx / RicePage.tsx と同じ値。 */
+export const STRAWBERRY_COLLECTION_ID = '486373589215';
+export const RICE_COLLECTION_ID = '486421135583';
+
+type WithCollections = {
+  collections?: { edges: Array<{ node: { id: string } }> };
+};
+
+/**
+ * 商品のカテゴリを collections から導出する。
+ *
+ * /product/$handle は動的ルートでいちご・お米の双方を配信するため、
+ * ページ側でカテゴリを固定してはならない（お米をstrawberryと誤ラベルする）。
+ * 一覧ページは自分のコレクションを指定して取得しているためカテゴリを知っており、
+ * 呼び出し側で明示指定する。一覧の取得クエリは collections を返さないため、
+ * この関数は商品詳細ページ専用である。
+ */
+export function categoryOf(product: WithCollections): string | undefined {
+  const ids = product.collections?.edges.map((e) => e.node.id) ?? [];
+  if (ids.some((id) => id.includes(STRAWBERRY_COLLECTION_ID))) return 'strawberry';
+  if (ids.some((id) => id.includes(RICE_COLLECTION_ID))) return 'rice';
+  return undefined;
+}
 ```
 
 - [ ] **Step 4: テストを通す**
 
 Run: `npm test`
-Expected: PASS — 15 passed
+Expected: PASS — 18 passed
 
 - [ ] **Step 5: 送信関数を `events.ts` に追加する**
 
@@ -733,16 +779,19 @@ import 行を変更する（既存は `import { trackAddToCart } from '@/utils/a
 
 ```ts
 import { trackAddToCart, trackViewItem } from '@/utils/analytics';
-import { toGaItem } from '@/utils/analytics/items';
+import { toGaItem, categoryOf } from '@/utils/analytics/items';
 ```
 
 既存の割引取得 `useEffect`（`fetchVariantDiscounts` を呼んでいるもの、77行目付近）の**直後**に、以下の `useEffect` を追加する。バリアント切り替えでも再送するため依存配列に `selectedVariantIndex` を含める。
+
+**カテゴリは `categoryOf(product)` で導出する。** `/product/$handle` は動的ルートで
+お米商品も配信するため、`'strawberry'` を固定すると誤ラベルになる。
 
 ```tsx
 useEffect(() => {
   if (!product) return;
   const variant = product.variants.edges[selectedVariantIndex]?.node;
-  trackViewItem(toGaItem(product, variant));
+  trackViewItem(toGaItem(product, variant, { category: categoryOf(product) }));
 }, [product, selectedVariantIndex]);
 ```
 
@@ -886,7 +935,7 @@ export function findVariant<P extends WithVariants>(
 - [ ] **Step 4: テストを通す**
 
 Run: `npm test`
-Expected: PASS — 17 passed
+Expected: PASS — 20 passed
 
 - [ ] **Step 5: `trackAddToCart` の引数を `GaItem` に変更する**
 
@@ -908,13 +957,16 @@ export function trackAddToCart(item: GaItem) {
 
 ```tsx
 try {
-  trackAddToCart(toGaItem(product, selectedVariant, { category: 'strawberry' }));
+  trackAddToCart(toGaItem(product, selectedVariant, { category: categoryOf(product) }));
 } catch (gaError) {
   console.warn('GA tracking error (add_to_cart):', gaError);
 }
 ```
 
-`toGaItem` は Task 4 で既に import 済み。
+`toGaItem` と `categoryOf` は Task 4 で既に import 済み。
+**ここで `'strawberry'` を固定してはならない** — `/product/$handle` はお米商品も配信するため、
+`view_item` と `add_to_cart` が同一商品で異なるカテゴリを名乗ることになり、
+設計書§4.1のファネルA/B分割が壊れる。
 
 - [ ] **Step 7: `StrawberriesPage.tsx` の `handleAddToCart` を書き換える**
 
@@ -1025,12 +1077,12 @@ for (const { variantId, quantity, line } of variantIds) {
 
 - [ ] **Step 10: 型検査とテストを通す**
 
-Run: `npx tsc --noEmit`
+Run: `npm run typecheck`
 Expected: エラーなし（`trackAddToCart` の引数変更に伴う呼び出し元の型エラーが
 残っていないこと）
 
 Run: `npm test`
-Expected: PASS — 17 passed
+Expected: PASS — 20 passed
 
 - [ ] **Step 11: 実ブラウザで発火を確認する**
 
@@ -1301,7 +1353,7 @@ export function classifyInquiry(subject: string, message: string): InquiryType {
 - [ ] **Step 4: テストを通す**
 
 Run: `npm test`
-Expected: PASS — 25 passed
+Expected: PASS — 28 passed
 
 - [ ] **Step 5: `trackContactFormSubmission` に種別を追加する**
 
@@ -1440,11 +1492,11 @@ export function trackEmailClick(email: string) {
 
 - [ ] **Step 2: 型検査を通す**
 
-Run: `npx tsc --noEmit`
+Run: `npm run typecheck`
 Expected: エラーなし
 
 Run: `npm test`
-Expected: PASS — 25 passed（既存テストが壊れていないこと）
+Expected: PASS — 28 passed（既存テストが壊れていないこと）
 
 - [ ] **Step 3: 実ブラウザで発火を確認する**
 
@@ -1611,7 +1663,7 @@ Claude in Chrome によりモバイルビューポートで購入導線を通し
 ## 完了条件
 
 - [ ] `npm test` が通る
-- [ ] `npx tsc --noEmit` が通る
+- [ ] `npm run typecheck` が通る
 - [ ] `npm run build` が通る
 - [ ] Task 10 の検証レポートで全イベントが「GA4着弾」を確認済み
 - [ ] `begin_checkout` / `purchase` が自社サイトから送信されていないこと
