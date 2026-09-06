@@ -5,6 +5,7 @@ import { useAuth } from '@/app/contexts/AuthContext';
 import { useCart } from '@/app/contexts/CartContext';
 import { ShopifyOrder } from '@/utils/shopify-customer';
 import { formatPrice } from '@/utils/shopify';
+import { trackAddToCart } from '@/utils/analytics';
 
 const STATUS_MAP: Record<string, string> = {
   PAID: '支払い済み',
@@ -51,6 +52,7 @@ export function OrderHistory() {
       .map((e) => ({
         variantId: e.node.variant!.id,
         quantity: e.node.quantity,
+        line: e.node,
       }));
 
     if (variantIds.length === 0) {
@@ -60,10 +62,26 @@ export function OrderHistory() {
     }
 
     let addedCount = 0;
-    for (const { variantId, quantity } of variantIds) {
+    for (const { variantId, quantity, line } of variantIds) {
       try {
         await addToCart(variantId, quantity);
         addedCount++;
+        // 追加に成功した商品だけを計上する。廃盤バリアント等でのスキップは
+        // 再購入では想定内のケースであり、失敗分までadd_to_cartに含めると
+        // イベント数が実態より水増しされてしまうため、await成功後に送信する。
+        try {
+          trackAddToCart({
+            item_id: variantId,
+            item_name: line.title,
+            item_variant: line.variant?.title,
+            price: line.variant?.price?.amount
+              ? parseFloat(line.variant.price.amount)
+              : undefined,
+            quantity,
+          });
+        } catch (gaError) {
+          console.warn('GA tracking error (add_to_cart):', gaError);
+        }
       } catch {
         // バリアントが存在しない場合はスキップ
       }

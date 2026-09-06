@@ -8,6 +8,8 @@ import { fetchProductsByCollectionId, ShopifyProduct, formatPrice, hasDiscount, 
 import { SEO, createBreadcrumbSchema } from '@/app/components/SEO';
 import { FaqSection } from '@/app/components/common/FaqSection';
 import { RelatedLinks } from '@/app/components/common/RelatedLinks';
+import { trackViewItemList, trackAddToCart } from '@/utils/analytics';
+import { toGaItem, findVariant } from '@/utils/analytics/items';
 
 const RICE_COLLECTION_ID = '486421135583';
 
@@ -39,8 +41,28 @@ export function RicePage() {
     }
   }, [products]);
 
+  useEffect(() => {
+    if (products.length === 0) return;
+    try {
+      trackViewItemList(
+        products.map((p) => toGaItem(p, p.variants.edges[0]?.node, { category: 'rice' })),
+        'rice'
+      );
+    } catch (gaError) {
+      console.warn('GA tracking error (view_item_list):', gaError);
+    }
+  }, [products]);
+
   const handleAddToCart = async (variantId: string) => {
     try {
+      const found = findVariant(products, variantId);
+      if (found) {
+        try {
+          trackAddToCart(toGaItem(found.product, found.variant, { category: 'rice' }));
+        } catch (gaError) {
+          console.warn('GA tracking error (add_to_cart):', gaError);
+        }
+      }
       await addToCart(variantId, 1);
       // カートドロワーを開く
       openCart();

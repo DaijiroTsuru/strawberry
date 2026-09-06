@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, ShoppingCart, Trash2, ExternalLink, Minus, Plus } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { formatPrice } from '@/utils/shopify';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { trackViewCart, trackRemoveFromCart } from '@/utils/analytics';
+import type { GaItem } from '@/utils/analytics/items';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -37,6 +39,31 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   const cartItems = cart?.lines.edges || [];
   const totalAmount = cart?.cost.totalAmount;
+
+  // ドロワーが「閉→開」に変わった瞬間だけview_cartを送信する。
+  // isOpenだけでなくcartも依存配列に入れると、開いている間の数量変更や
+  // 備考欄のデバウンス保存（setCart）のたびにcartの参照が変わり、
+  // そのたびにview_cartが再送されてイベント数が水増しされてしまうため、
+  // 前回のisOpenをrefで保持し遷移エッジのみで発火させる。
+  const wasOpenRef = useRef(false);
+  useEffect(() => {
+    const wasOpen = wasOpenRef.current;
+    wasOpenRef.current = isOpen;
+    if (!isOpen || wasOpen) return;
+    if (!cart || cart.lines.edges.length === 0) return;
+    try {
+      const items: GaItem[] = cart.lines.edges.map(({ node }) => ({
+        item_id: node.merchandise.id,
+        item_name: node.merchandise.product.title,
+        item_variant: node.merchandise.title,
+        price: parseFloat(node.merchandise.priceV2.amount),
+        quantity: node.quantity,
+      }));
+      trackViewCart(items, parseFloat(cart.cost.totalAmount.amount));
+    } catch (gaError) {
+      console.warn('GA tracking error (view_cart):', gaError);
+    }
+  }, [isOpen, cart]);
 
   const drawerContent = (
     <AnimatePresence>
@@ -94,6 +121,13 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     const hasCartDiscount = allocations.length > 0;
                     const lineTotalAmount = item.cost?.totalAmount;
                     const unitPrice = parseFloat(item.merchandise.priceV2.amount);
+                    const gaItem = (): GaItem => ({
+                      item_id: item.merchandise.id,
+                      item_name: product.title,
+                      item_variant: item.merchandise.title,
+                      price: unitPrice,
+                      quantity: item.quantity,
+                    });
                     const lineTotal = lineTotalAmount
                       ? parseFloat(lineTotalAmount.amount)
                       : unitPrice * item.quantity;
@@ -135,7 +169,14 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             )}
                           </div>
                           <button
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => {
+                              try {
+                                trackRemoveFromCart(gaItem());
+                              } catch (gaError) {
+                                console.warn('GA tracking error (remove_from_cart):', gaError);
+                              }
+                              removeItem(item.id);
+                            }}
                             disabled={isLoading}
                             className="p-1.5 rounded-lg hover:bg-red-50 transition-colors self-start flex-shrink-0"
                             aria-label="削除"
@@ -150,6 +191,11 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             <button
                               onClick={() => {
                                 if (item.quantity <= 1) {
+                                  try {
+                                    trackRemoveFromCart(gaItem());
+                                  } catch (gaError) {
+                                    console.warn('GA tracking error (remove_from_cart):', gaError);
+                                  }
                                   removeItem(item.id);
                                 } else {
                                   updateQuantity(item.id, item.quantity - 1);

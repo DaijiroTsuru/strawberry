@@ -5,7 +5,8 @@ import { ShoppingCart, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/app/contexts/CartContext';
 import { fetchProductByHandle, ShopifyProduct, formatPrice, hasDiscount, calcDiscountPercent, fetchVariantDiscounts, getEffectivePricing, CartDiscountInfo } from '@/utils/shopify';
 import { SEO, createProductSchema, createBreadcrumbSchema } from '@/app/components/SEO';
-import { trackAddToCart } from '@/utils/analytics';
+import { trackAddToCart, trackViewItem } from '@/utils/analytics';
+import { toGaItem, categoryOf } from '@/utils/analytics/items';
 import { FaqSection } from '@/app/components/common/FaqSection';
 import { StrawberryBEAFSection } from '@/app/components/product/StrawberryBEAFSection';
 import { PurchaseBox } from '@/app/components/product/PurchaseBox';
@@ -65,6 +66,16 @@ export function ProductByHandlePage() {
     }
   }, [product]);
 
+  useEffect(() => {
+    if (!product) return;
+    const variant = product.variants.edges[selectedVariantIndex]?.node;
+    try {
+      trackViewItem(toGaItem(product, variant, { category: categoryOf(product) }));
+    } catch (gaError) {
+      console.warn('GA tracking error (view_item):', gaError);
+    }
+  }, [product, selectedVariantIndex]);
+
   const handleAddToCart = async () => {
     if (!product) return;
     
@@ -74,11 +85,7 @@ export function ProductByHandlePage() {
     try {
       // Google Analytics: カート追加イベント（エラーが発生しても継続）
       try {
-        trackAddToCart({
-          productName: product.title,
-          variantName: selectedVariant.title,
-          price: selectedVariant.priceV2?.amount ? parseFloat(selectedVariant.priceV2.amount) : undefined,
-        });
+        trackAddToCart(toGaItem(product, selectedVariant, { category: categoryOf(product) }));
       } catch (gaError) {
         console.warn('GA tracking error (add_to_cart):', gaError);
       }
