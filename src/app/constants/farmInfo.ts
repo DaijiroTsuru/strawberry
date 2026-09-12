@@ -25,7 +25,23 @@ export const FARM_INFO = {
     fertilizers: [
       '油粕', '米糠', '海藻', '魚粉', '黒砂糖', 'ニッケ', 'イオウ'
     ],
-  }
+  },
+  awards: [
+    {
+      id: 'tabechoku-ichigo-grandprix',
+      name: '食べチョクいちごグランプリ',
+      description: '全国の優れたいちご生産者が集う、食べチョクが主催するいちごの品質コンテストに参加しています。',
+      year: '2024',
+      status: '参加',
+    },
+    {
+      id: 'national-strawberry-championship',
+      name: '全国いちご選手権',
+      description: '日本全国のいちご生産者が技術と品質を競う、権威ある全国大会に参加しています。',
+      year: '2024',
+      status: '参加',
+    }
+  ]
 };
 
 // いちご狩り料金
