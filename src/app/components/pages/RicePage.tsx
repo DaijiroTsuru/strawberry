@@ -404,6 +404,39 @@ export function RicePage() {
             </p>
           </motion.div>
 
+          {/*
+            令和7年度産の販売終了と、令和8年度産（新米）の再開予定のお知らせ。
+            再開時はこのブロックごと削除する（Shopify側で在庫を入れれば購入は再開する）。
+          */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto mb-16 rounded-2xl px-6 py-6 lg:px-8 lg:py-7"
+            style={{
+              background: 'var(--color-harvest-50)',
+              border: '1px solid var(--color-harvest-300)',
+            }}
+          >
+            <p
+              className="text-sm mb-3"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-harvest-700)', letterSpacing: '0.08em' }}
+            >
+              お知らせ
+            </p>
+            <p
+              className="text-base lg:text-lg"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-800)', lineHeight: '2' }}
+            >
+              令和7年度産のお米は、在庫が少なくなりましたため、ネット販売を終了いたしました。
+              <br />
+              令和8年度産の新米は、10月末から11月頃の販売開始を予定しております。
+              <br />
+              開始時期が決まりましたら、このページでお知らせいたします。
+            </p>
+          </motion.div>
+
           {isLoadingProducts ? (
             <div className="text-center py-20">
               <div className="inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--color-harvest-600)' }}></div>
