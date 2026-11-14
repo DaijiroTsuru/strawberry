@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import {
-  Calendar,
   Clock,
   Users,
   Info,
@@ -229,113 +228,24 @@ export function StrawberryPickingPage() {
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {STRAWBERRY_PICKING.pricing.map((pricing, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
-              >
-                <div className="p-8">
-                  <div className="text-center mb-6">
-                    <div
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, var(--color-strawberry-100) 0%, var(--color-strawberry-200) 100%)",
-                      }}
-                    >
-                      <Calendar
-                        className="w-4 h-4"
-                        style={{ color: "var(--color-strawberry-700)" }}
-                      />
-                      <span
-                        className="text-sm font-medium"
-                        style={{
-                          color: "var(--color-strawberry-800)",
-                          fontFamily: "var(--font-sans)",
-                        }}
-                      >
-                        {pricing.period}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4 mb-6">
-                    <div
-                      className="flex justify-between items-center pb-4"
-                      style={{
-                        borderBottom: "1px solid var(--color-neutral-200)",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: "var(--font-sans)",
-                          color: "var(--color-neutral-700)",
-                        }}
-                      >
-                        小学生以上
-                      </span>
-                      <span
-                        className="text-2xl font-bold"
-                        style={{
-                          fontFamily: "var(--font-serif)",
-                          color: "var(--color-strawberry-600)",
-                        }}
-                      >
-                        ¥{pricing.adult.toLocaleString()}
-                      </span>
-                    </div>
-                    <div
-                      className="flex justify-between items-center pb-4"
-                      style={{
-                        borderBottom: "1px solid var(--color-neutral-200)",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: "var(--font-sans)",
-                          color: "var(--color-neutral-700)",
-                        }}
-                      >
-                        幼児（3歳以上）
-                      </span>
-                      <span
-                        className="text-2xl font-bold"
-                        style={{
-                          fontFamily: "var(--font-serif)",
-                          color: "var(--color-strawberry-600)",
-                        }}
-                      >
-                        ¥{pricing.child.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span
-                        style={{
-                          fontFamily: "var(--font-sans)",
-                          color: "var(--color-neutral-700)",
-                        }}
-                      >
-                        お持ち帰り
-                      </span>
-                      <span
-                        className="text-xl font-bold"
-                        style={{
-                          fontFamily: "var(--font-serif)",
-                          color: "var(--color-strawberry-600)",
-                        }}
-                      >
-                        ¥{pricing.takeaway}/100g
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+          {/* 新料金決定までの暫定表示。新料金が決まったら STRAWBERRY_PICKING.pricing を更新して料金カードを戻す */}
+          <div
+            className="max-w-3xl mx-auto p-8 rounded-3xl bg-white shadow-lg text-center"
+            style={{ border: "1px solid var(--color-strawberry-200)" }}
+          >
+            <p
+              className="text-lg font-medium"
+              style={{
+                fontFamily: "var(--font-sans)",
+                color: "var(--color-strawberry-800)",
+                lineHeight: "1.8",
+              }}
+            >
+              <Info className="inline w-5 h-5 mr-2" />
+              今シーズンの料金は現在調整中です。決まり次第こちらでお知らせいたします。
+              <br />
+              お急ぎの方はお電話にてお問い合わせください。
+            </p>
           </div>
 
           <motion.div
