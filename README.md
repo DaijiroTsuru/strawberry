@@ -52,12 +52,19 @@ VITE_GOOGLE_PLACE_ID=your_place_id
 
 各機能の詳細なセットアップ方法は `/guides` ディレクトリを参照してください：
 
+### 統合・設定ガイド
 - [Shopify統合ガイド](guides/SHOPIFY_SETUP.md) - Shopify Storefront APIの設定方法
 - [Shopify統合概要](guides/SHOPIFY_INTEGRATION.md) - Shopify機能の使用方法
 - [EmailJS設定ガイド](guides/EMAILJS_SETUP.md) - お問い合わせフォームの設定
 - [Google Reviews設定](guides/GOOGLE_REVIEWS_SETUP.md) - Googleレビュー取得の設定
 - [お問い合わせフォーム統合](guides/CONTACT_FORM_INTEGRATION.md) - フォーム機能の詳細
 - [GitHub Pagesデプロイ](guides/GITHUB_PAGES_DEPLOYMENT.md) - GitHub Pagesへのデプロイ方法
+
+### 販路拡大ガイド
+- [食べチョク登録ガイド](guides/TABECHOKU_REGISTRATION.md) - 食べチョクへの生産者登録方法
+- [食べチョクタスクチェックリスト](guides/TABECHOKU_TASKS_CHECKLIST.md) - 登録作業の進捗管理用チェックリスト
+
+### その他
 - [ライセンス情報](guides/ATTRIBUTIONS.md) - 使用しているライブラリとリソース
 
 ## 🛠️ 技術スタック
