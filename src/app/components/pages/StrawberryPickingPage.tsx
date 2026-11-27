@@ -228,25 +228,47 @@ export function StrawberryPickingPage() {
             </h2>
           </motion.div>
 
-          {/* 新料金決定までの暫定表示。新料金が決まったら STRAWBERRY_PICKING.pricing を更新して料金カードを戻す */}
-          <div
-            className="max-w-3xl mx-auto p-8 rounded-3xl bg-white shadow-lg text-center"
-            style={{ border: "1px solid var(--color-strawberry-200)" }}
-          >
-            <p
-              className="text-lg font-medium"
-              style={{
-                fontFamily: "var(--font-sans)",
-                color: "var(--color-strawberry-800)",
-                lineHeight: "1.8",
-              }}
+          {STRAWBERRY_PICKING.pricing.map((pricing) => (
+            <div
+              key={pricing.period}
+              className="max-w-md mx-auto p-8 rounded-3xl bg-white shadow-lg"
+              style={{ border: "1px solid var(--color-strawberry-200)" }}
             >
-              <Info className="inline w-5 h-5 mr-2" />
-              今シーズンの料金は現在調整中です。決まり次第こちらでお知らせいたします。
-              <br />
-              お急ぎの方はお電話にてお問い合わせください。
-            </p>
-          </div>
+              <p
+                className="text-center text-sm font-medium mb-6"
+                style={{ fontFamily: "var(--font-sans)", color: "var(--color-strawberry-800)" }}
+              >
+                {pricing.period}（1時間・要予約）
+              </p>
+              {[
+                { label: "小学生以上", price: pricing.adult },
+                { label: "3歳以上", price: pricing.child },
+              ].map(({ label, price }) => (
+                <div
+                  key={label}
+                  className="flex justify-between items-center py-3"
+                  style={{ borderBottom: "1px solid var(--color-neutral-200)" }}
+                >
+                  <span style={{ fontFamily: "var(--font-sans)", color: "var(--color-neutral-700)" }}>
+                    {label}
+                  </span>
+                  <span
+                    className="text-2xl font-bold"
+                    style={{ fontFamily: "var(--font-serif)", color: "var(--color-strawberry-600)" }}
+                  >
+                    ¥{price.toLocaleString()}
+                  </span>
+                </div>
+              ))}
+              <p
+                className="mt-6 text-sm"
+                style={{ fontFamily: "var(--font-sans)", color: "var(--color-neutral-600)", lineHeight: "1.8" }}
+              >
+                <Info className="inline w-4 h-4 mr-1" />
+                1月以降の入園料・お持ち帰りの料金は、お電話にてお問い合わせください。
+              </p>
+            </div>
+          ))}
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
