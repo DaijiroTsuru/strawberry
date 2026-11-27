@@ -73,6 +73,8 @@ async function fetchGoogleReviews(): Promise<Review[]> {
     // レビューを変換
     const reviews: Review[] = data.result.reviews
       .filter(review => review.rating >= 4) // 4星以上のみ
+      // 料金改定で旧料金が誤解を招くため、金額に触れたレビューは載せない
+      .filter(review => !/[\d０-９][\d０-９,，]*\s*円/.test(review.text))
       .slice(0, 6) // 最大6件
       .map(review => ({
         name: review.author_name,
