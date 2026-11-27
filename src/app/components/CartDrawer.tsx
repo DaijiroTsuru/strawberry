@@ -327,12 +327,22 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         <div>
                           <p className="font-semibold">{packageCount}梱包での配送になります</p>
                           <p className="mt-1 text-xs" style={{ color: 'var(--color-neutral-500)' }}>
-                            ※送料は梱包数分かかります。正確な送料はチェックアウト時に確定します。
+                            ※いちごの送料は梱包数分かかります（お米は送料込み）。正確な送料はチェックアウト時に確定します。
                           </p>
                         </div>
                       </div>
                     );
                   })()}
+
+                  {/* お米は送料込み（沖縄県・離島除く）。対象地域は注文後に農園が個別対応する */}
+                  {cartItems.some(({ node }) => node.merchandise.product.title.includes('ヒノヒカリ')) && (
+                    <p
+                      className="p-3 rounded-lg text-xs leading-relaxed"
+                      style={{ backgroundColor: 'var(--color-harvest-50)', color: 'var(--color-harvest-700)' }}
+                    >
+                      ※お米は送料込みの価格です。沖縄県・離島のお客様は、ご注文前にお問い合わせください。ご注文いただいた場合は、当園から個別にご連絡いたします。
+                    </p>
+                  )}
 
                   {/* 備考欄 */}
                   <div className="space-y-2">

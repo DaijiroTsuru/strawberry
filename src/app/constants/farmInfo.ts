@@ -32,25 +32,13 @@ export const FARM_INFO = {
 export const STRAWBERRY_PICKING = {
   note: '※いちご狩りは要予約です。まずはご連絡下さい。',
   footwearNote: '※足下の土が緩んでいる事がありますので、靴はスニーカーや長靴等をおすすめいたします。',
+  // 2026-27シーズンは12月分のみ掲載（1月以降の入園料・持ち帰り料金は載せない方針）
   pricing: [
     {
-      period: '12月〜2月',
-      adult: 2000,
-      child: 1000,
-      takeaway: 300
+      period: '12月',
+      adult: 2300,
+      child: 1150,
     },
-    {
-      period: '3月',
-      adult: 1900,
-      child: 950,
-      takeaway: 275
-    },
-    {
-      period: '4月〜',
-      adult: 1800,
-      child: 900,
-      takeaway: 250
-    }
   ]
 };
 

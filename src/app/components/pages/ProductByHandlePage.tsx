@@ -352,7 +352,7 @@ export function ProductByHandlePage() {
                   </>
                 ) : backLink.to === '/rice' ? (
                   <p className="text-sm font-semibold" style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-strawberry-700)' }}>
-                    配送料として 九州 1,500円／九州外 2,000円（一律）
+                    送料込み（沖縄県・離島のお客様はお問い合わせください）
                   </p>
                 ) : null}
               </div>
