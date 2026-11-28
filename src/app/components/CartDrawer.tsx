@@ -305,7 +305,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         {/* 合計 */}
                         <div className="flex items-center justify-between text-lg pt-2 border-t" style={{ borderColor: 'var(--color-neutral-200)' }}>
                           <span style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-neutral-700)' }}>
-                            {shipping > 0 ? '合計（税込・送料込）' : '合計（税込・送料除く）'}
+                            {shipping > 0 ? '合計（税込・送料込）' : '合計（税込）'}
                           </span>
                           <span className="text-2xl font-bold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-strawberry-600)' }}>
                             {formatPrice(totalAmount.amount, currency)}
@@ -334,8 +334,8 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     );
                   })()}
 
-                  {/* お米は送料込み（沖縄県・離島除く）。対象地域は注文後に農園が個別対応する */}
-                  {cartItems.some(({ node }) => node.merchandise.product.title.includes('ヒノヒカリ')) && (
+                  {/* お米・もち米は送料込み（沖縄県・離島除く）。対象地域は注文後に農園が個別対応する */}
+                  {cartItems.some(({ node }) => node.merchandise.product.title.includes('米')) && (
                     <p
                       className="p-3 rounded-lg text-xs leading-relaxed"
                       style={{ backgroundColor: 'var(--color-harvest-50)', color: 'var(--color-harvest-700)' }}
